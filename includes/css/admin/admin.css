@@ -1,0 +1,101 @@
+div.radio-with-Icon {
+    display: block;
+}
+div.radio-with-Icon p.radioOption {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    margin: -20px 15px;
+    border: none;
+}
+div.radio-with-Icon p.radioOption:first-child {
+    margin-left: 0;
+}
+div.radio-with-Icon p.radioOption label {
+    display: block;
+    height: 100%;
+    width: 100%;
+    padding: 10px 10px 0px 10px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    color: #222;
+    cursor: pointer;
+    opacity: .8;
+    transition: none;
+    font-size: 20px;
+    text-align: center;
+    margin: 0 !important;
+}
+div.radio-with-Icon p.radioOption label:hover, div.radio-with-Icon p.radioOption label:focus, div.radio-with-Icon p.radioOption label:active {
+    opacity: .5;
+    background-color: #222;
+    color: #fff;
+    margin: 0 !important;
+}
+div.radio-with-Icon p.radioOption label::after, div.radio-with-Icon p.radioOption label:after, div.radio-with-Icon p.radioOption label::before, div.radio-with-Icon p.radioOption label:before {
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+}
+div.radio-with-Icon p.radioOption label i.fa {
+    display: block;
+    font-size: 50px;
+}
+div.radio-with-Icon p.radioOption input[type="radio"] {
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+div.radio-with-Icon p.radioOption input[type="radio"]:active ~ label {
+    opacity: 1;
+}
+div.radio-with-Icon p.radioOption input[type="radio"]:checked ~ label {
+    opacity: 1;
+    border: none;
+    background-color: #222;
+    color: #fff;
+}
+div.radio-with-Icon p.radioOption input[type="radio"]:hover, div.radio-with-Icon p.radioOption input[type="radio"]:focus, div.radio-with-Icon p.radioOption input[type="radio"]:active {
+    margin: 0 !important;
+}
+div.radio-with-Icon p.radioOption input[type="radio"] + label:before, div.radio-with-Icon p.radioOption input[type="radio"] + label:after {
+    margin: 0 !important;
+}
+
+.vwg_postbox-container {
+    top: 100px;
+    right: 20px;
+    position: absolute;
+}
+
+.vwg_postbox-container .postbox {
+    width: 300px;
+}
+
+.vwg-settings-warning {
+    color: #ee974b !important;
+}
+
+/*Responsive*/
+@media only screen and (max-width: 1200px) {
+    .vwg_postbox-container {
+        width: 100%;
+        position: static;
+    }
+    .vwg_postbox-container .postbox {
+        width: 100%;
+    }
+}
+@media only screen and (max-width: 480px) {
+    div.radio-with-Icon p.radioOption label {
+        padding: 4px 8px 4px 8px;
+        font-size: 14px;
+    }
+    div.radio-with-Icon p.radioOption {
+        width: 20px;
+        height: 20px;
+        margin: 0px 10px;
+    }
+}
