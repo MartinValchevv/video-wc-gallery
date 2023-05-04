@@ -83,7 +83,7 @@ add_filter( 'plugin_row_meta', 'vwg_plugin_row_meta', 10, 2 );
 /**
  * Feedback when deactivate plugin view
  *
- * @since 1.0
+ * @since 1.1
  */
 function vwg_feedback_dialog() {
     ?>
@@ -188,7 +188,7 @@ function vwg_feedback_dialog() {
             line-height: 1;
             padding: 12px 20px;
             font-size: 13px;
-            width: 180px;
+			min-width: 180px;
             height: 38px;
             border-width: 0;
             font-weight: 500;
@@ -217,7 +217,7 @@ add_action( 'admin_footer-plugins.php', 'vwg_feedback_dialog' );
 /**
  * Feedback send email
  *
- * @since 1.0
+ * @since 1.1
  */
 function vwg_send_deactivation_email() {
 
@@ -271,7 +271,7 @@ function vwg_send_deactivation_email() {
     <?php
     $html = ob_get_clean();
 
-//    wp_mail($to, $subject, $html, $headers);
+    wp_mail($to, $subject, $html, $headers);
     wp_send_json_success('Email sent successfully');
 
     wp_die();

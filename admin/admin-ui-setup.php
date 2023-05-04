@@ -114,7 +114,7 @@ function vwg_custom_settings() {
 
 /**
  * Plugin info view
- * @since 1.0
+ * @since 1.1
  */
 function vwg_plugin_info() {
     $allowed_tags = array(
@@ -128,6 +128,9 @@ function vwg_plugin_info() {
         esc_url('https://revolut.me/mvalchev'),
         esc_url('https://wordpress.org/support/plugin/video-wc-gallery/reviews/?rate=5#new-post')
     );
+    $vwg_support_links = sprintf( __( '<a href="%s" target="_blank">Get support</a>', 'video-wc-gallery' ),
+        esc_url('https://wordpress.org/support/plugin/video-wc-gallery/#new-post'),
+    );
     ?>
     <div id="postbox-container-1" class="postbox-container vwg_postbox-container">
         <div id="side-sortables" class="meta-box-sortables ui-sortable" style="">
@@ -137,6 +140,7 @@ function vwg_plugin_info() {
                 </div>
                 <div class="inside">
                     <p><?php echo wp_kses($vwg_footer_text, $allowed_tags); ?></p>
+                    <p style="text-align: center;"><?php echo wp_kses($vwg_support_links, $allowed_tags); ?> | <a href="https://translate.wordpress.org/projects/wp-plugins/video-wc-gallery/" target="_blank"><span class="dashicons dashicons-translation"></span></a></p>
                     <hr>
                     <p style="text-align: center"><?php echo esc_html__('Video Gallery for WooCommerce version:' , 'video-wc-gallery') ?> <?php echo esc_html(VWG_VERSION_NUM) ?></p>
                 </div>

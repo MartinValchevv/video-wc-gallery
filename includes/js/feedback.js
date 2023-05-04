@@ -1,9 +1,9 @@
 jQuery(document).ready(function ($) {
-    var src = $('#the-list').find('[data-slug="video-gallery-for-woocommerce"] span.deactivate a').attr('href')
+    var src = $('#the-list').find('[data-slug="video-wc-gallery"] span.deactivate a').attr('href')
 
-    $('#the-list').find('[data-slug="video-gallery-for-woocommerce"] span.deactivate a').attr('href', 'javascript:;')
+    $('#the-list').find('[data-slug="video-wc-gallery"] span.deactivate a').attr('href', 'javascript:;')
 
-    $('#the-list').find('[data-slug="video-gallery-for-woocommerce"] span.deactivate a').on('click', function (e) {
+    $('#the-list').find('[data-slug="video-wc-gallery"] span.deactivate a').on('click', function (e) {
         e.preventDefault();
         $('#vwg-popup-container').addClass('show');
     });
