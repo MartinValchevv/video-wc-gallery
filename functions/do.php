@@ -262,11 +262,12 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.0
+ * @since 1.2
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
         $iconColor = get_option('vwg_settings_group')['vwg_settings_icon_color'];
+        $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
         ?>
         <style>
             .vwg-video-wrapper { width: 100%; height: 100%; overflow: hidden; position: relative; margin: auto !important; }
@@ -293,6 +294,22 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     jQuery(this).prev().click()
                 });
             });
+
+            jQuery(window).on('load', function() {
+                var li_height;
+                jQuery('ol.flex-control-nav li img').each(function(index) {
+                    var src = jQuery(this).attr('src');
+                    if (index === 0) {
+                        li_height = jQuery(this).parent('li').height();
+                    }
+                    // Check if the src attribute starts with 'data:'
+                    if (src.startsWith('data:')) {
+                        jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                        jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                    }
+                });
+            });
         </script>
         <?php
     }
@@ -302,13 +319,13 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.0
+ * @since 1.2
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
     $video_url = get_post_meta( $product->get_id(), 'vwg_video_url', true );
     $video_urls = maybe_unserialize($video_url);
-    $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
+    // $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
     $controls = get_option('vwg_settings_group')['vwg_settings_video_controls'];
     $loop = get_option('vwg_settings_group')['vwg_settings_loop'];
     $muted = get_option('vwg_settings_group')['vwg_settings_muted'];
@@ -322,18 +339,6 @@ function vwg_add_video_to_product_gallery() {
                 <video src="<?=esc_url($video['video_url']) ?>" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline></video>
             </a>
         </div>
-        <script>
-           setTimeout(function () {
-               jQuery('ol.flex-control-nav li img').each(function (){
-                   var src = jQuery(this).attr('src');
-                   // check if the src attribute starts with 'data:'
-                   if (src.startsWith('data:')) {
-                       jQuery(this).wrap('<div class="vwg-video-wrapper"></div>')
-                       jQuery('.vwg-video-wrapper').append('<i class="<?=esc_html($icon) ?>"></i>')
-                   }
-               })
-           }, 500);
-        </script>
         <?php endforeach;
     }
 }

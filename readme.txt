@@ -3,9 +3,9 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: video gallery, woocommerce, product page, product video, autoplay, multimedia, video control, video files, media library, video player
 Requires at least: 5.3
-Tested up to: 6.2
+Tested up to: 6.2.2
 Requires PHP: 7.4
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ The helper libraries plugin uses the following:
 Notes:
 
 *   Video Gallery for WooCommerce requires the Woocommerce plugin to be activated in order to function properly. If you do not have Woocommerce installed, you will need to install and activate it before using Video Gallery for WooCommerce.
-*   Video Gallery for WooCommerce uses the default mediaelementJS script in WordPress to display videos. Therefore, it is important not to disable this script, as doing so may cause the plugin to malfunction.
+*   Video Gallery for WooCommerce uses the default mediaelementJS script in WordPress to display videos. If your theme has added scripts or styles with an id containing "mediaelement" they will be automatically disabled, otherwise a conflict will occur.
 *   The plugin supports a wide range of video file formats, but it is important to ensure that your videos are in a format that is supported by WordPress. Commonly used formats such as MP4, AVI, and MOV are typically supported.
 
 == Installation ==
@@ -67,6 +67,10 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product page
 
 == Changelog ==
+
+= 1.2 =
+* Added check if your theme contains any mediaelementJS import will be disabled to prevent conflicts and use default library which is in WordPress core
+* Fixes in product page if style is vertical media gallery
 
 = 1.1 =
 * Visual fixes.
