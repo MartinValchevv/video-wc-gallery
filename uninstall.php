@@ -15,7 +15,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) die;
 /**
  * Delete database settings
  *
- * @since		1.0
+ * @since		1.3
  */
 $option = get_option('vwg_settings_group');
 
@@ -29,6 +29,31 @@ if ($option['vwg_settings_remove_videos_data'] == 1) {
             'vwg_video_url'
         )
     );
+
+    // Delete all file and directory video-wc-gallery-thumb
+    $upload_dir = wp_upload_dir();
+    $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
+
+    if (is_dir($target_dir)) {
+        // Open the directory
+        $dir_handle = opendir($target_dir);
+
+        // Loop through the directory and delete files
+        while (($file = readdir($dir_handle)) !== false) {
+            if ($file != '.' && $file != '..') {
+                $file_path = $target_dir . $file;
+                unlink($file_path); // Delete the file
+            }
+        }
+
+        closedir($dir_handle); // Close the directory handle
+
+        // Delete the directory itself
+        rmdir($target_dir);
+    } else {
+        echo 'Directory does not exist.';
+    }
+
 }
 
 if ($option['vwg_settings_remove_settings_data'] == 1) {

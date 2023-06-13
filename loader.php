@@ -16,3 +16,6 @@ require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'admin/admin-ui-setup.php' );
 
 // Do plugin operations
 require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/do.php' );
+
+// Version updater
+require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'update.php' );

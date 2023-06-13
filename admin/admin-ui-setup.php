@@ -38,7 +38,7 @@ function vwg_enqueue_css_js( $hook ) {
     /**
      * Translate array for JS vwg-admin
      *
-     * @since 1.0
+     * @since 1.3
      */
     $translation_array = array(
         'yes' => __( 'Yes, confirm', 'video-wc-gallery' ),
@@ -48,6 +48,8 @@ function vwg_enqueue_css_js( $hook ) {
         'remove_plugin_data_txt' => __( 'This setting, in the event of uninstallation of the plugin, will delete all plugin settings made so far!', 'video-wc-gallery' ),
         'remove_video_txt' => __( 'This setting will remove any video that has been added to a product when the plugin is uninstalled!', 'video-wc-gallery' ),
         'deactivating' => __( 'Deactivating...', 'video-wc-gallery' ),
+        'deleting' => __( 'Deleting...', 'video-wc-gallery' ),
+        'deleting_thumbs' => __( 'thumbnails deleted', 'video-wc-gallery' ),
     );
     wp_localize_script( 'vwg-admin', 'translate_obj', $translation_array );
     wp_localize_script( 'vwg-feedback', 'translate_obj', $translation_array );
@@ -280,8 +282,40 @@ function vwg_register_settings() {
 
 }
 
+/**
+ * Settings for detect not used thumbnails and deleted !
+ * @since 1.3
+ */
 function vwg_settings_section_callback() {
+    $detectedThumbs = vwg_detect_attached_thumbs();
+    $count_for_delete = '';
+    $files_for_delete = '';
+    if ( isset($detectedThumbs) ) {
+        $count_for_delete = $detectedThumbs['not_attached_count'];
+        $files_for_delete = $detectedThumbs['file'];
+    }
+    ?>
 
+    <?php if ($count_for_delete) : ?>
+    <div id="dashboard-widgets" class="metabox-holder vwg-dashboard-widgets-unused-thumbs">
+        <div id="postbox-container-1" class="postbox-container">
+            <div id="normal-sortables" class="meta-box-sortables ui-sortable">
+                <div id="metabox" class="postbox">
+                    <div class="inside">
+                        <div class="main">
+                            <p><strong><?php echo sprintf(esc_html__('There are generated %s thumbnails which are not used !', 'video-wc-gallery'), $count_for_delete) ?></strong></p>
+                            <p><?php echo esc_html__('From the "Delete all" button you will delete all thumbnails that are not used so that they do not take up space' , 'video-wc-gallery') ?></p>
+                            <p><a class="button button-primary" id="delete_unused_thumbs" style="background: #d63638; border-color: #d63638;"><?php echo esc_html__('Delete all' , 'video-wc-gallery') ?></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="files_for_delete" type="hidden" value="<?php echo (isset($files_for_delete)) ? implode(',',$files_for_delete ) : '' ?>">
+    <?php endif; ?>
+
+    <?php
 }
 
 function vwg_settings_icon_callback() {
@@ -389,5 +423,106 @@ add_action( 'admin_init', 'vwg_register_settings' );
 add_action( 'woocommerce_settings_tabs_vwg_tab', 'vwg_custom_settings' );
 
 
+/**
+ * Function for detect attached thumbs
+ * @since 1.3
+ */
+function vwg_detect_attached_thumbs() {
+    $attachedThumbs = array();
+    $not_attachedThumbs = array();
+    $counter = 0;
+    $products = get_posts( array(
+        'post_type'   => 'product',
+        'numberposts' => -1,
+        'meta_query'  => array(
+            array(
+                'key'     => 'vwg_video_url',
+                'compare' => 'EXISTS',
+            ),
+        ),
+    ) );
+
+    foreach ( $products as $product ) {
+        $video_urls = get_post_meta( $product->ID, 'vwg_video_url', true );
+
+        if ( ! empty( $video_urls ) ) {
+            foreach ( $video_urls as $attachment ) {
+                $video_thumb_url = $attachment['video_thumb_url'];
+                $filename_pattern = '/vwg-thumb_(.+)\.png/';
+                if ( preg_match( $filename_pattern, $video_thumb_url, $matches ) === 1 ) {
+                    $attachedThumbs[] = $matches[0];
+                }
+            }
+        }
+    }
+
+    $upload_dir = wp_upload_dir();
+    $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
+
+    $files = scandir($target_dir);
+    if ($files !== false) {
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..') {
+                // $file_path = $target_dir . $file;
+                if (!in_array($file, $attachedThumbs)) {
+                    // The file is not in the list of attached thumbs, perform necessary action
+                    $counter++;
+                    $not_attachedThumbs['not_attached_count'] = $counter;
+                    $not_attachedThumbs['file'][] = $file;
+                }
+            }
+        }
+    }
+
+
+    if ( !empty($not_attachedThumbs) ) {
+        return $not_attachedThumbs;
+    }
+
+}
+
+
+/**
+ * AJAX function for remove unused thumbnails
+ * @since 1.3
+ */
+function remove_unused_thumbnails() {
+
+    $for_delete = explode(',', $_POST['files_for_del']);
+
+    $upload_dir = wp_upload_dir();
+    $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
+    $counter = 0;
+    $deleted_attachedThumbs = array();
+
+    $files = scandir($target_dir);
+
+    if ($files !== false) {
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $file_path = $target_dir . $file;
+                if (in_array($file, $for_delete)) {
+                    // The file is not in the list of attached thumbs, perform necessary action
+                    unlink($file_path);
+                    $counter++;
+                    $deleted_attachedThumbs['count_delete'] = $counter;
+                    $deleted_attachedThumbs['deleted_file'][] = $file;
+                }
+            }
+        }
+    }
+
+    // Prepare the response
+    $response = array(
+        'count_delete' => $deleted_attachedThumbs['count_delete'],
+        'deleted_file' => $deleted_attachedThumbs['deleted_file'],
+    );
+
+    // Send the response back to the AJAX request
+    wp_send_json_success($response);
+    wp_die();
+}
+add_action('wp_ajax_remove_unused_thumbnails', 'remove_unused_thumbnails');
+add_action('wp_ajax_nopriv_remove_unused_thumbnails', 'remove_unused_thumbnails');
 
 

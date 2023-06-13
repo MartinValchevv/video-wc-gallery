@@ -5,7 +5,7 @@ Tags: video gallery, woocommerce, product page, product video, autoplay, multime
 Requires at least: 5.3
 Tested up to: 6.2.2
 Requires PHP: 7.4
-Stable tag: 1.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,10 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 
 == Changelog ==
 
+= 1.3 =
+* Change thumbnails not use e base64-encoded image, thumbnails saved in uploads folder
+* Added a function in the settings that finds generated thumbnails that are not used and can be deleted so they don't take up space
+
 = 1.2 =
 * Added check if your theme contains any mediaelementJS import will be disabled to prevent conflicts and use default library which is in WordPress core
 * Fixes in product page if style is vertical media gallery
@@ -80,6 +84,10 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 1.3 =
+* Change thumbnails not use e base64-encoded image, thumbnails saved in uploads folder
+* Added a function in the settings that finds generated thumbnails that are not used and can be deleted so they don't take up space
 
 = 1.0 =
 * First release of the plugin.
