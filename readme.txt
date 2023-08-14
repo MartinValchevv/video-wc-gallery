@@ -3,7 +3,7 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: video gallery, woocommerce, product page, product video, autoplay, multimedia, video control, video files, media library, video player
 Requires at least: 5.3
-Tested up to: 6.2.2
+Tested up to: 6.3
 Requires PHP: 7.4
 Stable tag: 1.3
 License: GPLv2 or later
