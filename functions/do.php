@@ -92,7 +92,7 @@ add_action( 'woocommerce_product_data_panels', 'vwg_add_custom_product_tab_conte
 /**
  * Save the tab content data
  *
- * @since 1.3
+ * @since 1.4
  */
 function vwg_save_custom_product_tab_content( $post_id ) {
     if ( isset( $_POST['video_url'] ) )  {
@@ -104,28 +104,35 @@ function vwg_save_custom_product_tab_content( $post_id ) {
                 'video_thumb_url' => wp_kses_post( $attachment['video_thumb_url'] ),
             );
 
-
             if ( isset( $attachment['video_thumb_url'] ) ) {
-                // Decode the base64-encoded image
-                $base64_image = $attachment['video_thumb_url'];
-                // Remove the data URI scheme and get the base64-encoded image data
-                $base64_data = str_replace( 'data:image/png;base64,', '', $base64_image );
-                $decoded_image = base64_decode( $base64_data );
 
-                // Create a directory (if not exists) to store the uploaded images
-                $upload_dir = wp_upload_dir();
-                $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
-                wp_mkdir_p( $target_dir );
+                // The string contains 'data:image/png;base64,'
+                if (strpos($attachment['video_thumb_url'], "data:image/png;base64,") !== false) {
 
-                // Generate a unique filename for the uploaded image
-                $filename = 'vwg-thumb_' . uniqid() . '.png';
+                    // Decode the base64-encoded image
+                    $base64_image = $attachment['video_thumb_url'];
+                    // Remove the data URI scheme and get the base64-encoded image data
+                    $base64_data = str_replace( 'data:image/png;base64,', '', $base64_image );
+                    $decoded_image = base64_decode( $base64_data );
 
-                // Save the decoded image to the target directory
-                $file_path = $target_dir . $filename;
-                file_put_contents( $file_path, $decoded_image );
+                    // Create a directory (if not exists) to store the uploaded images
+                    $upload_dir = wp_upload_dir();
+                    $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
+                    wp_mkdir_p( $target_dir );
 
-                // Set the video_thumb_url to the uploaded file URL
-                $sanitized_attachment['video_thumb_url'] = $upload_dir['baseurl'] . '/video-wc-gallery-thumb/' . $filename;
+                    // Generate a unique filename for the uploaded image
+                    $filename = 'vwg-thumb_' . uniqid() . '.png';
+
+                    // Save the decoded image to the target directory
+                    $file_path = $target_dir . $filename;
+                    file_put_contents( $file_path, $decoded_image );
+
+                    // Set the video_thumb_url to the uploaded file URL
+                    $sanitized_attachment['video_thumb_url'] = $upload_dir['baseurl'] . '/video-wc-gallery-thumb/' . $filename;
+                } else {
+                    $sanitized_attachment['video_thumb_url'] = $attachment['video_thumb_url'];
+                }
+
             }
 
             $sanitized_urls[ $key ] = $sanitized_attachment;

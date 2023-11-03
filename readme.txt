@@ -3,9 +3,9 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: video gallery, woocommerce, product page, product video, autoplay, multimedia, video control, video files, media library, video player
 Requires at least: 5.3
-Tested up to: 6.3
+Tested up to: 6.3.2
 Requires PHP: 7.4
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,11 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product page
 
 == Changelog ==
+
+= 1.4 =
+* Fixed generate thumbnails
+* Fixed edit product with Beaver Builder – WordPress Page Builder
+* Remove check if theme contains any mediaelementJS import
 
 = 1.3 =
 * Change thumbnails not use e base64-encoded image, thumbnails saved in uploads folder
