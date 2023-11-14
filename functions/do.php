@@ -295,7 +295,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.3
+ * @since 1.7
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -323,24 +323,38 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
         <script>
             jQuery( document ).ready(function() {
+                jQuery(document.body).on('wc-product-gallery-after-init', function() {
+                    var li_height = jQuery('ol.flex-control-nav li img').first().parent('li').height();
+                    jQuery('ol.flex-control-nav li img').each(function(index) {
+                        var src = jQuery(this).attr('src');
+                        // Check if the src attribute includes uploads/video-wc-gallery-thumb'
+                        if (src.includes('uploads/video-wc-gallery-thumb')) {
+                            jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                            jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                            jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                        }
+                    });
+                });
+
+                // Second checker if firs not find height
+                var checkLiHeightInterval = setInterval(function() {
+                    var li_height_Interval = jQuery('ol.flex-control-nav li img').first().parent('li').height();
+
+                    if (li_height_Interval > 0) {
+                        clearInterval(checkLiHeightInterval); // Stop the interval once li_height_Interval is available
+
+                        jQuery('ol.flex-control-nav li img').each(function(index) {
+                            var src = jQuery(this).attr('src');
+                            // Check if the src attribute includes 'uploads/video-wc-gallery-thumb'
+                            if (src.includes('uploads/video-wc-gallery-thumb')) {
+                                jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
+                            }
+                        });
+                    }
+                }, 500); // Check every 0.5 seconds
+
                 jQuery(document).on('click', '.vwg-video-wrapper i', function() {
                     jQuery(this).prev().click()
-                });
-            });
-
-            jQuery(window).on('load', function() {
-                var li_height;
-                jQuery('ol.flex-control-nav li img').each(function(index) {
-                    var src = jQuery(this).attr('src');
-                    if (index === 0) {
-                        li_height = jQuery(this).parent('li').height();
-                    }
-                    // Check if the src attribute includes uploads/video-wc-gallery-thumb'
-                    if (src.includes('uploads/video-wc-gallery-thumb')) {
-                        jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
-                        jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
-                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
-                    }
                 });
             });
         </script>
