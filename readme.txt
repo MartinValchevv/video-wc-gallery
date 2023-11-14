@@ -5,7 +5,7 @@ Tags: video gallery, woocommerce, product page, product video, autoplay, multime
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.5
+Stable tag: 1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ The options for this plugin include:
 The helper libraries plugin uses the following:
 
 *   [FontAwesome v5](https://fontawesome.com/)
-*   [SweetAlert2 v11.7.10](https://sweetalert2.github.io/)
+*   [SweetAlert2 v11.4.8](https://sweetalert2.github.io/)
 
 Notes:
 
@@ -67,6 +67,9 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.6 =
+* Changed version SweetAlert2 to v11.4.8
 
 = 1.5 =
 * Return function check if theme contains any mediaelement-migrate-js and deregister script. Prevent broke design and conflict with some plugins
