@@ -295,7 +295,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.9
+ * @since 1.10
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -328,7 +328,6 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     jQuery('ol.flex-control-nav').each(function() {
                         jQuery(this).find('li img').each(function() {
                             var src = jQuery(this).attr('src');
-                            console.log(src);
                             // Check if the src attribute includes '/video-wc-gallery-thumb'
                             if (src.includes('/video-wc-gallery-thumb')) {
                                 jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
@@ -340,10 +339,13 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 });
 
                 // Second checker if firs not find height
+                var li_height_Interval
                 setInterval(function() {
                     jQuery('ol.flex-control-nav').each(function() {
-                        jQuery(this).find('li img').each(function() {
-                            var li_height_Interval = jQuery(this).parent('li').height();
+                        jQuery(this).find('li img').each(function(index) {
+                            if (index === 0) {
+                                li_height_Interval = jQuery(this).parent('li').height();
+                            }
                             var src = jQuery(this).attr('src');
                             if (src.includes('/video-wc-gallery-thumb')) {
                                 jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
