@@ -295,7 +295,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.7
+ * @since 1.8
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -328,7 +328,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     jQuery('ol.flex-control-nav li img').each(function(index) {
                         var src = jQuery(this).attr('src');
                         // Check if the src attribute includes uploads/video-wc-gallery-thumb'
-                        if (src.includes('uploads/video-wc-gallery-thumb')) {
+                        if (src.includes('/video-wc-gallery-thumb')) {
                             jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
                             jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
                             jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
@@ -346,7 +346,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         jQuery('ol.flex-control-nav li img').each(function(index) {
                             var src = jQuery(this).attr('src');
                             // Check if the src attribute includes 'uploads/video-wc-gallery-thumb'
-                            if (src.includes('uploads/video-wc-gallery-thumb')) {
+                            if (src.includes('/video-wc-gallery-thumb')) {
                                 jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
                             }
                         });
