@@ -324,15 +324,20 @@ function vwg_add_custom_style_and_scripts_product_page() {
         <script>
             jQuery( document ).ready(function() {
                 jQuery(document.body).on('wc-product-gallery-after-init', function() {
-                    var li_height = jQuery('ol.flex-control-nav li img').first().parent('li').height();
+                    var li_height;
                     jQuery('ol.flex-control-nav').each(function() {
-                        jQuery(this).find('li img').each(function() {
+                        var wrapperAdded = false;
+                        jQuery(this).find('li img').each(function(index) {
+                            if (index === 0) {
+                                li_height = jQuery(this).parent('li').height();
+                            }
                             var src = jQuery(this).attr('src');
                             // Check if the src attribute includes '/video-wc-gallery-thumb'
-                            if (src.includes('/video-wc-gallery-thumb')) {
+                            if (src.includes('/video-wc-gallery-thumb') && !wrapperAdded) {
                                 jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
                                 jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
                                 jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                                wrapperAdded = true;
                             }
                         });
                     });
