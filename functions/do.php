@@ -10,15 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Enqueue CSS and JS
  *
- * @since 1.0
+ * @since 1.12
  */
 function vwg_enqueue_scripts( $hook ) {
 
     if ( is_product() ) {
         // CSS
         wp_enqueue_style('vwg_fontawesome', VWG_VIDEO_WOO_GALLERY_URL . 'includes/fontawesome5/css/all.css', '', VWG_VERSION_NUM);
+        // Enqueue Video.js CSS
+        wp_enqueue_style('videojs-css', VWG_VIDEO_WOO_GALLERY_URL . 'includes/video-js/video-js.css', '', VWG_VERSION_NUM);
 
         // JS
+        // Enqueue Video.js JavaScript
+        wp_enqueue_script('videojs', VWG_VIDEO_WOO_GALLERY_URL . 'includes/video-js/video-js.min.js', array('jquery'), VWG_VERSION_NUM, true);
 
     }
 
@@ -295,12 +299,34 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.10
+ * @since 1.12
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
         $iconColor = get_option('vwg_settings_group')['vwg_settings_icon_color'];
         $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
+        if ($icon == 'far fa-play-circle') {
+            $unuCodeIcon = 'f144';
+            $iconWeight = '500';
+        } elseif ($icon == 'fas fa-play-circle') {
+            $unuCodeIcon = 'f144';
+            $iconWeight = '900';
+        } elseif ($icon == 'fas fa-play') {
+            $unuCodeIcon = 'f04b';
+            $iconWeight = '900';
+        } elseif ($icon == 'fas fa-video') {
+            $unuCodeIcon = 'f03d';
+            $iconWeight = '900';
+        } elseif ($icon == 'fas fa-file-video') {
+            $unuCodeIcon = 'f1c8';
+            $iconWeight = '900';
+        } elseif ($icon == 'far fa-file-video') {
+            $unuCodeIcon = 'f1c8';
+            $iconWeight = '500';
+        } else {
+            $unuCodeIcon = 'f04b';
+            $iconWeight = '900';
+        }
         ?>
         <style>
             .vwg-video-wrapper { width: 100%; height: 100%; overflow: hidden; position: relative; margin: auto !important; }
@@ -319,6 +345,21 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 opacity: 0;
                 visibility: hidden;
             }
+            /* Center the play button */
+            .vwg_video_js .vjs-big-play-button {
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                border-color: <?=esc_attr($iconColor)?> !important;
+            }
+            /* Replace the default play button with a FontAwesome icon */
+            .vwg_video_js .vjs-big-play-button .vjs-icon-placeholder:before {
+                content: '\<?=esc_attr($unuCodeIcon)?>';
+                font-family: 'Font Awesome 5 Free';
+                font-weight: <?=esc_attr($iconWeight)?>;
+                font-size: 30px;
+                color: <?=esc_attr($iconColor)?>;
+            }
         </style>
 
         <script>
@@ -326,18 +367,19 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 jQuery(document.body).on('wc-product-gallery-after-init', function() {
                     var li_height;
                     jQuery('ol.flex-control-nav').each(function() {
-                        var wrapperAdded = false;
                         jQuery(this).find('li img').each(function(index) {
                             if (index === 0) {
                                 li_height = jQuery(this).parent('li').height();
                             }
                             var src = jQuery(this).attr('src');
                             // Check if the src attribute includes '/video-wc-gallery-thumb'
-                            if (src.includes('/video-wc-gallery-thumb') && !wrapperAdded) {
-                                jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
-                                jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
-                                jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
-                                wrapperAdded = true;
+                            if (src.includes('/video-wc-gallery-thumb')) {
+                                var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
+                                if (vwg_video_wrapper.length === 0) {
+                                    jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                    jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                                    jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                                }
                             }
                         });
                     });
@@ -345,17 +387,19 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
                 // Second checker if firs not find height
                 var li_height_Interval
-                setInterval(function() {
-                    jQuery('ol.flex-control-nav').each(function() {
-                        jQuery(this).find('li img').each(function(index) {
-                            if (index === 0) {
-                                li_height_Interval = jQuery(this).parent('li').height();
-                            }
-                            var src = jQuery(this).attr('src');
-                            if (src.includes('/video-wc-gallery-thumb')) {
-                                jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
-                            }
-                        });
+                setInterval(function () {
+                    jQuery('ol.flex-control-nav').each(function () {
+                        if (!jQuery(this).is(':hidden')) {
+                            jQuery(this).find('li img').each(function (index) {
+                                if (index === 0) {
+                                    li_height_Interval = jQuery(this).parent('li').height();
+                                }
+                                var src = jQuery(this).attr('src');
+                                if (src.includes('/video-wc-gallery-thumb')) {
+                                    jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
+                                }
+                            });
+                        }
                     });
 
                 }, 500); // Check every 0.5 seconds
@@ -373,7 +417,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.3
+ * @since 1.12
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -390,7 +434,9 @@ function vwg_add_video_to_product_gallery() {
             ?>
             <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-thumb-alt="" data-vwg-video="1" class="woocommerce-product-gallery__image">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
-                    <video src="<?=esc_url($video['video_url']) ?>" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline></video>
+                    <video class="video-js vjs-fluid vwg_video_js" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
+                        <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
+                    </video>
                 </a>
             </div>
         <?php endforeach;

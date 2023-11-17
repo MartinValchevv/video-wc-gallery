@@ -5,7 +5,7 @@ Tags: video gallery, woocommerce, product page, product video, autoplay, multime
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.11
+Stable tag: 1.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,12 +32,13 @@ The helper libraries plugin uses the following:
 
 *   [FontAwesome v5](https://fontawesome.com/)
 *   [SweetAlert2 v11.4.8](https://sweetalert2.github.io/)
+*   [VideoJS v7.15.4](https://videojs.com/)
 
 Notes:
 
 *   Video Gallery for WooCommerce requires the Woocommerce plugin to be activated in order to function properly. If you do not have Woocommerce installed, you will need to install and activate it before using Video Gallery for WooCommerce.
-*   Video Gallery for WooCommerce uses the default mediaelementJS script in WordPress to display videos. If your theme has added scripts or styles with an id containing "mediaelement" they will be automatically disabled, otherwise a conflict will occur.
-*   The plugin supports a wide range of video file formats, but it is important to ensure that your videos are in a format that is supported by WordPress. Commonly used formats such as MP4, AVI, and MOV are typically supported.
+*   The plugin supports a wide range of video file formats, but it is important to ensure that your videos are in a format that is supported by WordPress. Commonly used formats such as MP4 and MOV are typically supported.
+*   Autoplay function is not supported for Safari browser. You can read more information in FAQ.
 
 == Installation ==
 
@@ -52,13 +53,15 @@ To install this plugin:
 = What is Video Gallery for WooCommerce? =
 Video Gallery for WooCommerce is a plugin that allows you to add video files from your WordPress (WP) library to your product pages on your website. It comes with a range of customization options to enhance your video display and improve user engagement.
 = What types of video files can I use with Video Gallery for WooCommerce? =
-You can use any video file format that is supported by WordPress. This includes popular formats such as MP4, AVI, and MOV.
+You can use any video file format that is supported by WordPress. This includes popular formats such as MP4 and MOV.
 = Can I customize the display of my video files? =
 Yes, Video Gallery for WooCommerce comes with a variety of customization options, such as the ability to change the video file icon and color, and move videos around on the product page to your desired position.
 = Can I control how my video clips play? =
 Yes, you can choose from a range of video clip settings, such as autoplay, sound, and loop options, as well as the ability to show or hide video control options.
 = Is Video Gallery for WooCommerce compatible with other WordPress themes and plugins? =
 Video Gallery for WooCommerce is compatible with most WordPress themes and plugins, although some may require additional customization. It is designed to seamlessly integrate with Woocommerce, ensuring a smooth user experience.
+= Why Safari browser not support video autoplay? =
+Safari browser refrains from video autoplay to enhance user experience, conserve bandwidth, and address privacy concerns. Autoplaying videos can disrupt browsing, lead to increased data usage, and pose potential privacy risks. By requiring explicit user interaction, Safari ensures a more controlled, secure, and efficient online environment. Developers can align with these policies by implementing user-triggered video playback, thus contributing to a seamless and user-friendly web experience on Safari.
 
 == Screenshots ==
 
@@ -67,6 +70,12 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.12 =
+* Fix video loading for Safari browser
+* Fix problematic loading of hidden items
+* Changed the way of visualizing video in the front page of the product, it is now visualized with VideoJS, which will improve the user experience
+* Stop support AVI video formats
 
 = 1.11 =
 * Fix: Multiple generated sections from WP Bakery with gallery elements
@@ -111,6 +120,12 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 1.12 =
+* Fix video loading for Safari browser
+* Fix problematic loading of hidden items
+* Changed the way of visualizing video in the front page of the product, it is now visualized with VideoJS, which will improve the user experience
+* Stop support AVI video formats
 
 = 1.3 =
 * Change thumbnails not use e base64-encoded image, thumbnails saved in uploads folder
