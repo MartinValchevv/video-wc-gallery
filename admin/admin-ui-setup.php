@@ -38,7 +38,7 @@ function vwg_enqueue_css_js( $hook ) {
     /**
      * Translate array for JS vwg-admin
      *
-     * @since 1.3
+     * @since 1.13
      */
     $translation_array = array(
         'yes' => __( 'Yes, confirm', 'video-wc-gallery' ),
@@ -50,6 +50,7 @@ function vwg_enqueue_css_js( $hook ) {
         'deactivating' => __( 'Deactivating...', 'video-wc-gallery' ),
         'deleting' => __( 'Deleting...', 'video-wc-gallery' ),
         'deleting_thumbs' => __( 'thumbnails deleted', 'video-wc-gallery' ),
+        'autoplay_settings_info' => __( 'Autoplay in most browsers requires muted audio to provide a better user experience. Autoplaying videos with sound can be disruptive, so browser vendors often restrict autoplay to muted videos by default to prevent unexpected and intrusive playback.', 'video-wc-gallery' ),
     );
     wp_localize_script( 'vwg-admin', 'translate_obj', $translation_array );
     wp_localize_script( 'vwg-feedback', 'translate_obj', $translation_array );

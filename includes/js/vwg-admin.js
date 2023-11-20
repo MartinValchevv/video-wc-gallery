@@ -14,6 +14,19 @@ jQuery(document).ready(function($) {
     });
 
     /**
+     * @since 1.13 Function if mute is off automatically turns off autoplay
+     */
+    $('#vwg_settings_muted').on('change', function (){
+        $('#vwg_autoplay_settings_info').remove()
+        if (!this.checked) {
+            if ($('#vwg_settings_autoplay').prop('checked')) {
+                $('#vwg_settings_autoplay').prop('checked', false)
+                $('#vwg_settings_autoplay').parent('td').append(`<div id="vwg_autoplay_settings_info" class="notice notice-info alt"><p>${translate_obj.autoplay_settings_info}</p></div>`)
+            }
+        }
+    })
+
+    /**
      * @since 1.0 Add confirm change this settings remove_settings_data
      */
     $('#vwg_settings_remove_settings_data').on('change', function (){

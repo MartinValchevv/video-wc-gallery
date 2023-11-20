@@ -299,7 +299,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.12
+ * @since 1.13
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -407,6 +407,36 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 jQuery(document).on('click', '.vwg-video-wrapper i', function() {
                     jQuery(this).prev().click()
                 });
+
+                jQuery('a.woocommerce-product-gallery__vwg_video').off('click');
+
+
+                setInterval(function () {
+                    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
+                    var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.flex-active-slide .woocommerce-product-gallery__vwg_video')
+                    if ($activeVideoSlide.length > 0 ) {
+                        var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.flex-active-slide').attr('data-vwg-video')
+                        var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')
+                        var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
+                        var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
+                        if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
+                            var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
+                            if (vwg_video_loop) {
+                                vwgPlayer.play();
+                            } else {
+                                vwgPlayer.play();
+                                vwgPlayer.on('ended', function () {
+                                    vwgPlayer.currentTime(0);
+                                    $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause', 'true');
+                                });
+                            }
+                        }
+                        jQuery('.woocommerce-product-gallery__trigger').hide()
+                    } else {
+                        jQuery('.woocommerce-product-gallery__trigger').show()
+                    }
+                }, 500); // Check every 0.5 seconds
+
             });
         </script>
         <?php
@@ -417,7 +447,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.12
+ * @since 1.13
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -430,11 +460,13 @@ function vwg_add_video_to_product_gallery() {
     $autoplay = get_option('vwg_settings_group')['vwg_settings_autoplay'];
 
     if ( $video_url ) {
+        $countVideo = 0;
         foreach ($video_urls as $video) :
+            $countVideo++
             ?>
-            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-thumb-alt="" data-vwg-video="1" class="woocommerce-product-gallery__image">
+            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
-                    <video class="video-js vjs-fluid vwg_video_js" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
+                    <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js vjs-fluid vwg_video_js" preload="metadata" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
                     </video>
                 </a>

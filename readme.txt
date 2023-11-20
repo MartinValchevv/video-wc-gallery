@@ -5,7 +5,7 @@ Tags: video gallery, woocommerce, product page, product video, autoplay, multime
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.12
+Stable tag: 1.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,7 +38,6 @@ Notes:
 
 *   Video Gallery for WooCommerce requires the Woocommerce plugin to be activated in order to function properly. If you do not have Woocommerce installed, you will need to install and activate it before using Video Gallery for WooCommerce.
 *   The plugin supports a wide range of video file formats, but it is important to ensure that your videos are in a format that is supported by WordPress. Commonly used formats such as MP4 and MOV are typically supported.
-*   Autoplay function is not supported for Safari browser. You can read more information in FAQ.
 
 == Installation ==
 
@@ -60,8 +59,6 @@ Yes, Video Gallery for WooCommerce comes with a variety of customization options
 Yes, you can choose from a range of video clip settings, such as autoplay, sound, and loop options, as well as the ability to show or hide video control options.
 = Is Video Gallery for WooCommerce compatible with other WordPress themes and plugins? =
 Video Gallery for WooCommerce is compatible with most WordPress themes and plugins, although some may require additional customization. It is designed to seamlessly integrate with Woocommerce, ensuring a smooth user experience.
-= Why Safari browser not support video autoplay? =
-Safari browser refrains from video autoplay to enhance user experience, conserve bandwidth, and address privacy concerns. Autoplaying videos can disrupt browsing, lead to increased data usage, and pose potential privacy risks. By requiring explicit user interaction, Safari ensures a more controlled, secure, and efficient online environment. Developers can align with these policies by implementing user-triggered video playback, thus contributing to a seamless and user-friendly web experience on Safari.
 
 == Screenshots ==
 
@@ -70,6 +67,11 @@ Safari browser refrains from video autoplay to enhance user experience, conserve
 3. Product pages
 
 == Changelog ==
+
+= 1.13 =
+* Fix: Autoplay function for Safari browser
+* Added Function if mute is off automatically turn off auto play
+* Fix: When have video element disabled click event to prevent open in popup
 
 = 1.12 =
 * Fix video loading for Safari browser
@@ -120,6 +122,11 @@ Safari browser refrains from video autoplay to enhance user experience, conserve
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 1.13 =
+* Fix: Autoplay function for Safari browser
+* Added Function if mute is off automatically turn off auto play
+* Fix: When have video element disabled click event to prevent open in popup
 
 = 1.12 =
 * Fix video loading for Safari browser
