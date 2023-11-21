@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Plugin activatation
  *
  * This function runs when user activates the plugin. Used in register_activation_hook in the main plugin file. 
- * @since 1.0
+ * @since 1.14
  */
 function vwg_activate_plugin() {
     $option = get_option('vwg_settings_group');
@@ -28,6 +28,7 @@ function vwg_activate_plugin() {
             'vwg_settings_loop' => 'loop',
             'vwg_settings_muted' => 'muted',
             'vwg_settings_autoplay' => 'autoplay',
+            'vwg_settings_show_first' => '',
             'vwg_settings_remove_settings_data' => '',
             'vwg_settings_remove_videos_data' => '',
         );

@@ -60,7 +60,7 @@ add_action( 'admin_enqueue_scripts', 'vwg_enqueue_css_js' );
 
 /**
  * Save settings
- * @since 1.0
+ * @since 1.14
  */
 function vwg_save_settings() {
 
@@ -70,6 +70,7 @@ function vwg_save_settings() {
     $loop = isset( $_POST['vwg_settings_loop'] ) ? 'loop' : '';
     $muted = isset( $_POST['vwg_settings_muted'] ) ? 'muted' : '';
     $autoplay = isset( $_POST['vwg_settings_autoplay'] ) ? 'autoplay' : '';
+    $showFirst = isset( $_POST['vwg_settings_show_first'] ) ? sanitize_text_field( $_POST['vwg_settings_show_first'] ) : '';
     $removeSettings = isset( $_POST['vwg_settings_remove_settings_data'] ) ? sanitize_text_field( $_POST['vwg_settings_remove_settings_data'] ) : '';
     $removeSettingsVideo = isset( $_POST['vwg_settings_remove_videos_data'] ) ? sanitize_text_field( $_POST['vwg_settings_remove_videos_data'] ) : '';
 
@@ -80,6 +81,7 @@ function vwg_save_settings() {
         'vwg_settings_loop' => $loop,
         'vwg_settings_muted' => $muted,
         'vwg_settings_autoplay' => $autoplay,
+        'vwg_settings_show_first' => $showFirst,
         'vwg_settings_remove_settings_data' => $removeSettings,
         'vwg_settings_remove_videos_data' => $removeSettingsVideo,
     );
@@ -157,7 +159,7 @@ add_action( 'woocommerce_after_settings_vwg_tab', 'vwg_plugin_info' );
 
 /**
  * Register Settings
- * @since 1.0
+ * @since 1.14
  */
 function vwg_register_settings() {
     add_settings_section(
@@ -217,6 +219,14 @@ function vwg_register_settings() {
     );
 
     add_settings_field(
+        'vwg_settings_show_first',
+        __( 'Show video first in product gallery', 'video-wc-gallery' ),
+        'vwg_settings_show_first_callback',
+        'vwg_settings_group',
+        'vwg_settings_section'
+    );
+
+    add_settings_field(
         'vwg_settings_remove_settings_data',
         __( 'Delete all plugin settings when uninstalling the plugin', 'video-wc-gallery' ),
         'vwg_settings_remove_settings_data_callback',
@@ -266,6 +276,12 @@ function vwg_register_settings() {
         'type' => 'boolean',
         'sanitize_callback' => 'sanitize_text_field',
         'default' => true
+    ) );
+
+    register_setting( 'vwg_settings_group', 'vwg_settings_show_first', array(
+        'type' => 'boolean',
+        'sanitize_callback' => 'sanitize_text_field',
+        'default' => false
     ) );
 
     register_setting( 'vwg_settings_group', 'vwg_settings_remove_settings_data', array(
@@ -405,17 +421,24 @@ function vwg_settings_autoplay_callback() {
     <?php
 }
 
+function vwg_settings_show_first_callback() {
+    $option = get_option('vwg_settings_group');
+    ?>
+    <input type="checkbox" name="vwg_settings_show_first" id="vwg_settings_show_first" value="1" <?php checked(isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'], '1'); ?>>
+    <?php
+}
+
 function vwg_settings_remove_settings_data_callback() {
     $option = get_option('vwg_settings_group');
     ?>
-    <input type="checkbox" name="vwg_settings_remove_settings_data" id="vwg_settings_remove_settings_data" value="1" <?php checked($option['vwg_settings_remove_settings_data'], '1'); ?>>
+    <input type="checkbox" name="vwg_settings_remove_settings_data" id="vwg_settings_remove_settings_data" value="1" <?php checked(isset($option['vwg_settings_remove_settings_data']) && $option['vwg_settings_remove_settings_data'], '1'); ?>>
     <?php
 }
 
 function vwg_settings_remove_videos_callback() {
     $option = get_option('vwg_settings_group');
     ?>
-    <input type="checkbox" name="vwg_settings_remove_videos_data" id="vwg_settings_remove_videos_data" value="1" <?php checked($option['vwg_settings_remove_videos_data'], '1'); ?>>
+    <input type="checkbox" name="vwg_settings_remove_videos_data" id="vwg_settings_remove_videos_data" value="1" <?php checked(isset($option['vwg_settings_remove_videos_data']) && $option['vwg_settings_remove_videos_data'], '1'); ?>>
     <?php
 }
 

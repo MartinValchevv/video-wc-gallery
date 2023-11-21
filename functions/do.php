@@ -7,6 +7,8 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+$option = get_option('vwg_settings_group');
+
 /**
  * Enqueue CSS and JS
  *
@@ -299,7 +301,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.13
+ * @since 1.14
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -408,9 +410,6 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     jQuery(this).prev().click()
                 });
 
-                jQuery('a.woocommerce-product-gallery__vwg_video').off('click');
-
-
                 setInterval(function () {
                     var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                     var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.flex-active-slide .woocommerce-product-gallery__vwg_video')
@@ -432,8 +431,10 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             }
                         }
                         jQuery('.woocommerce-product-gallery__trigger').hide()
+                        jQuery('.woocommerce-product-gallery__image a').css('pointer-events', 'none');
                     } else {
                         jQuery('.woocommerce-product-gallery__trigger').show()
+                        jQuery('.woocommerce-product-gallery__image a').css('pointer-events', 'auto');
                     }
                 }, 500); // Check every 0.5 seconds
 
@@ -447,7 +448,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.13
+ * @since 1.14
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -474,5 +475,30 @@ function vwg_add_video_to_product_gallery() {
         <?php endforeach;
     }
 }
-add_action( 'woocommerce_product_thumbnails', 'vwg_add_video_to_product_gallery', 99 );
+if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'] == 1) {
+    add_action( 'vwg_woocommerce_product_thumbnails_first_show', 'vwg_add_video_to_product_gallery', 1 );
+} else {
+    add_action( 'woocommerce_product_thumbnails', 'vwg_add_video_to_product_gallery', 99 );
+}
+
+
+
+/**
+ * Overwrite woocommerce template 'product-image' - in template add custom hook
+ *
+ * @since 1.14
+ */
+function vwg_custom_wc_product_image_template($located, $template_name, $args, $template_path, $default_path)
+{
+    // Check if the template being loaded is 'single-product/product-image.php'
+    if ($template_name === 'single-product/product-image.php') {
+        // Override the located template with plugin's custom template
+        $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/product-image.php';
+    }
+
+    return $located;
+}
+if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'] == 1) {
+    add_filter('wc_get_template', 'vwg_custom_wc_product_image_template', 10, 5);
+}
 
