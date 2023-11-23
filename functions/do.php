@@ -301,7 +301,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.14
+ * @since 1.15
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -431,10 +431,8 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             }
                         }
                         jQuery('.woocommerce-product-gallery__trigger').hide()
-                        jQuery('.woocommerce-product-gallery__image a').css('pointer-events', 'none');
                     } else {
                         jQuery('.woocommerce-product-gallery__trigger').show()
-                        jQuery('.woocommerce-product-gallery__image a').css('pointer-events', 'auto');
                     }
                 }, 500); // Check every 0.5 seconds
 
@@ -502,3 +500,53 @@ if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_firs
     add_filter('wc_get_template', 'vwg_custom_wc_product_image_template', 10, 5);
 }
 
+
+/**
+ * Enqueue JS - if theme not support wc-product-gallery-zoom
+ *
+ * @since 1.15
+ */
+function vwg_enqueue_overwrite_scripts() {
+
+    if ( is_product() && !current_theme_supports( 'wc-product-gallery-zoom' ) ) {
+
+        wp_dequeue_script('wc-single-product');
+        wp_enqueue_script('vwg-single-product', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/frontend/single-product.js',  array('jquery'), VWG_VERSION_NUM, true);
+
+        $params = array(
+            'i18n_required_rating_text' => esc_attr__( 'Please select a rating', 'woocommerce' ),
+            'review_rating_required'    => wc_review_ratings_required() ? 'yes' : 'no',
+            'flexslider'                => apply_filters(
+                'woocommerce_single_product_carousel_options',
+                array(
+                    'rtl'            => is_rtl(),
+                    'animation'      => 'slide',
+                    'smoothHeight'   => true,
+                    'directionNav'   => false,
+                    'controlNav'     => 'thumbnails',
+                    'slideshow'      => false,
+                    'animationSpeed' => 500,
+                    'animationLoop'  => false, // Breaks photoswipe pagination if true.
+                    'allowOneSlide'  => false,
+                )
+            ),
+            'zoom_enabled'              => apply_filters( 'woocommerce_single_product_zoom_enabled', get_theme_support( 'wc-product-gallery-zoom' ) ),
+            'zoom_options'              => apply_filters( 'woocommerce_single_product_zoom_options', array() ),
+            'photoswipe_enabled'        => apply_filters( 'woocommerce_single_product_photoswipe_enabled', get_theme_support( 'wc-product-gallery-lightbox' ) ),
+            'photoswipe_options'        => apply_filters(
+                'woocommerce_single_product_photoswipe_options',
+                array(
+                    'shareEl'               => false,
+                    'closeOnScroll'         => false,
+                    'history'               => false,
+                    'hideAnimationDuration' => 0,
+                    'showAnimationDuration' => 0,
+                )
+            ),
+            'flexslider_enabled'        => apply_filters( 'woocommerce_single_product_flexslider_enabled', get_theme_support( 'wc-product-gallery-slider' ) ),
+        );
+
+        wp_localize_script( 'vwg-single-product', 'wc_single_product_params', $params );
+    }
+}
+add_action('wp_enqueue_scripts', 'vwg_enqueue_overwrite_scripts', 20);
