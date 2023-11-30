@@ -301,7 +301,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.16
+ * @since 1.17
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -406,8 +406,13 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
                 }, 500); // Check every 0.5 seconds
 
-                jQuery(document).on('click', '.vwg-video-wrapper i', function() {
-                    jQuery(this).prev().click()
+                jQuery(document).on('click touchend', '.vwg-video-wrapper i', function(event) {
+                    event.preventDefault();
+                    if (event.type === 'touchend' || (event.originalEvent && event.originalEvent.touches)) {
+                        jQuery(this).prev().trigger('touchend')
+                    } else {
+                        jQuery(this).prev().trigger('click');
+                    }
                 });
 
                 setInterval(function () {
@@ -452,6 +457,12 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     }
                 }, 500); // Check every 0.5 seconds
 
+                // setTimeout(function (){
+                //     jQuery('ol.flex-control-nav').on('click touchend keyup', 'a, img', function(event) {
+                //         event.preventDefault();
+                //     });
+                // }, 300)
+
             });
         </script>
         <?php
@@ -462,7 +473,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.14
+ * @since 1.16
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
