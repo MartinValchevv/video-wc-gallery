@@ -11,7 +11,7 @@ if ( ! defined('ABSPATH') ) exit;
 /**
  * Enqueue Admin CSS and JS
  *
- * @since 1.0
+ * @since 1.18
  */
 function vwg_enqueue_css_js( $hook ) {
 
@@ -33,12 +33,12 @@ function vwg_enqueue_css_js( $hook ) {
 
     // JS
     wp_enqueue_script( 'sweetalert2', VWG_VIDEO_WOO_GALLERY_URL . 'includes/sweetalert2/sweetalert2.all.min.js', __FILE__ );
-    wp_enqueue_script( 'vwg-feedback', VWG_VIDEO_WOO_GALLERY_URL . 'includes/js/feedback.js', __FILE__ );
+    // wp_enqueue_script( 'vwg-feedback', VWG_VIDEO_WOO_GALLERY_URL . 'includes/js/feedback.js', __FILE__ );
 
     /**
      * Translate array for JS vwg-admin
      *
-     * @since 1.13
+     * @since 1.18
      */
     $translation_array = array(
         'yes' => __( 'Yes, confirm', 'video-wc-gallery' ),
@@ -53,7 +53,7 @@ function vwg_enqueue_css_js( $hook ) {
         'autoplay_settings_info' => __( 'Autoplay in most browsers requires muted audio to provide a better user experience. Autoplaying videos with sound can be disruptive, so browser vendors often restrict autoplay to muted videos by default to prevent unexpected and intrusive playback.', 'video-wc-gallery' ),
     );
     wp_localize_script( 'vwg-admin', 'translate_obj', $translation_array );
-    wp_localize_script( 'vwg-feedback', 'translate_obj', $translation_array );
+    // wp_localize_script( 'vwg-feedback', 'translate_obj', $translation_array );
 
 }
 add_action( 'admin_enqueue_scripts', 'vwg_enqueue_css_js' );

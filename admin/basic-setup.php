@@ -82,9 +82,9 @@ add_filter( 'plugin_row_meta', 'vwg_plugin_row_meta', 10, 2 );
 
 
 /**
- * Feedback when deactivate plugin view
+ * Feedback when deactivate plugin view - STOP
  *
- * @since 1.1
+ * @since 1.18
  */
 function vwg_feedback_dialog() {
     ?>
@@ -212,13 +212,13 @@ function vwg_feedback_dialog() {
 	</style>
     <?php
 }
-add_action( 'admin_footer-plugins.php', 'vwg_feedback_dialog' );
+//add_action( 'admin_footer-plugins.php', 'vwg_feedback_dialog' );
 
 
 /**
- * Feedback send email
+ * Feedback send email - STOP
  *
- * @since 1.1
+ * @since 1.18
  */
 function vwg_send_deactivation_email() {
 
@@ -278,6 +278,6 @@ function vwg_send_deactivation_email() {
     wp_die();
 
 }
-add_action('wp_ajax_vwg_send_deactivation_feedback_email', 'vwg_send_deactivation_email');
-add_action('wp_ajax_nopriv_vwg_send_deactivation_feedback_email', 'vwg_send_deactivation_email');
+//add_action('wp_ajax_vwg_send_deactivation_feedback_email', 'vwg_send_deactivation_email');
+//add_action('wp_ajax_nopriv_vwg_send_deactivation_feedback_email', 'vwg_send_deactivation_email');
 

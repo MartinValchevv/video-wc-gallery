@@ -301,7 +301,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.17
+ * @since 1.18
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -364,62 +364,15 @@ function vwg_add_custom_style_and_scripts_product_page() {
             }
         </style>
 
+        <?php if (vwg_active_theme_checker() === 'Flatsome') : ?>
+
         <script>
             jQuery( document ).ready(function() {
-                jQuery(document.body).on('wc-product-gallery-after-init', function() {
-                    var li_height;
-                    jQuery('ol.flex-control-nav').each(function() {
-                        jQuery(this).find('li img').each(function(index) {
-                            if (index === 0) {
-                                li_height = jQuery(this).parent('li').height();
-                            }
-                            var src = jQuery(this).attr('src');
-                            // Check if the src attribute includes '/video-wc-gallery-thumb'
-                            if (src.includes('/video-wc-gallery-thumb')) {
-                                var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
-                                if (vwg_video_wrapper.length === 0) {
-                                    jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
-                                    jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
-                                    jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
-                                }
-                            }
-                        });
-                    });
-                });
-
-                // Second checker if firs not find height
-                var li_height_Interval
-                setInterval(function () {
-                    jQuery('ol.flex-control-nav').each(function () {
-                        if (!jQuery(this).is(':hidden')) {
-                            jQuery(this).find('li img').each(function (index) {
-                                if (index === 0) {
-                                    li_height_Interval = jQuery(this).parent('li').height();
-                                }
-                                var src = jQuery(this).attr('src');
-                                if (src.includes('/video-wc-gallery-thumb')) {
-                                    jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
-                                }
-                            });
-                        }
-                    });
-
-                }, 500); // Check every 0.5 seconds
-
-                jQuery(document).on('click touchend', '.vwg-video-wrapper i', function(event) {
-                    event.preventDefault();
-                    if (event.type === 'touchend' || (event.originalEvent && event.originalEvent.touches)) {
-                        jQuery(this).prev().trigger('touchend')
-                    } else {
-                        jQuery(this).prev().trigger('click');
-                    }
-                });
-
                 setInterval(function () {
                     var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
-                    var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.flex-active-slide .woocommerce-product-gallery__vwg_video')
+                    var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.is-selected .woocommerce-product-gallery__vwg_video')
                     if ($activeVideoSlide.length > 0 ) {
-                        var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.flex-active-slide').attr('data-vwg-video')
+                        var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.is-selected').attr('data-vwg-video')
                         var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')
                         var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
                         var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
@@ -451,20 +404,119 @@ function vwg_add_custom_style_and_scripts_product_page() {
                                 });
                             }
                         }
-                        jQuery('.woocommerce-product-gallery__trigger').hide()
+                        jQuery('a[href="#product-zoom"]').hide()
                     } else {
-                        jQuery('.woocommerce-product-gallery__trigger').show()
+                        jQuery('a[href="#product-zoom"]').show()
                     }
                 }, 500); // Check every 0.5 seconds
 
-                // setTimeout(function (){
-                //     jQuery('ol.flex-control-nav').on('click touchend keyup', 'a, img', function(event) {
-                //         event.preventDefault();
-                //     });
-                // }, 300)
-
             });
         </script>
+
+        <?php else: ?>
+            <script>
+                jQuery( document ).ready(function() {
+                    jQuery(document.body).on('wc-product-gallery-after-init', function() {
+                        var li_height;
+                        jQuery('ol.flex-control-nav').each(function() {
+                            jQuery(this).find('li img').each(function(index) {
+                                if (index === 0) {
+                                    li_height = jQuery(this).parent('li').height();
+                                }
+                                var src = jQuery(this).attr('src');
+                                // Check if the src attribute includes '/video-wc-gallery-thumb'
+                                if (src.includes('/video-wc-gallery-thumb')) {
+                                    var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
+                                    if (vwg_video_wrapper.length === 0) {
+                                        jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                        jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                                    }
+                                }
+                            });
+                        });
+                    });
+
+                    // Second checker if firs not find height
+                    var li_height_Interval
+                    setInterval(function () {
+                        jQuery('ol.flex-control-nav').each(function () {
+                            if (!jQuery(this).is(':hidden')) {
+                                jQuery(this).find('li img').each(function (index) {
+                                    if (index === 0) {
+                                        li_height_Interval = jQuery(this).parent('li').height();
+                                    }
+                                    var src = jQuery(this).attr('src');
+                                    if (src.includes('/video-wc-gallery-thumb')) {
+                                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
+                                    }
+                                });
+                            }
+                        });
+
+                    }, 500); // Check every 0.5 seconds
+
+                    jQuery(document).on('click touchend', '.vwg-video-wrapper i', function(event) {
+                        event.preventDefault();
+                        if (event.type === 'touchend' || (event.originalEvent && event.originalEvent.touches)) {
+                            jQuery(this).prev().trigger('touchend')
+                        } else {
+                            jQuery(this).prev().trigger('click');
+                        }
+                    });
+
+                    setInterval(function () {
+                        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
+                        var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.flex-active-slide .woocommerce-product-gallery__vwg_video')
+                        if ($activeVideoSlide.length > 0 ) {
+                            var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.flex-active-slide').attr('data-vwg-video')
+                            var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')
+                            var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
+                            var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
+                            var vwg_user_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause')
+                            if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
+                                var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
+                                if (vwg_video_loop) {
+                                    if (!vwg_user_pause) {
+                                        vwgPlayer.play();
+                                        // Listen for the 'pause' event to detect when the video is paused
+                                        vwgPlayer.on('pause', function () {
+                                            vwgPlayer.pause();
+                                            var posterUrl = vwgPlayer.poster();
+                                            if (posterUrl) {
+                                                var posterStyle = 'url("' + posterUrl + '")';
+                                                vwgPlayer.el().style.display = 'block';
+                                                vwgPlayer.el().style.backgroundImage = posterStyle;
+                                                vwgPlayer.el().style.backgroundSize = 'cover';
+                                                vwgPlayer.el().style.backgroundPosition = 'center';
+                                            }
+                                            $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
+                                        });
+                                    }
+                                } else {
+                                    vwgPlayer.play();
+                                    vwgPlayer.on('ended', function () {
+                                        vwgPlayer.currentTime(0);
+                                        $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause', 'true');
+                                    });
+                                }
+                            }
+                            jQuery('.woocommerce-product-gallery__trigger').hide()
+                        } else {
+                            jQuery('.woocommerce-product-gallery__trigger').show()
+                        }
+                    }, 500); // Check every 0.5 seconds
+
+                    // setTimeout(function (){
+                    //     jQuery('ol.flex-control-nav').on('click touchend keyup', 'a, img', function(event) {
+                    //         event.preventDefault();
+                    //     });
+                    // }, 300)
+
+                });
+            </script>
+        <?php endif; ?>
+
         <?php
     }
 }
@@ -473,7 +525,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.16
+ * @since 1.18
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -501,30 +553,13 @@ function vwg_add_video_to_product_gallery() {
     }
 }
 if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'] == 1) {
-    add_action( 'vwg_woocommerce_product_thumbnails_first_show', 'vwg_add_video_to_product_gallery', 1 );
+    if (vwg_active_theme_checker() === 'default') {
+        add_action( 'vwg_woocommerce_product_thumbnails_first_show', 'vwg_add_video_to_product_gallery', 1 );
+    } elseif (vwg_active_theme_checker() === 'Flatsome') {
+        add_action( 'vwg_woocommerce_product_thumbnails_first_show_flatsome_theme', 'vwg_add_video_to_product_gallery', 1 );
+    }
 } else {
     add_action( 'woocommerce_product_thumbnails', 'vwg_add_video_to_product_gallery', 99 );
-}
-
-
-
-/**
- * Overwrite woocommerce template 'product-image' - in template add custom hook
- *
- * @since 1.14
- */
-function vwg_custom_wc_product_image_template($located, $template_name, $args, $template_path, $default_path)
-{
-    // Check if the template being loaded is 'single-product/product-image.php'
-    if ($template_name === 'single-product/product-image.php') {
-        // Override the located template with plugin's custom template
-        $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/product-image.php';
-    }
-
-    return $located;
-}
-if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'] == 1) {
-    add_filter('wc_get_template', 'vwg_custom_wc_product_image_template', 10, 5);
 }
 
 

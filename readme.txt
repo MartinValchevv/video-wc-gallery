@@ -5,7 +5,7 @@ Tags: video gallery, woocommerce, product page, product video, autoplay, multime
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.17
+Stable tag: 1.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,7 @@ Notes:
 
 *   Video Gallery for WooCommerce requires the Woocommerce plugin to be activated in order to function properly. If you do not have Woocommerce installed, you will need to install and activate it before using Video Gallery for WooCommerce.
 *   The plugin supports a wide range of video file formats, but it is important to ensure that your videos are in a format that is supported by WordPress. Commonly used formats such as MP4 and MOV are typically supported.
+*   The plugin works with WooCommerce base elements. Added support for someone on known themes. If you have a problem with a theme, write to support to check if it can be made compatible.
 
 == Installation ==
 
@@ -67,6 +68,10 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.18 =
+* Added basic support for Flatsome theme
+* Stop function for Feedback when deactivate plugin
 
 = 1.17 =
 * Fixed: Clicking on the video icon for mobile devices
