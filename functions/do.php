@@ -301,7 +301,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.18
+ * @since 1.19
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -416,26 +416,52 @@ function vwg_add_custom_style_and_scripts_product_page() {
         <?php else: ?>
             <script>
                 jQuery( document ).ready(function() {
-                    jQuery(document.body).on('wc-product-gallery-after-init', function() {
-                        var li_height;
-                        jQuery('ol.flex-control-nav').each(function() {
-                            jQuery(this).find('li img').each(function(index) {
-                                if (index === 0) {
-                                    li_height = jQuery(this).parent('li').height();
-                                }
-                                var src = jQuery(this).attr('src');
-                                // Check if the src attribute includes '/video-wc-gallery-thumb'
-                                if (src.includes('/video-wc-gallery-thumb')) {
-                                    var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
-                                    if (vwg_video_wrapper.length === 0) {
-                                        jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
-                                        jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
-                                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                    // Check if the event wc-product-gallery-after-init is already bound
+                    var eventHandlers = jQuery._data(document.body, 'events');
+                    if (eventHandlers && eventHandlers['wc-product-gallery-after-init']) {
+                        jQuery(document.body).on('wc-product-gallery-after-init', function() {
+                            var li_height;
+                            jQuery('ol.flex-control-nav').each(function() {
+                                jQuery(this).find('li img').each(function(index) {
+                                    if (index === 0) {
+                                        li_height = jQuery(this).parent('li').height();
                                     }
-                                }
+                                    var src = jQuery(this).attr('src');
+                                    // Check if the src attribute includes '/video-wc-gallery-thumb'
+                                    if (src.includes('/video-wc-gallery-thumb')) {
+                                        var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
+                                        if (vwg_video_wrapper.length === 0) {
+                                            jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                            jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                                            jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                                        }
+                                    }
+                                });
                             });
                         });
-                    });
+                    } else {
+                        var li_height
+                        setInterval(function () {
+                            jQuery('ol.flex-control-nav').each(function() {
+                                jQuery(this).find('li img').each(function(index) {
+                                    if (index === 0) {
+                                        li_height = jQuery(this).parent('li').height();
+                                    }
+                                    var src = jQuery(this).attr('src');
+                                    // Check if the src attribute includes '/video-wc-gallery-thumb'
+                                    if (src.includes('/video-wc-gallery-thumb')) {
+                                        var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
+                                        if (vwg_video_wrapper.length === 0) {
+                                            jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                            jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                                            jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                                        }
+                                    }
+                                });
+                            });
+
+                        }, 500); // Check every 0.5 seconds
+                    }
 
                     // Second checker if firs not find height
                     var li_height_Interval
