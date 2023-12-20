@@ -38,11 +38,12 @@ function vwg_enqueue_css_js( $hook ) {
     /**
      * Translate array for JS vwg-admin
      *
-     * @since 1.18
+     * @since 1.20
      */
     $translation_array = array(
         'yes' => __( 'Yes, confirm', 'video-wc-gallery' ),
         'are_you_sure' => __( 'Are you sure ?', 'video-wc-gallery' ),
+        'to_delete_unused_thumbs' => __( 'want to delete unused thumbnails', 'video-wc-gallery' ),
         'cancel_text' => __( 'No, cancel', 'video-wc-gallery' ),
         'changes_are_saved' => __( 'Changes are saved', 'video-wc-gallery' ),
         'remove_plugin_data_txt' => __( 'This setting, in the event of uninstallation of the plugin, will delete all plugin settings made so far!', 'video-wc-gallery' ),
@@ -449,7 +450,7 @@ add_action( 'woocommerce_settings_tabs_vwg_tab', 'vwg_custom_settings' );
 
 /**
  * Function for detect attached thumbs
- * @since 1.3
+ * @since 1.20
  */
 function vwg_detect_attached_thumbs() {
     $attachedThumbs = array();
@@ -472,8 +473,16 @@ function vwg_detect_attached_thumbs() {
         if ( ! empty( $video_urls ) ) {
             foreach ( $video_urls as $attachment ) {
                 $video_thumb_url = $attachment['video_thumb_url'];
+                $woocommerce_thumbnail_url = isset($attachment['woocommerce_thumbnail_url']) ? $attachment['woocommerce_thumbnail_url'] : '';
+                $woocommerce_gallery_thumbnail_url = isset($attachment['woocommerce_gallery_thumbnail_url']) ? $attachment['woocommerce_gallery_thumbnail_url'] : '';
                 $filename_pattern = '/vwg-thumb_(.+)\.png/';
                 if ( preg_match( $filename_pattern, $video_thumb_url, $matches ) === 1 ) {
+                    $attachedThumbs[] = $matches[0];
+                }
+                if ( preg_match( $filename_pattern, $woocommerce_thumbnail_url, $matches ) === 1 ) {
+                    $attachedThumbs[] = $matches[0];
+                }
+                if ( preg_match( $filename_pattern, $woocommerce_gallery_thumbnail_url, $matches ) === 1 ) {
                     $attachedThumbs[] = $matches[0];
                 }
             }

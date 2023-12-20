@@ -98,12 +98,14 @@ add_action( 'woocommerce_product_data_panels', 'vwg_add_custom_product_tab_conte
 /**
  * Save the tab content data
  *
- * @since 1.4
+ * @since 1.20
  */
 function vwg_save_custom_product_tab_content( $post_id ) {
     if ( isset( $_POST['video_url'] ) )  {
         $sanitized_urls = array();
         foreach ( $_POST['video_url'] as $key => $attachment ) {
+
+            $unique_id = uniqid(); // Generate a unique identifier
 
             $sanitized_attachment = array(
                 'video_url' => wp_kses_post( $attachment['video_url'] ),
@@ -127,7 +129,7 @@ function vwg_save_custom_product_tab_content( $post_id ) {
                     wp_mkdir_p( $target_dir );
 
                     // Generate a unique filename for the uploaded image
-                    $filename = 'vwg-thumb_' . uniqid() . '.png';
+                    $filename   = 'vwg-thumb_' . $unique_id . '.png';
 
                     // Save the decoded image to the target directory
                     $file_path = $target_dir . $filename;
@@ -135,6 +137,26 @@ function vwg_save_custom_product_tab_content( $post_id ) {
 
                     // Set the video_thumb_url to the uploaded file URL
                     $sanitized_attachment['video_thumb_url'] = $upload_dir['baseurl'] . '/video-wc-gallery-thumb/' . $filename;
+
+                    // Resize the image to 'woocommerce_thumbnail' size
+                    $thumbnail_size = wc_get_image_size( 'woocommerce_thumbnail' );
+                    $thumbnail_path = $target_dir . 'vwg-thumb_' . $unique_id . '-woocommerce_thumbnail.png';
+                    $thumbnail_editor = wp_get_image_editor( $file_path );
+                    if ( ! is_wp_error( $thumbnail_editor ) ) {
+                        $thumbnail_editor->resize( $thumbnail_size['width'], $thumbnail_size['height'], $thumbnail_size['crop'] );
+                        $thumbnail_editor->save( $thumbnail_path );
+                        $sanitized_attachment['woocommerce_thumbnail_url'] = $upload_dir['baseurl'] . '/video-wc-gallery-thumb/' . basename( $thumbnail_path );
+                    }
+
+                    // Resize the image to 'woocommerce_gallery_thumbnail' size
+                    $gallery_thumbnail_size = wc_get_image_size( 'woocommerce_gallery_thumbnail' );
+                    $gallery_thumbnail_path = $target_dir . 'vwg-thumb_' . $unique_id . '-woocommerce_gallery_thumbnail.png';
+                    $gallery_thumbnail_editor = wp_get_image_editor( $file_path );
+                    if ( ! is_wp_error( $gallery_thumbnail_editor ) ) {
+                        $gallery_thumbnail_editor->resize( $gallery_thumbnail_size['width'], $gallery_thumbnail_size['height'], $gallery_thumbnail_size['crop'] );
+                        $gallery_thumbnail_editor->save( $gallery_thumbnail_path );
+                        $sanitized_attachment['woocommerce_gallery_thumbnail_url'] = $upload_dir['baseurl'] . '/video-wc-gallery-thumb/' . basename( $gallery_thumbnail_path );
+                    }
                 } else {
                     $sanitized_attachment['video_thumb_url'] = $attachment['video_thumb_url'];
                 }
@@ -301,7 +323,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.19
+ * @since 1.20
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -333,6 +355,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
         <style>
             .vwg-video-wrapper { width: 100%; height: 100%; overflow: hidden; position: relative; margin: auto !important; }
             .vwg-video-wrapper img { width: 100%; height: 100%; margin: auto !important; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) }
+            .vwg-video-wrapper img.vwg-generated-thumb { width: 100% !important; height: 100% !important;}
             .vwg-video-wrapper i { font-size: 24px; color: <?=esc_attr($iconColor)?>; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
             .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper {cursor: pointer;opacity: .5;margin: 0;}
             .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper:hover, .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper.flex-active {opacity: 1;}
@@ -415,69 +438,25 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
         <?php else: ?>
             <script>
-                jQuery( document ).ready(function() {
-                    // Check if the event wc-product-gallery-after-init is already bound
-                    var eventHandlers = jQuery._data(document.body, 'events');
-                    if (eventHandlers && eventHandlers['wc-product-gallery-after-init']) {
-                        jQuery(document.body).on('wc-product-gallery-after-init', function() {
-                            var li_height;
-                            jQuery('ol.flex-control-nav').each(function() {
-                                jQuery(this).find('li img').each(function(index) {
-                                    if (index === 0) {
-                                        li_height = jQuery(this).parent('li').height();
-                                    }
-                                    var src = jQuery(this).attr('src');
-                                    // Check if the src attribute includes '/video-wc-gallery-thumb'
-                                    if (src.includes('/video-wc-gallery-thumb')) {
-                                        var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
-                                        if (vwg_video_wrapper.length === 0) {
-                                            jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
-                                            jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
-                                            jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
-                                        }
-                                    }
-                                });
-                            });
-                        });
-                    } else {
-                        var li_height
-                        setInterval(function () {
-                            jQuery('ol.flex-control-nav').each(function() {
-                                jQuery(this).find('li img').each(function(index) {
-                                    if (index === 0) {
-                                        li_height = jQuery(this).parent('li').height();
-                                    }
-                                    var src = jQuery(this).attr('src');
-                                    // Check if the src attribute includes '/video-wc-gallery-thumb'
-                                    if (src.includes('/video-wc-gallery-thumb')) {
-                                        var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
-                                        if (vwg_video_wrapper.length === 0) {
-                                            jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
-                                            jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
-                                            jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
-                                        }
-                                    }
-                                });
-                            });
-
-                        }, 500); // Check every 0.5 seconds
-                    }
-
-                    // Second checker if firs not find height
-                    var li_height_Interval
+                jQuery( document ).ready(function($) {
+                    var li_height;
                     setInterval(function () {
-                        jQuery('ol.flex-control-nav').each(function () {
-                            if (!jQuery(this).is(':hidden')) {
-                                jQuery(this).find('li img').each(function (index) {
-                                    if (index === 0) {
-                                        li_height_Interval = jQuery(this).parent('li').height();
+                        jQuery('ol.flex-control-nav').each(function() {
+                            jQuery(this).find('li img').each(function(index) {
+                                if (index === 0) {
+                                    li_height = jQuery(this).parent('li').height();
+                                }
+                                var src = jQuery(this).attr('src');
+                                // Check if the src attribute includes '/video-wc-gallery-thumb'
+                                if (src.includes('/video-wc-gallery-thumb')) {
+                                    var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
+                                    if (vwg_video_wrapper.length === 0) {
+                                        jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                        jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
                                     }
-                                    var src = jQuery(this).attr('src');
-                                    if (src.includes('/video-wc-gallery-thumb')) {
-                                        jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height_Interval}px`)
-                                    }
-                                });
-                            }
+                                }
+                            });
                         });
 
                     }, 500); // Check every 0.5 seconds
@@ -533,11 +512,6 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         }
                     }, 500); // Check every 0.5 seconds
 
-                    // setTimeout(function (){
-                    //     jQuery('ol.flex-control-nav').on('click touchend keyup', 'a, img', function(event) {
-                    //         event.preventDefault();
-                    //     });
-                    // }, 300)
 
                 });
             </script>
@@ -551,7 +525,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.18
+ * @since 1.20
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -568,7 +542,7 @@ function vwg_add_video_to_product_gallery() {
         foreach ($video_urls as $video) :
             $countVideo++
             ?>
-            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image">
+            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
                     <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js vjs-fluid vwg_video_js" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
@@ -592,9 +566,12 @@ if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_firs
 /**
  * Enqueue JS - if theme not support wc-product-gallery-zoom
  *
- * @since 1.15
+ * @since 1.20
  */
 function vwg_enqueue_overwrite_scripts() {
+
+    wp_dequeue_script('flexslider');
+    wp_enqueue_script('vwg-flexslider', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/flexslider/jquery.flexslider.js',  array('jquery'), VWG_VERSION_NUM, true);
 
     if ( is_product() && !current_theme_supports( 'wc-product-gallery-zoom' ) ) {
 

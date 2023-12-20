@@ -75,8 +75,10 @@ if ( $attachment_ids ) {
                 foreach ($video_urls as $video) {
                     $countVideo++;
                     $attachment_ids[] = array(
-                        'video_thumb_url' => esc_url($video['video_thumb_url']),
-                        'video_url' => esc_url($video['video_url']),
+                        'video_thumb_url' => isset($video['video_thumb_url']) ? esc_url($video['video_thumb_url']) : '',
+                        'woocommerce_thumbnail_url' => isset($video['woocommerce_thumbnail_url']) ? esc_url($video['woocommerce_thumbnail_url']) : esc_url($video['video_thumb_url']),
+                        'woocommerce_gallery_thumbnail_url' => isset($video['woocommerce_gallery_thumbnail_url']) ? esc_url($video['woocommerce_gallery_thumbnail_url']) : esc_url($video['video_thumb_url']),
+                        'video_url' => isset($video['video_url']) ? esc_url($video['video_url']) : '',
                         'count' => $countVideo
                     );
                 }
@@ -88,6 +90,8 @@ if ( $attachment_ids ) {
                 if (is_array($video) && isset($video['count']) && $video['count'] === 1) {
                     $post_video_thumbnail = 1;
                     $videoThumbUrl = $video['video_thumb_url'];
+                    $woocommerce_thumbnail_url = $video['woocommerce_thumbnail_url'];
+                    $woocommerce_gallery_thumbnail_url = $video['woocommerce_gallery_thumbnail_url'];
                     $videoUrl = $video['video_url'];
 
                     unset($attachment_ids[$key]);
@@ -101,7 +105,11 @@ if ( $attachment_ids ) {
                 <div class="col is-nav-selected first">
                 <a>
                     <?php
-                    $image     = '<img src="' . $videoThumbUrl . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+                    if ($gallery_thumbnail['width'] !== 100 ) {
+                        $image = '<img src="' . $woocommerce_thumbnail_url . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+                    } else {
+                        $image = '<img src="' . $woocommerce_gallery_thumbnail_url . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+                    }
 
                     echo sprintf('%s<i class="'.$icon.'" style="font-size: 24px; color: '.$iconColor.'; position: absolute; left: 50%%; top: 50%%; transform: translate(-50%%,-50%%);"></i>', $image);
                     ?>
@@ -112,8 +120,11 @@ if ( $attachment_ids ) {
             foreach ( $attachment_ids as $attachment_id ) {
 
                 if (is_array($attachment_id)) {
-
-                    $image = '<img src="' . $attachment_id['video_thumb_url'] . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+                    if ($gallery_thumbnail['width'] !== 100 ) {
+                        $image = '<img src="' . $attachment_id['woocommerce_thumbnail_url'] . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+                    } else {
+                        $image = '<img src="' . $attachment_id['woocommerce_gallery_thumbnail_url'] . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+                    }
 
                     echo sprintf('<div class="col"><a>%s<i class="'.$icon.'" style="font-size: 24px; color: '.$iconColor.'; position: absolute; left: 50%%; top: 50%%; transform: translate(-50%%,-50%%);"></i></a></div>', $image);
                 } else {
@@ -166,8 +177,10 @@ if ( $attachment_ids ) {
             foreach ($video_urls as $video) {
                 $countVideo++;
                 $attachment_ids[] = array(
-                    'video_thumb_url' => esc_url($video['video_thumb_url']),
-                    'video_url' => esc_url($video['video_url']),
+                    'video_thumb_url' => isset($video['video_thumb_url']) ? esc_url($video['video_thumb_url']) : '',
+                    'woocommerce_thumbnail_url' => isset($video['woocommerce_thumbnail_url']) ? esc_url($video['woocommerce_thumbnail_url']) : esc_url($video['video_thumb_url']),
+                    'woocommerce_gallery_thumbnail_url' => isset($video['woocommerce_gallery_thumbnail_url']) ? esc_url($video['woocommerce_gallery_thumbnail_url']) : esc_url($video['video_thumb_url']),
+                    'video_url' => isset($video['video_url']) ? esc_url($video['video_url']) : '',
                     'count' => $countVideo
                 );
             }
@@ -176,8 +189,11 @@ if ( $attachment_ids ) {
 		foreach ( $attachment_ids as $attachment_id ) {
 
         if (is_array($attachment_id)) {
-
-            $image = '<img src="' . $attachment_id['video_thumb_url'] . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+            if ($gallery_thumbnail['width'] !== 100 ) {
+                $image = '<img src="' . $attachment_id['woocommerce_thumbnail_url'] . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+            } else {
+                $image = '<img src="' . $attachment_id['woocommerce_gallery_thumbnail_url'] . '" width="' . $gallery_thumbnail['width'] . '" height="' . $gallery_thumbnail['height'] . '" class="attachment-woocommerce_thumbnail" />';
+            }
 
             echo sprintf('<div class="col"><a>%s<i class="'.$icon.'" style="font-size: 24px; color: '.$iconColor.'; position: absolute; left: 50%%; top: 50%%; transform: translate(-50%%,-50%%);"></i></a></div>', $image);
         } else {
