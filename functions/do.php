@@ -323,12 +323,13 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.21
+ * @since 1.22
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
         $iconColor = get_option('vwg_settings_group')['vwg_settings_icon_color'];
         $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
+
         if ($icon == 'far fa-play-circle') {
             $unuCodeIcon = 'f144';
             $iconWeight = '500';
@@ -361,10 +362,13 @@ function vwg_add_custom_style_and_scripts_product_page() {
             .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper:hover, .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper.flex-active {opacity: 1;}
 
             .woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video video {
-                display: block;
-                width: 100%;
-                height: auto;
+                object-fit: cover !important;
             }
+
+            /*.woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video .video-js {*/
+            /*    background-color: #000;*/
+            /*    margin: 0 auto;*/
+            /*}*/
 
             .woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video video:not(:playing) {
                 opacity: 0;
@@ -384,6 +388,16 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 font-weight: <?=esc_attr($iconWeight)?>;
                 font-size: 30px;
                 color: <?=esc_attr($iconColor)?>;
+            }
+
+            @media only screen and (max-width: 1200px) {
+                .woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video .vwg_video_js {
+                    position: relative;
+                    width: 100%;
+                    padding-top: 133.33%;
+                    max-width: 100%;
+                    height: 0;
+                }
             }
         </style>
 
@@ -518,6 +532,33 @@ function vwg_add_custom_style_and_scripts_product_page() {
         <?php endif; ?>
 
         <?php
+        global $product;
+        $video_url = get_post_meta( $product->get_id(), 'vwg_video_url', true );
+        $video_urls = maybe_unserialize($video_url);
+        $product_main_image =  wp_get_attachment_image_src($product->get_image_id(), 'woocommerce_single');
+        $width = $product_main_image[1];
+        $height = $product_main_image[2];
+
+        if ( $video_url ) {
+            $countVideo = 0;
+            foreach ($video_urls as $video) :
+                $countVideo++
+                ?>
+                <script type="application/ld+json">
+                    {
+                    "@context": "http://schema.org",
+                    "@type": "VideoObject",
+                    "name": "<?= esc_attr($product->get_name() . ' Video - ' . esc_attr($countVideo)) ?>",
+                    "thumbnailUrl": "<?=esc_url($video['video_thumb_url']) ?>",
+                    "contentUrl": "<?=esc_url($video['video_url']) ?>",
+                    "encodingFormat": "video/mp4",
+                    "width": "<?=esc_attr($width) ?>",
+                    "height": "<?=esc_attr($height) ?>"
+                }
+                </script>
+            <?php endforeach;
+        }
+
     }
 }
 add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
@@ -525,7 +566,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.20
+ * @since 1.22
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -536,6 +577,9 @@ function vwg_add_video_to_product_gallery() {
     $loop = get_option('vwg_settings_group')['vwg_settings_loop'];
     $muted = get_option('vwg_settings_group')['vwg_settings_muted'];
     $autoplay = get_option('vwg_settings_group')['vwg_settings_autoplay'];
+    $product_main_image =  wp_get_attachment_image_src($product->get_image_id(), 'woocommerce_single');
+    $width = $product_main_image[1];
+    $height = $product_main_image[2];
 
     if ( $video_url ) {
         $countVideo = 0;
@@ -544,7 +588,7 @@ function vwg_add_video_to_product_gallery() {
             ?>
             <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
-                    <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js vjs-fluid vwg_video_js" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
+                    <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js vjs-fluid1 vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
                     </video>
                 </a>
