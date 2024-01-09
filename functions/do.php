@@ -323,7 +323,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.22
+ * @since 1.23
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -362,7 +362,11 @@ function vwg_add_custom_style_and_scripts_product_page() {
             .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper:hover, .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper.flex-active {opacity: 1;}
 
             .woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video video {
-                object-fit: cover !important;
+                object-fit: cover;
+            }
+
+            .woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video .vjs-fullscreen video {
+                object-fit: contain;
             }
 
             /*.woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video .video-js {*/
