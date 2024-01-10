@@ -61,7 +61,7 @@ add_action( 'admin_enqueue_scripts', 'vwg_enqueue_css_js' );
 
 /**
  * Save settings
- * @since 1.14
+ * @since 1.24
  */
 function vwg_save_settings() {
 
@@ -72,6 +72,7 @@ function vwg_save_settings() {
     $muted = isset( $_POST['vwg_settings_muted'] ) ? 'muted' : '';
     $autoplay = isset( $_POST['vwg_settings_autoplay'] ) ? 'autoplay' : '';
     $showFirst = isset( $_POST['vwg_settings_show_first'] ) ? sanitize_text_field( $_POST['vwg_settings_show_first'] ) : '';
+    $videoAdaptSizes = isset( $_POST['vwg_settings_video_adapt_sizes'] ) ? sanitize_text_field( $_POST['vwg_settings_video_adapt_sizes'] ) : '';
     $removeSettings = isset( $_POST['vwg_settings_remove_settings_data'] ) ? sanitize_text_field( $_POST['vwg_settings_remove_settings_data'] ) : '';
     $removeSettingsVideo = isset( $_POST['vwg_settings_remove_videos_data'] ) ? sanitize_text_field( $_POST['vwg_settings_remove_videos_data'] ) : '';
 
@@ -83,6 +84,7 @@ function vwg_save_settings() {
         'vwg_settings_muted' => $muted,
         'vwg_settings_autoplay' => $autoplay,
         'vwg_settings_show_first' => $showFirst,
+        'vwg_settings_video_adapt_sizes' => $videoAdaptSizes,
         'vwg_settings_remove_settings_data' => $removeSettings,
         'vwg_settings_remove_videos_data' => $removeSettingsVideo,
     );
@@ -228,6 +230,14 @@ function vwg_register_settings() {
     );
 
     add_settings_field(
+        'vwg_settings_video_adapt_sizes',
+        __( 'Adjust the video size according to the theme settings', 'video-wc-gallery' ),
+        'vwg_settings_video_adapt_sizes_callback',
+        'vwg_settings_group',
+        'vwg_settings_section'
+    );
+
+    add_settings_field(
         'vwg_settings_remove_settings_data',
         __( 'Delete all plugin settings when uninstalling the plugin', 'video-wc-gallery' ),
         'vwg_settings_remove_settings_data_callback',
@@ -280,6 +290,12 @@ function vwg_register_settings() {
     ) );
 
     register_setting( 'vwg_settings_group', 'vwg_settings_show_first', array(
+        'type' => 'boolean',
+        'sanitize_callback' => 'sanitize_text_field',
+        'default' => false
+    ) );
+
+    register_setting( 'vwg_settings_group', 'vwg_settings_video_adapt_sizes', array(
         'type' => 'boolean',
         'sanitize_callback' => 'sanitize_text_field',
         'default' => false
@@ -426,6 +442,13 @@ function vwg_settings_show_first_callback() {
     $option = get_option('vwg_settings_group');
     ?>
     <input type="checkbox" name="vwg_settings_show_first" id="vwg_settings_show_first" value="1" <?php checked(isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'], '1'); ?>>
+    <?php
+}
+
+function vwg_settings_video_adapt_sizes_callback() {
+    $option = get_option('vwg_settings_group');
+    ?>
+    <input type="checkbox" name="vwg_settings_video_adapt_sizes" id="vwg_settings_video_adapt_sizes" value="1" <?php checked(isset($option['vwg_settings_video_adapt_sizes']) && $option['vwg_settings_video_adapt_sizes'], '1'); ?>>
     <?php
 }
 

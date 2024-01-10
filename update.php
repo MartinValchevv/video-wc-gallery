@@ -6,13 +6,21 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Update function when update to new version
  *
- * @since 1.3
+ * @since 1.24
  */
 function vwg_update_to_new_version() {
     $plugin_data = get_file_data( VWG_VIDEO_WOO_GALLERY_DIR . '/video-wc-gallery.php', array( 'Version' ) );
     $plugin_version = $plugin_data[0];
 
     // Check if the current plugin version matches the desired version
+    if ($plugin_version === '1.24') {
+        $existing_settings = get_option('vwg_settings_group', array());
+        if (!isset($existing_settings['vwg_settings_video_adapt_sizes'])) {
+             $existing_settings['vwg_settings_video_adapt_sizes'] = '';
+             update_option('vwg_settings_group', $existing_settings);
+        }
+    }
+
     if ($plugin_version === '1.3') {
         $products = get_posts( array(
             'post_type'   => 'product',
@@ -66,6 +74,7 @@ function vwg_update_to_new_version() {
     }
 }
 add_action( 'admin_init', 'vwg_update_to_new_version' );
+add_action('wp_loaded', 'vwg_update_to_new_version');
 
 
 
