@@ -323,13 +323,14 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.24
+ * @since 1.25
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
         $iconColor = get_option('vwg_settings_group')['vwg_settings_icon_color'];
         $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
         $adaptSettings = get_option('vwg_settings_group')['vwg_settings_video_adapt_sizes'];
+        $showFirstClassSettings = get_option('vwg_settings_group')['vwg_settings_show_first'];
 
         if ($icon == 'far fa-play-circle') {
             $unuCodeIcon = 'f144';
@@ -412,7 +413,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
         <?php if (vwg_active_theme_checker() === 'Flatsome') : ?>
 
         <script>
-            jQuery( document ).ready(function() {
+            jQuery( document ).ready(function($) {
                 setInterval(function () {
                     var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                     var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.is-selected .woocommerce-product-gallery__vwg_video')
@@ -454,6 +455,102 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         jQuery('a[href="#product-zoom"]').show()
                     }
                 }, 500); // Check every 0.5 seconds
+
+                /**
+                 * Add function fix variable product with option video show first
+                 *
+                 * @since 1.25
+                 */
+                <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
+                $.fn.wc_variations_image_update = function( variation ) {
+                    var $form             = this,
+                        $product          = $form.closest( '.product' ),
+                        $product_gallery  = $product.find( '.images' ),
+                        $gallery_nav      = $product.find( '.flickity-slider' ),
+                        $gallery_img      = $gallery_nav.find('div.col.vwg-variable:eq(0) img'),
+                        $product_img_wrap = $product_gallery
+                            .find( '.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)' )
+                            .eq( 0 ),
+                        $product_img      = $product_img_wrap.find( '.wp-post-image' ),
+                        $product_link     = $product_img_wrap.find( 'a' ).eq( 0 );
+
+                    if ( variation && variation.image && variation.image.src && variation.image.src.length > 1 ) {
+                        // See if the gallery has an image with the same original src as the image we want to switch to.
+                        var galleryHasImage = $gallery_nav.find( 'li img[data-o_src="' + variation.image.gallery_thumbnail_src + '"]' ).length > 0;
+
+                        // If the gallery has the image, reset the images. We'll scroll to the correct one.
+                        if ( galleryHasImage ) {
+                            $form.wc_variations_image_reset();
+                        }
+
+                        window.setTimeout( function() {
+                            var slideToImage = $gallery_nav.find( 'div.col img[src="' + variation.image.gallery_thumbnail_src + '"]' );
+                            console.log(slideToImage.length)
+                            if ( slideToImage.length > 0 ) {
+                                slideToImage.trigger( 'click' );
+                                $form.attr( 'current-image', variation.image_id );
+                                window.setTimeout( function() {
+                                    $( window ).trigger( 'resize' );
+                                    $product_gallery.trigger( 'woocommerce_gallery_init_zoom' );
+                                }, 20 );
+                            }
+                        }, 200 );
+
+                        $product_img.wc_set_variation_attr( 'src', variation.image.src );
+                        $product_img.wc_set_variation_attr( 'height', variation.image.src_h );
+                        $product_img.wc_set_variation_attr( 'width', variation.image.src_w );
+                        $product_img.wc_set_variation_attr( 'srcset', variation.image.srcset );
+                        $product_img.wc_set_variation_attr( 'sizes', variation.image.sizes );
+                        $product_img.wc_set_variation_attr( 'title', variation.image.title );
+                        $product_img.wc_set_variation_attr( 'data-caption', variation.image.caption );
+                        $product_img.wc_set_variation_attr( 'alt', variation.image.alt );
+                        $product_img.wc_set_variation_attr( 'data-src', variation.image.full_src );
+                        $product_img.wc_set_variation_attr( 'data-large_image', variation.image.full_src );
+                        $product_img.wc_set_variation_attr( 'data-large_image_width', variation.image.full_src_w );
+                        $product_img.wc_set_variation_attr( 'data-large_image_height', variation.image.full_src_h );
+                        $product_img_wrap.wc_set_variation_attr( 'data-thumb', variation.image.src );
+                        $gallery_img.wc_set_variation_attr( 'src', variation.image.gallery_thumbnail_src );
+                        $product_link.wc_set_variation_attr( 'href', variation.image.full_src );
+                    } else {
+                        $form.wc_variations_image_reset();
+                    }
+
+                    window.setTimeout( function() {
+                        $( window ).trigger( 'resize' );
+                        $form.wc_maybe_trigger_slide_position_reset( variation );
+                        $product_gallery.trigger( 'woocommerce_gallery_init_zoom' );
+                    }, 20 );
+                };
+
+                $.fn.wc_variations_image_reset = function() {
+                    var $form             = this,
+                        $product          = $form.closest( '.product' ),
+                        $product_gallery  = $product.find( '.images' ),
+                        $gallery_nav      = $product.find( '.flickity-slider' ),
+                        $gallery_img      = $gallery_nav.find('div.col.vwg-variable:eq(0) img'),
+                        $product_img_wrap = $product_gallery
+                            .find( '.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)' )
+                            .eq( 0 ),
+                        $product_img      = $product_img_wrap.find( '.wp-post-image' ),
+                        $product_link     = $product_img_wrap.find( 'a' ).eq( 0 );
+
+                    $product_img.wc_reset_variation_attr( 'src' );
+                    $product_img.wc_reset_variation_attr( 'width' );
+                    $product_img.wc_reset_variation_attr( 'height' );
+                    $product_img.wc_reset_variation_attr( 'srcset' );
+                    $product_img.wc_reset_variation_attr( 'sizes' );
+                    $product_img.wc_reset_variation_attr( 'title' );
+                    $product_img.wc_reset_variation_attr( 'data-caption' );
+                    $product_img.wc_reset_variation_attr( 'alt' );
+                    $product_img.wc_reset_variation_attr( 'data-src' );
+                    $product_img.wc_reset_variation_attr( 'data-large_image' );
+                    $product_img.wc_reset_variation_attr( 'data-large_image_width' );
+                    $product_img.wc_reset_variation_attr( 'data-large_image_height' );
+                    $product_img_wrap.wc_reset_variation_attr( 'data-thumb' );
+                    $gallery_img.wc_reset_variation_attr( 'src' );
+                    $product_link.wc_reset_variation_attr( 'href' );
+                };
+                <?php endif; ?>
 
             });
         </script>
@@ -534,6 +631,100 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         }
                     }, 500); // Check every 0.5 seconds
 
+                    /**
+                     * Add function fix variable product with option video show first
+                     *
+                     * @since 1.25
+                     */
+                    <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
+                    $.fn.wc_variations_image_update = function( variation ) {
+                        var $form             = this,
+                            $product          = $form.closest( '.product' ),
+                            $product_gallery  = $product.find( '.images' ),
+                            $gallery_nav      = $product.find( '.flex-control-nav' ),
+                            $gallery_img      = $gallery_nav.find('li:not(:has(div.vwg-video-wrapper)):eq(0) img'),
+                            $product_img_wrap = $product_gallery
+                                .find( '.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)' )
+                                .eq( 0 ),
+                            $product_img      = $product_img_wrap.find( '.wp-post-image' ),
+                            $product_link     = $product_img_wrap.find( 'a' ).eq( 0 );
+
+                        if ( variation && variation.image && variation.image.src && variation.image.src.length > 1 ) {
+                            // See if the gallery has an image with the same original src as the image we want to switch to.
+                            var galleryHasImage = $gallery_nav.find( 'li img[data-o_src="' + variation.image.gallery_thumbnail_src + '"]' ).length > 0;
+
+                            // If the gallery has the image, reset the images. We'll scroll to the correct one.
+                            if ( galleryHasImage ) {
+                                $form.wc_variations_image_reset();
+                            }
+
+                            window.setTimeout( function() {
+                                var slideToImage = $gallery_nav.find( 'li img[src="' + variation.image.gallery_thumbnail_src + '"]' );
+                                if ( slideToImage.length > 0 ) {
+                                    slideToImage.trigger( 'click' );
+                                    $form.attr( 'current-image', variation.image_id );
+                                    window.setTimeout( function() {
+                                        $( window ).trigger( 'resize' );
+                                        $product_gallery.trigger( 'woocommerce_gallery_init_zoom' );
+                                    }, 20 );
+                                }
+                            }, 200 );
+
+                            $product_img.wc_set_variation_attr( 'src', variation.image.src );
+                            $product_img.wc_set_variation_attr( 'height', variation.image.src_h );
+                            $product_img.wc_set_variation_attr( 'width', variation.image.src_w );
+                            $product_img.wc_set_variation_attr( 'srcset', variation.image.srcset );
+                            $product_img.wc_set_variation_attr( 'sizes', variation.image.sizes );
+                            $product_img.wc_set_variation_attr( 'title', variation.image.title );
+                            $product_img.wc_set_variation_attr( 'data-caption', variation.image.caption );
+                            $product_img.wc_set_variation_attr( 'alt', variation.image.alt );
+                            $product_img.wc_set_variation_attr( 'data-src', variation.image.full_src );
+                            $product_img.wc_set_variation_attr( 'data-large_image', variation.image.full_src );
+                            $product_img.wc_set_variation_attr( 'data-large_image_width', variation.image.full_src_w );
+                            $product_img.wc_set_variation_attr( 'data-large_image_height', variation.image.full_src_h );
+                            $product_img_wrap.wc_set_variation_attr( 'data-thumb', variation.image.src );
+                            $gallery_img.wc_set_variation_attr( 'src', variation.image.gallery_thumbnail_src );
+                            $product_link.wc_set_variation_attr( 'href', variation.image.full_src );
+                        } else {
+                            $form.wc_variations_image_reset();
+                        }
+
+                        window.setTimeout( function() {
+                            $( window ).trigger( 'resize' );
+                            $form.wc_maybe_trigger_slide_position_reset( variation );
+                            $product_gallery.trigger( 'woocommerce_gallery_init_zoom' );
+                        }, 20 );
+                    };
+
+                    $.fn.wc_variations_image_reset = function() {
+                        var $form             = this,
+                            $product          = $form.closest( '.product' ),
+                            $product_gallery  = $product.find( '.images' ),
+                            $gallery_nav      = $product.find( '.flex-control-nav' ),
+                            $gallery_img      = $gallery_nav.find('li:not(:has(div.vwg-video-wrapper)):eq(0) img'),
+                            $product_img_wrap = $product_gallery
+                                .find( '.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)' )
+                                .eq( 0 ),
+                            $product_img      = $product_img_wrap.find( '.wp-post-image' ),
+                            $product_link     = $product_img_wrap.find( 'a' ).eq( 0 );
+
+                        $product_img.wc_reset_variation_attr( 'src' );
+                        $product_img.wc_reset_variation_attr( 'width' );
+                        $product_img.wc_reset_variation_attr( 'height' );
+                        $product_img.wc_reset_variation_attr( 'srcset' );
+                        $product_img.wc_reset_variation_attr( 'sizes' );
+                        $product_img.wc_reset_variation_attr( 'title' );
+                        $product_img.wc_reset_variation_attr( 'data-caption' );
+                        $product_img.wc_reset_variation_attr( 'alt' );
+                        $product_img.wc_reset_variation_attr( 'data-src' );
+                        $product_img.wc_reset_variation_attr( 'data-large_image' );
+                        $product_img.wc_reset_variation_attr( 'data-large_image_width' );
+                        $product_img.wc_reset_variation_attr( 'data-large_image_height' );
+                        $product_img_wrap.wc_reset_variation_attr( 'data-thumb' );
+                        $gallery_img.wc_reset_variation_attr( 'src' );
+                        $product_link.wc_reset_variation_attr( 'href' );
+                    };
+                    <?php endif; ?>
 
                 });
             </script>
@@ -578,7 +769,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.24
+ * @since 1.25
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -590,6 +781,7 @@ function vwg_add_video_to_product_gallery() {
     $muted = get_option('vwg_settings_group')['vwg_settings_muted'];
     $autoplay = get_option('vwg_settings_group')['vwg_settings_autoplay'];
     $adaptClassSettings = get_option('vwg_settings_group')['vwg_settings_video_adapt_sizes'];
+    $showFirstClassSettings = get_option('vwg_settings_group')['vwg_settings_show_first'];
     $product_main_image =  wp_get_attachment_image_src($product->get_image_id(), 'woocommerce_single');
 
     if (is_array($product_main_image)) {
@@ -610,7 +802,7 @@ function vwg_add_video_to_product_gallery() {
         foreach ($video_urls as $video) :
             $countVideo++
             ?>
-            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image">
+            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image <?php echo (isset($showFirstClassSettings) && $showFirstClassSettings == 1)?'vwg_show_first':''; ?>">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
                     <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js <?=esc_attr($adaptClass) ?> vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />

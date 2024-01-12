@@ -218,7 +218,7 @@ if(get_theme_mod('product_zoom', 0)){
                   $image_alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
                   $image = '<img src="'.$image[0].'" alt="'.$image_alt.'" width="'.$gallery_thumbnail['width'].'" height="'.$gallery_thumbnail['height'].'"  class="attachment-woocommerce_thumbnail" />';
 
-                  echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', sprintf( '<div class="col"><a>%s</a></div>', $image ), $attachment_id, $post->ID, $image_class );
+                  echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', sprintf( '<div class="col vwg-variable"><a>%s</a></div>', $image ), $attachment_id, $post->ID, $image_class );
               }
 
               $loop++;
