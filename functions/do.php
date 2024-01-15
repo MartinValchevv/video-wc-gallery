@@ -323,7 +323,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.25
+ * @since 1.26
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -459,14 +459,16 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 /**
                  * Add function fix variable product with option video show first
                  *
-                 * @since 1.25
+                 * @since 1.26
                  */
                 <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
                 $.fn.wc_variations_image_update = function( variation ) {
                     var $form             = this,
                         $product          = $form.closest( '.product' ),
                         $product_gallery  = $product.find( '.images' ),
-                        $gallery_nav      = $product.find( '.flickity-slider' ),
+                        $gallery_nav      = $product.find( '.product-thumbnails .flickity-slider' ),
+                        $gallery_img_1st  = $gallery_nav.find('div.col.first img'),
+                        $gallery_img_1_val= $gallery_nav.find('div.col.first img').attr('src'),
                         $gallery_img      = $gallery_nav.find('div.col.vwg-variable:eq(0) img'),
                         $product_img_wrap = $product_gallery
                             .find( '.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)' )
@@ -485,9 +487,11 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
                         window.setTimeout( function() {
                             var slideToImage = $gallery_nav.find( 'div.col img[src="' + variation.image.gallery_thumbnail_src + '"]' );
-                            console.log(slideToImage.length)
                             if ( slideToImage.length > 0 ) {
                                 slideToImage.trigger( 'click' );
+                                var $flickityInstance = $('.slider').flickity();
+                                var slideIndexToNavigate = slideToImage.closest('div.col').index();
+                                $flickityInstance.flickity('select', slideIndexToNavigate);
                                 $form.attr( 'current-image', variation.image_id );
                                 window.setTimeout( function() {
                                     $( window ).trigger( 'resize' );
@@ -511,6 +515,9 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         $product_img_wrap.wc_set_variation_attr( 'data-thumb', variation.image.src );
                         $gallery_img.wc_set_variation_attr( 'src', variation.image.gallery_thumbnail_src );
                         $product_link.wc_set_variation_attr( 'href', variation.image.full_src );
+                        window.setTimeout( function() {
+                            $gallery_img_1st.wc_set_variation_attr( 'src', $gallery_img_1_val );
+                        }, 1 );
                     } else {
                         $form.wc_variations_image_reset();
                     }
@@ -526,7 +533,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     var $form             = this,
                         $product          = $form.closest( '.product' ),
                         $product_gallery  = $product.find( '.images' ),
-                        $gallery_nav      = $product.find( '.flickity-slider' ),
+                        $gallery_nav      = $product.find( '.product-thumbnails .flickity-slider' ),
                         $gallery_img      = $gallery_nav.find('div.col.vwg-variable:eq(0) img'),
                         $product_img_wrap = $product_gallery
                             .find( '.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)' )
