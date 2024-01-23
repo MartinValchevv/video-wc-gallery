@@ -15,7 +15,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) die;
 /**
  * Delete database settings
  *
- * @since		1.3
+ * @since		1.27
  */
 $option = get_option('vwg_settings_group');
 
@@ -60,3 +60,5 @@ if ($option['vwg_settings_remove_settings_data'] == 1) {
     delete_option( 'vwg_settings_group' );
 }
 delete_option( 'abl_vwg_version' );
+delete_option('vwg_monthly_notice_dismissed');
+wp_clear_scheduled_hook('vwg_monthly_admin_notice');

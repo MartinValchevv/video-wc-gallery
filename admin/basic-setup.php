@@ -83,6 +83,71 @@ add_filter( 'plugin_row_meta', 'vwg_plugin_row_meta', 10, 2 );
 
 
 /**
+ * Add donate notice
+ *
+ * @since 1.27
+ */
+function vwg_admin_init_notice_monthly() {
+
+    if (is_plugin_active(VWG_VIDEO_WOO_GALLERY.'/video-wc-gallery.php')) {
+        // Schedule the monthly event
+        if (!wp_next_scheduled('vwg_monthly_admin_notice')) {
+            wp_schedule_event(time(), 'monthly', 'vwg_monthly_admin_notice');
+        }
+    }
+
+}
+add_action('admin_init', 'vwg_admin_init_notice_monthly');
+
+function vwg_monthly_admin_notice() {
+
+    update_option('vwg_monthly_notice_dismissed', false);
+
+}
+add_action('vwg_monthly_admin_notice', 'vwg_monthly_admin_notice');
+
+function vwg_display_monthly_admin_notice()
+{
+
+    $is_dismissed = get_option('vwg_monthly_notice_dismissed', false);
+
+    if (!$is_dismissed) {
+        ?>
+        <div class="notice notice-info is-dismissible" id="vwg_monthly-donation-notice">
+            <img src="https://ps.w.org/video-wc-gallery/assets/icon-128x128.png" style="max-width: 40px; position: absolute; top: 50%; left: 20px; transform: translateY(-50%);">
+            <div class="vwg-notice-wrapper" style="margin-left: 60px; padding: 15px;">
+                <p style="font-size: 16px; font-weight: bold;">🚀 <?php echo esc_html__('Help Us Improve Video Gallery for WooCommerce', 'video-wc-gallery'); ?>!</p>
+                <p><?php echo esc_html__('Dear valued user,', 'video-wc-gallery'); ?></p>
+                <p><?php echo esc_html__('We hope you are enjoying using Video Gallery for WooCommerce. Your support is crucial to the continued development and improvement of our plugin.', 'video-wc-gallery'); ?></p>
+                <p><?php echo esc_html__('Consider making a donation to ensure we can keep providing you with top-notch features, updates, and support.', 'video-wc-gallery'); ?></p>
+                <a href="https://revolut.me/mvalchev" target="_blank" class="button button-primary" style="text-decoration: none; color: #fff; padding: 8px 16px; background-color: #0073aa; border-color: #0073aa; border-radius: 4px; display: inline-block;"><?php echo esc_html__('Make a Donation', 'video-wc-gallery'); ?></a>
+            </div>
+        </div>
+        <script>
+            jQuery(document).on('click', '#vwg_monthly-donation-notice .notice-dismiss', function () {
+                jQuery.post(ajaxurl, {
+                    action: 'dismiss_monthly_notice'
+                });
+            });
+        </script>
+        <style>
+            @media screen and (max-width: 480px) { .vwg-notice-wrapper { margin-left: 0 !important; } #vwg_monthly-donation-notice img { left: unset !important; right: 20px !important; top: 90px !important; } }
+        </style>
+        <?php
+    }
+}
+add_action('admin_notices', 'vwg_display_monthly_admin_notice');
+
+function vwg_dismiss_monthly_notice() {
+
+    update_option('vwg_monthly_notice_dismissed', true);
+
+    wp_die();
+}
+add_action('wp_ajax_dismiss_monthly_notice', 'vwg_dismiss_monthly_notice');
+
+
+/**
  * Feedback when deactivate plugin view - STOP
  *
  * @since 1.18

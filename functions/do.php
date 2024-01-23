@@ -323,14 +323,23 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.26
+ * @since 1.27
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
+        global $product;
         $iconColor = get_option('vwg_settings_group')['vwg_settings_icon_color'];
         $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
         $adaptSettings = get_option('vwg_settings_group')['vwg_settings_video_adapt_sizes'];
         $showFirstClassSettings = get_option('vwg_settings_group')['vwg_settings_show_first'];
+        $useDefaultAttrVariable = 0;
+
+        if ($product->is_type('variable')) {
+            $default_attributes = $product->get_default_attributes();
+            if ($default_attributes && isset($showFirstClassSettings) && $showFirstClassSettings == 1) {
+                $useDefaultAttrVariable = 1;
+            }
+        }
 
         if ($icon == 'far fa-play-circle') {
             $unuCodeIcon = 'f144';
@@ -459,9 +468,10 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 /**
                  * Add function fix variable product with option video show first
                  *
-                 * @since 1.26
+                 * @since 1.27
                  */
                 <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
+                var isFirstLoad = true;
                 $.fn.wc_variations_image_update = function( variation ) {
                     var $form             = this,
                         $product          = $form.closest( '.product' ),
@@ -475,6 +485,17 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             .eq( 0 ),
                         $product_img      = $product_img_wrap.find( '.wp-post-image' ),
                         $product_link     = $product_img_wrap.find( 'a' ).eq( 0 );
+
+                    if (isFirstLoad && <?=$useDefaultAttrVariable ?> === 1 ) {
+                        var countVideo = 0
+                        jQuery('.product-thumbnails div.col img').each(function() {
+                            if (jQuery(this).attr('src').includes('/video-wc-gallery-thumb')) {
+                                countVideo++;
+                            }
+                        })
+                        $gallery_img =  jQuery('.product-thumbnails').find(`div.col:eq(${countVideo}) a img`)
+                        isFirstLoad = false;
+                    }
 
                     if ( variation && variation.image && variation.image.src && variation.image.src.length > 1 ) {
                         // See if the gallery has an image with the same original src as the image we want to switch to.
@@ -573,6 +594,17 @@ function vwg_add_custom_style_and_scripts_product_page() {
                                 if (!src.includes('/video-wc-gallery-thumb')) {
                                     li_height = jQuery(this).height();
                                 }
+
+                                // Check if use default variable value and show first option
+                                if (index === 0 ) {
+                                    jQuery(this).parent('li').attr('use-default-att-variable', <?php echo esc_attr($useDefaultAttrVariable) ?>)
+                                    if (jQuery(this).parent('li').attr('use-default-att-variable') && jQuery(this).closest('.vwg-video-wrapper').length === 0) {
+                                        jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                        jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
+                                    }
+                                    jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
+                                }
+
                                 // Check if the src attribute includes '/video-wc-gallery-thumb'
                                 if (src.includes('/video-wc-gallery-thumb')) {
                                     var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
@@ -641,9 +673,10 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     /**
                      * Add function fix variable product with option video show first
                      *
-                     * @since 1.25
+                     * @since 1.27
                      */
                     <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
+                    var isFirstLoad = true;
                     $.fn.wc_variations_image_update = function( variation ) {
                         var $form             = this,
                             $product          = $form.closest( '.product' ),
@@ -655,6 +688,17 @@ function vwg_add_custom_style_and_scripts_product_page() {
                                 .eq( 0 ),
                             $product_img      = $product_img_wrap.find( '.wp-post-image' ),
                             $product_link     = $product_img_wrap.find( 'a' ).eq( 0 );
+
+                        if (isFirstLoad && <?=$useDefaultAttrVariable ?> === 1 ) {
+                            var countVideo = 0
+                            $gallery_nav.find('li img').each(function() {
+                                if (jQuery(this).attr('src').includes('/video-wc-gallery-thumb')) {
+                                    countVideo++;
+                                }
+                            })
+                            $gallery_img = $gallery_nav.find(`li:eq(${countVideo}) img`),
+                            isFirstLoad = false;
+                        }
 
                         if ( variation && variation.image && variation.image.src && variation.image.src.length > 1 ) {
                             // See if the gallery has an image with the same original src as the image we want to switch to.
@@ -763,7 +807,8 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     "contentUrl": "<?=esc_url($video['video_url']) ?>",
                     "encodingFormat": "video/mp4",
                     "width": "<?=esc_attr($width) ?>",
-                    "height": "<?=esc_attr($height) ?>"
+                    "height": "<?=esc_attr($height) ?>",
+                    "uploadDate": "<?=esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s')))) ?>"
                 }
                 </script>
             <?php endforeach;
