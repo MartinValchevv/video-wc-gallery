@@ -323,7 +323,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.27
+ * @since 1.28
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -598,7 +598,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                                 // Check if use default variable value and show first option
                                 if (index === 0 ) {
                                     jQuery(this).parent('li').attr('use-default-att-variable', <?php echo esc_attr($useDefaultAttrVariable) ?>)
-                                    if (jQuery(this).parent('li').attr('use-default-att-variable') && jQuery(this).closest('.vwg-video-wrapper').length === 0) {
+                                    if (jQuery(this).parent('li').attr('use-default-att-variable') === 1 && jQuery(this).closest('.vwg-video-wrapper').length === 0) {
                                         jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
                                         jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
                                     }
@@ -803,12 +803,14 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     "@context": "http://schema.org",
                     "@type": "VideoObject",
                     "name": "<?= esc_attr($product->get_name() . ' Video - ' . esc_attr($countVideo)) ?>",
+                    "description": "<?= esc_attr($product->get_short_description()) ?>",
                     "thumbnailUrl": "<?=esc_url($video['video_thumb_url']) ?>",
                     "contentUrl": "<?=esc_url($video['video_url']) ?>",
                     "encodingFormat": "video/mp4",
                     "width": "<?=esc_attr($width) ?>",
                     "height": "<?=esc_attr($height) ?>",
-                    "uploadDate": "<?=esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s')))) ?>"
+                    "uploadDate": "<?=esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s')))) ?>",
+                    "duration": "PT1M30S"
                 }
                 </script>
             <?php endforeach;
