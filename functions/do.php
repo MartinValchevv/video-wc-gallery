@@ -323,7 +323,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page
  *
- * @since 1.28
+ * @since 1.29
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -780,6 +780,21 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 });
             </script>
         <?php endif; ?>
+
+        <script>
+            jQuery( document ).ready(function($) {
+                // Fix if have problem with first loading classes
+                if ( jQuery('.vwg_video_js').attr('autoplay') && !jQuery('.vwg_video_js').hasClass('.vjs-has-started')) {
+                    jQuery('.vwg_video_js').addClass('vjs-has-started')
+                } else if (!jQuery('.vwg_video_js').attr('autoplay') && !jQuery('.vwg_video_js').hasClass('.vjs-has-started')) {
+                    jQuery(document).on('click touchend', '.vwg_video_js .vjs-big-play-button', function(event) {
+                        event.preventDefault();
+                        jQuery('.vwg_video_js').addClass('vjs-has-started')
+                    });
+                }
+            });
+        </script>
+
 
         <?php
         global $product;
