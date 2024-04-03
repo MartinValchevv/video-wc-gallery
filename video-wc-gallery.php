@@ -5,7 +5,8 @@
  * Description: The Video Gallery for WooCommerce is a plugin that enables the addition of video files from the WordPress library to a product page, with several customizable options.
  * Author: Martin Valchev
  * Author URI: https://martinvalchev.com/
- * Version: 1.29
+ *  Requires Plugins: woocommerce
+ * Version: 1.30
  * Text Domain: video-wc-gallery
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -20,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.2
  */
-if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '1.29' ); // Plugin version constant
+if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '1.30' ); // Plugin version constant
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY' ) )		define( 'VWG_VIDEO_WOO_GALLERY'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'video-wc-gallery'
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY_DIR' ) )	define( 'VWG_VIDEO_WOO_GALLERY_DIR'	, plugin_dir_path( __FILE__ ) ); // Plugin directory absolute path with the trailing slash. Useful for using with includes eg - /var/www/html/wp-content/plugins/video-wc-gallery/
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY_URL' ) )	define( 'VWG_VIDEO_WOO_GALLERY_URL'	, plugin_dir_url( __FILE__ ) ); // URL to the plugin folder with the trailing slash. Useful for referencing src eg - http://localhost/wp/wp-content/plugins/video-wc-gallery/

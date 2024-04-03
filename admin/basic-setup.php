@@ -49,6 +49,29 @@ function vwg_load_plugin_textdomain() {
 }
 add_action( 'plugins_loaded', 'vwg_load_plugin_textdomain' );
 
+
+/**
+ * Added admin menu for Video Gallery for WooCommerce
+ *
+ * @since 1.30
+ */
+function vwg_register_video_gallery_menu() {
+
+    $vwg_logo_icon = 'data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNDAuMDQgODYuMTgiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO308L3N0eWxlPjwvZGVmcz48dGl0bGU+VW50aXRsZWQtMTwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNODkuOTQsNzVhMy4yMywzLjIzLDAsMCwxLTEuNTMsMi43M0w2OS4yMSw4OS40NWEzLjIzLDMuMjMsMCwwLDEtMy4yNC4wNiwzLjIsMy4yLDAsMCwxLTEuNjMtMi43OFY2My4yN0EzLjIyLDMuMjIsMCwwLDEsNjYsNjAuNDl2MGEzLjI2LDMuMjYsMCwwLDEsMy4yNC4wNmwxOS4yLDExLjc0QTMuMjEsMy4yMSwwLDAsMSw4OS45NCw3NVoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00Ljk4IC0zMS45MSkiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjEuNDEsMzEuOTFIMjguNTlhNS40OCw1LjQ4LDAsMCwwLTUuNDksNS40N3Y3NS4yNGE1LjQ4LDUuNDgsMCwwLDAsNS40OSw1LjQ3aDkyLjgyYTUuNDgsNS40OCwwLDAsMCw1LjQ5LTUuNDdWMzcuMzhBNS40OCw1LjQ4LDAsMCwwLDEyMS40MSwzMS45MVpNNzUsMTA5LjEyQTM0LjEyLDM0LjEyLDAsMSwxLDEwOS4xMiw3NSwzNC4xMiwzNC4xMiwwLDAsMSw3NSwxMDkuMTJaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNC45OCAtMzEuOTEpIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ1LDQwLjg4djY4LjI0SDEzNWMtMywwLTUuNDctMy43My01LjQ3LTguMzRWNDkuMjJjMC00LjYxLDIuNDUtOC4zNCw1LjQ3LTguMzRaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNC45OCAtMzEuOTEpIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjAuMjcsNDkuMjJ2NTEuNTZjMCw0LjYxLTIuNDUsOC4zNC01LjQ3LDguMzRINVY0MC44OEgxNC44QzE3LjgyLDQwLjg4LDIwLjI3LDQ0LjYxLDIwLjI3LDQ5LjIyWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQuOTggLTMxLjkxKSIvPjwvc3ZnPg==';
+
+    add_menu_page(
+        __( 'Video Gallery', 'video-wc-gallery' ), // Page title
+        __( 'Video Gallery', 'video-wc-gallery' ), // Menu title
+        'manage_options',
+        'admin.php?page=wc-settings&tab=vwg_tab',
+        null,
+        $vwg_logo_icon,
+        56 // Position after WooCommerce (adjust as needed)
+    );
+}
+add_action('admin_menu', 'vwg_register_video_gallery_menu');
+
+
 /**
  * Print direct link to plugin settings in plugins list in admin
  *

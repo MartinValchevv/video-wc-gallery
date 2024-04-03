@@ -1,15 +1,15 @@
 === Video Gallery for WooCommerce ===
 Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
-Tags: video gallery, woocommerce, product page, product video, autoplay, multimedia, video control, video files, media library, video player
+Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.29
+Stable tag: 1.30
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The Video Gallery for WooCommerce is a plugin that enables the addition of video files from the WordPress library to a product page, with several customizable options. The plugin allows users to rearrange the videos to fit their desired visual order, change the icon and color to differentiate video files, and adjust the settings to autoplay, enable/disable sound, and loop the videos. There is also an option to show or hide video control, giving users control over the video playback experience. It is important to note that Woocommerce plugin activation is a prerequisite for using the Video Gallery for WooCommerce plugin.
+WooCommerce Video Gallery: Add WordPress library videos to product pages with customization. Requires WooCommerce activation.
 
 == Description ==
 
@@ -68,6 +68,12 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.30 =
+* **Added:** Admin menu for Video Gallery for WooCommerce
+* **Added:** Required plugins the new option of WordPress 6.5
+* Tested with WordPress 6.5
+**Release date: April 3, 2024**
 
 = 1.29 =
 * Fix: If have problem with first loading classes
