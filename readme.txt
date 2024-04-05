@@ -3,7 +3,7 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
 Stable tag: 1.30
 License: GPLv2 or later
