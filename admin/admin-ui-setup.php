@@ -11,7 +11,7 @@ if ( ! defined('ABSPATH') ) exit;
 /**
  * Enqueue Admin CSS and JS
  *
- * @since 1.18
+ * @since 2.0
  */
 function vwg_enqueue_css_js( $hook ) {
 
@@ -33,12 +33,11 @@ function vwg_enqueue_css_js( $hook ) {
 
     // JS
     wp_enqueue_script( 'sweetalert2', VWG_VIDEO_WOO_GALLERY_URL . 'includes/sweetalert2/sweetalert2.all.min.js', __FILE__ );
-    // wp_enqueue_script( 'vwg-feedback', VWG_VIDEO_WOO_GALLERY_URL . 'includes/js/feedback.js', __FILE__ );
 
     /**
      * Translate array for JS vwg-admin
      *
-     * @since 1.20
+     * @since 2.0
      */
     $translation_array = array(
         'yes' => __( 'Yes, confirm', 'video-wc-gallery' ),
@@ -54,7 +53,6 @@ function vwg_enqueue_css_js( $hook ) {
         'autoplay_settings_info' => __( 'Autoplay in most browsers requires muted audio to provide a better user experience. Autoplaying videos with sound can be disruptive, so browser vendors often restrict autoplay to muted videos by default to prevent unexpected and intrusive playback.', 'video-wc-gallery' ),
     );
     wp_localize_script( 'vwg-admin', 'translate_obj', $translation_array );
-    // wp_localize_script( 'vwg-feedback', 'translate_obj', $translation_array );
 
 }
 add_action( 'admin_enqueue_scripts', 'vwg_enqueue_css_js' );
@@ -96,10 +94,10 @@ add_filter('woocommerce_settings_save_vwg_tab', 'vwg_save_settings');
 
 /**
  * Add a new tab to WooCommerce settings page.
- * @since 1.0
+ * @since 2.0
  */
 function vwg_add_custom_settings_tab( $tabs ) {
-    $tabs['vwg_tab'] = __( 'Video Gallery for WooCommerce', 'video-wc-gallery' );
+    $tabs['vwg_tab'] = apply_filters('vwg_modify_strings', __('Video Gallery for WooCommerce', 'video-wc-gallery'));
     return $tabs;
 }
 add_filter( 'woocommerce_settings_tabs_array', 'vwg_add_custom_settings_tab', 50 );
@@ -122,7 +120,7 @@ function vwg_custom_settings() {
 
 /**
  * Plugin info view
- * @since 1.1
+ * @since 2.0
  */
 function vwg_plugin_info() {
     $allowed_tags = array(
@@ -144,13 +142,14 @@ function vwg_plugin_info() {
         <div id="side-sortables" class="meta-box-sortables ui-sortable" style="">
             <div id="submitdiv" class="postbox ">
                 <div class="postbox-header">
-                    <h2 class="hndle ui-sortable-handle" style="padding: 0 10px;"><?php echo esc_html__('Video Gallery for WooCommerce' , 'video-wc-gallery') ?></h2>
+                    <h2 class="hndle ui-sortable-handle" style="padding: 0 10px;"><?php echo esc_html(apply_filters('vwg_modify_strings', __('Video Gallery for WooCommerce', 'video-wc-gallery'))); ?></h2>
                 </div>
                 <div class="inside">
                     <p><?php echo wp_kses($vwg_footer_text, $allowed_tags); ?></p>
                     <p style="text-align: center;"><?php echo wp_kses($vwg_support_links, $allowed_tags); ?> | <a href="https://translate.wordpress.org/projects/wp-plugins/video-wc-gallery/" target="_blank"><span class="dashicons dashicons-translation"></span></a></p>
                     <hr>
                     <p style="text-align: center"><?php echo esc_html__('Video Gallery for WooCommerce version:' , 'video-wc-gallery') ?> <?php echo esc_html(VWG_VERSION_NUM) ?></p>
+                    <?php do_action( 'vwg_add_info_version' ); ?>
                 </div>
             </div>
         </div>
@@ -167,7 +166,7 @@ add_action( 'woocommerce_after_settings_vwg_tab', 'vwg_plugin_info' );
 function vwg_register_settings() {
     add_settings_section(
         'vwg_settings_section',
-        __( 'Video Gallery for WooCommerce Settings', 'video-wc-gallery' ),
+        apply_filters('vwg_modify_strings', __('Video Gallery for WooCommerce Settings', 'video-wc-gallery')),
         'vwg_settings_section_callback',
         'vwg_settings_group'
     );
@@ -355,7 +354,7 @@ function vwg_settings_section_callback() {
 function vwg_settings_icon_callback() {
     $option = get_option( 'vwg_settings_group' );
     ?>
-    <div class="radio-with-Icon">
+    <div class="radio-with-Icon" style="height: 60px;">
         <p class="radioOption">
             <input type="radio" name="vwg_settings_icon" id="vwg_settings_icon_play-circle" value="far fa-play-circle" <?php checked($option['vwg_settings_icon'], 'far fa-play-circle'); ?> class="ng-valid ng-dirty ng-touched ng-empty">
             <label for="vwg_settings_icon_play-circle">
@@ -395,6 +394,9 @@ function vwg_settings_icon_callback() {
                 <i class="far fa-file-video"></i>
             </label>
         </p>
+    </div>
+    <div>
+        <a href="#" class="button button-small button-secondary"><?php echo esc_html__('Add SVG icon' , 'video-wc-gallery') ?></a>
     </div>
     <?php
 }

@@ -70,8 +70,12 @@ div.radio-with-Icon p.radioOption input[type="radio"] + label:before, div.radio-
     position: absolute;
 }
 
+.wrap.vwg-wrap {
+    width: calc(100% - 330px);
+}
+
 .vwg_postbox-container .postbox {
-    width: 300px;
+    width: 320px;
 }
 
 .vwg-settings-warning {
@@ -85,6 +89,9 @@ div.radio-with-Icon p.radioOption input[type="radio"] + label:before, div.radio-
         position: static;
     }
     .vwg_postbox-container .postbox {
+        width: 100%;
+    }
+    .wrap.vwg-wrap {
         width: 100%;
     }
 }

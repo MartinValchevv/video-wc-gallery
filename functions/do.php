@@ -34,11 +34,11 @@ add_action( 'wp_enqueue_scripts', 'vwg_enqueue_scripts' );
 /**
  * Create video tab in Woocommerce product
  *
- * @since 1.0
+ * @since 2.0
  */
 function vwg_add_custom_product_tab( $product_data_tabs ) {
     $product_data_tabs['vwg_video_tab'] = array(
-        'label' => __( 'Video Gallery for WooCommerce', 'video-wc-gallery' ),
+        'label' => apply_filters('vwg_modify_strings', __('Video Gallery for WooCommerce', 'video-wc-gallery')),
         'target' => 'vwg_video_tab_content',
         'class' => array( 'show_if_simple', 'show_if_variable' ),
     );
