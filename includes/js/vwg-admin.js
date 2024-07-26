@@ -1,12 +1,6 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 1.0 Add warning class for this settings
-     */
-    $('#vwg_settings_remove_settings_data').parent().prev().addClass('vwg-settings-warning')
-    $('#vwg_settings_remove_videos_data').parent().prev().addClass('vwg-settings-warning')
-
-    /**
      * @since 1.0 Add admin setting page Color Picker
      */
     $('.vwg_settings_icon_color').wpColorPicker({
@@ -132,7 +126,5 @@ jQuery(document).ready(function($) {
             }
         });
     });
-
-
 
 });

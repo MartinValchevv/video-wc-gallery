@@ -71,6 +71,8 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 
 = 2.0 =
 * **Added:** Admin menu
+* **Fix:** When the browser is Safari and the settings are to repeat the video and the controls are disabled
+* **Improvement:** Redesign admin products Video Gallery tab
 * **Improvement:** Code cleanup and improvements
 **Release date: April 3, 2024**
 

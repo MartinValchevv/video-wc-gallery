@@ -3,9 +3,9 @@
  * Plugin Name: Video Gallery for WooCommerce
  * Plugin URI:
  * Description: The Video Gallery for WooCommerce is a plugin that enables the addition of video files from the WordPress library to a product page, with several customizable options.
- * Author: Martin Valchev
- * Author URI: https://martinvalchev.com/
- *  Requires Plugins: woocommerce
+ * Author: Afowsoft, Martin Valchev
+ * Author URI: https://afowsoft.com/
+ * Requires Plugins: woocommerce
  * Version: 2.0
  * Text Domain: video-wc-gallery
  * Domain Path: /languages
@@ -95,6 +95,21 @@ function vwg_admin_notice_err($msg) {
     <?php endif;
 }
 add_action( 'admin_notices', 'vwg_admin_notice_err' );
+
+/**
+ * Admin notice success
+ *
+ * @since 2.0
+ */
+function vwg_settings_saved_notice($msg) {
+    if (!empty($msg)) :
+        ?>
+        <div class="notice notice-success is-dismissible">
+            <p><?php echo esc_html($msg); ?></p>
+        </div>
+    <?php endif;
+}
+add_action('admin_notices', 'vwg_settings_saved_notice');
 
 /**
  * Deregister all scripts and styles contains id mediaelement - use defaults wordpress

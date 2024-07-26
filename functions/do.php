@@ -65,20 +65,24 @@ function vwg_add_custom_product_tab_content() {
         <ul id="sortable" class="video_gallery_wrapper">
             <?php if (!empty($video_url)) :
                 $video_url = maybe_unserialize( $video_url );
+                $break_rule = apply_filters('vwg_continue_video_loop', 2);
                 $position_counter = 0;
                 ?>
                 <?php foreach ($video_url as $key => $video) :
                 $position_counter++;
+                if ($position_counter > $break_rule) {
+                    break;
+                }
                 ?>
                 <li class="ui-state video_id_<?php echo esc_attr($key) ?>" data-position="<?php echo esc_attr($position_counter) ?>" >
                     <div class="video-player" style="width:220px;height:200px; background:#222;">
                         <video width="230" height="200" controls preload="auto">
                             <source src="<?php echo esc_url($video['video_url']); ?>" type="video/webm">
                         </video>
-                        <div>
-                            <input type="hidden" class="video_url" name="video_url[<?php echo esc_attr($key) ?>][video_url]" value="<?php echo esc_url($video['video_url']); ?>"/>
-                            <input type="hidden" class="video_thumb_url" name="video_url[<?php echo esc_attr($key) ?>][video_thumb_url]" value="<?php echo esc_url($video['video_thumb_url']); ?>"/>
-                            <button data-video-id="<?php echo esc_attr($key) ?>" type="button" class="button delete_video_btn" title="Delete">X</button>
+                    </div>
+                    <input type="hidden" class="video_url" name="video_url[<?php echo esc_attr($key) ?>][video_url]" value="<?php echo esc_url($video['video_url']); ?>"/>
+                    <input type="hidden" class="video_thumb_url" name="video_url[<?php echo esc_attr($key) ?>][video_thumb_url]" value="<?php echo esc_url($video['video_thumb_url']); ?>"/>
+                    <button data-video-id="<?php echo esc_attr($key) ?>" type="button" class="button delete_video_btn" title="Delete">X</button>
                 </li>
             <?php endforeach; ?>
             <?php endif; ?>
@@ -157,6 +161,7 @@ function vwg_save_custom_product_tab_content( $post_id ) {
                         $gallery_thumbnail_editor->save( $gallery_thumbnail_path );
                         $sanitized_attachment['woocommerce_gallery_thumbnail_url'] = $upload_dir['baseurl'] . '/video-wc-gallery-thumb/' . basename( $gallery_thumbnail_path );
                     }
+                    do_action('vwg_image_paths_processed', $file_path, $thumbnail_path, $gallery_thumbnail_path);
                 } else {
                     $sanitized_attachment['video_thumb_url'] = $attachment['video_thumb_url'];
                 }
@@ -175,18 +180,31 @@ add_action( 'woocommerce_process_product_meta', 'vwg_save_custom_product_tab_con
 /**
  * Add the media upload script
  *
- * @since 1.0
+ * @since 2.0
  */
 function vwg_add_video_upload_script() {
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
 
-            $("#sortable").sortable({
+            $('#vwg_video_tab_content').attr('v-limit', 2)
+            $('#vwg_video_tab_content').attr('is-pro', 0)
+
+            $(".video_gallery_wrapper").sortable({
                 opacity: 0.9,
+                // placeholder: "ui-state ui-sortable-handle",
+                tolerance: "pointer",
                 cursor: 'move',
+                start: function(event, ui) {
+                    var draggingItem = $(ui.helper);
+                    var height = draggingItem.height();
+                    var width = draggingItem.width();
+                    $(".video_gallery_wrapper .ui-sortable-handle")
+                        .height(height)
+                        .width(width);
+                }
             });
-            $("#sortable").disableSelection();
+            $(".video_gallery_wrapper").disableSelection();
 
             $( '#delete_all_video_button').on('click', function () {
                 $( '.video_gallery_wrapper' ).empty()
@@ -231,7 +249,7 @@ function vwg_add_video_upload_script() {
                         add_position = last_pos + 1
                     }
 
-                    if ($('.video_gallery_wrapper li').length < 2) {
+                    if ($('.video_gallery_wrapper li').length < $('#vwg_video_tab_content').attr('v-limit') ) {
 
                         $('.video_gallery_wrapper').append(`
                             <li class="ui-state video_id_${attachment.id}" data-position="${add_position}" >
@@ -269,11 +287,21 @@ function vwg_add_video_upload_script() {
                         });
 
                     } else {
-                        Swal.fire(
-                            '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
-                            '<?php echo esc_html__('Can add only 2 videos !' , 'video-wc-gallery') ?>',
-                            'warning'
-                        )
+                        if ( $('#vwg_video_tab_content').attr('is-pro') === '1') {
+                            Swal.fire(
+                                '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
+                                `<?php echo esc_html__('Can add only', 'video-wc-gallery') ?> ${ $('#vwg_video_tab_content').attr('v-limit') } <?php echo esc_html__('videos !', 'video-wc-gallery') ?>`,
+                                'warning'
+                            )
+                        } else {
+                            Swal.fire(
+                                '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
+                                `<?php echo esc_html__('Can add only', 'video-wc-gallery') ?> ${ $('#vwg_video_tab_content').attr('v-limit') } <?php echo esc_html__('videos !', 'video-wc-gallery') ?>
+                                 <?php echo esc_html__('To be able to add more videos get', 'video-wc-gallery') ?> <a class="open-vwg-modal-pro-info" href="#"><?php echo esc_html__('PRO version', 'video-wc-gallery') ?></a>
+                                `,
+                                'warning'
+                            )
+                        }
                     }
 
                     $('.bar-btns').show();
@@ -289,13 +317,16 @@ function vwg_add_video_upload_script() {
             position: relative;
             align-items: center;
             flex-wrap: wrap;
+            column-gap: 20px;
             margin-left: 15px;
             margin-right: 15px
         }
         #vwg_video_tab_content .ui-state {
-            margin-right: auto;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             position: relative;
+            padding: 20px;
+            box-shadow: 0 0px 38px rgba(0,0,0,0.30), 0 8px 12px rgba(0,0,0,0.22);
+            border-radius: 12px;
         }
         #vwg_video_tab_content .mejs-container {
             width: 100% !important;
@@ -306,6 +337,10 @@ function vwg_add_video_upload_script() {
             top: -10px;
             right: -10px;
             border-radius: 50%;
+            background: red;
+            border-color: red;
+            color: #fff;
+            font-weight: bold;
         }
         #vwg_video_tab_content video {
             cursor: move;
@@ -321,9 +356,9 @@ add_action( 'admin_footer-post.php', 'vwg_add_video_upload_script' );
 add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 
 /**
- * Add custom style and scripts in product page
+ * Add custom style and scripts in product page (IMPORTANT)
  *
- * @since 1.29
+ * @since 2.0
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -432,24 +467,29 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
                         var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
                         var vwg_user_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause')
+                        var vwg_controls_enabled = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).hasClass('.vjs-controls-enabled')
                         if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
                             var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
                             if (vwg_video_loop) {
-                                if (!vwg_user_pause) {
+                                if(vwg_controls_enabled) {
                                     vwgPlayer.play();
-                                    // Listen for the 'pause' event to detect when the video is paused
-                                    vwgPlayer.on('pause', function () {
-                                        vwgPlayer.pause();
-                                        var posterUrl = vwgPlayer.poster();
-                                        if (posterUrl) {
-                                            var posterStyle = 'url("' + posterUrl + '")';
-                                            vwgPlayer.el().style.display = 'block';
-                                            vwgPlayer.el().style.backgroundImage = posterStyle;
-                                            vwgPlayer.el().style.backgroundSize = 'cover';
-                                            vwgPlayer.el().style.backgroundPosition = 'center';
-                                        }
-                                        $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
-                                    });
+                                } else {
+                                    if (!vwg_user_pause) {
+                                        vwgPlayer.play();
+                                        // Listen for the 'pause' event to detect when the video is paused
+                                        vwgPlayer.on('pause', function () {
+                                            vwgPlayer.pause();
+                                            var posterUrl = vwgPlayer.poster();
+                                            if (posterUrl) {
+                                                var posterStyle = 'url("' + posterUrl + '")';
+                                                vwgPlayer.el().style.display = 'block';
+                                                vwgPlayer.el().style.backgroundImage = posterStyle;
+                                                vwgPlayer.el().style.backgroundSize = 'cover';
+                                                vwgPlayer.el().style.backgroundPosition = 'center';
+                                            }
+                                            $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
+                                        });
+                                    }
                                 }
                             } else {
                                 vwgPlayer.play();
@@ -637,24 +677,29 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
                             var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
                             var vwg_user_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause')
+                            var vwg_controls_enabled = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).hasClass('.vjs-controls-enabled')
                             if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
                                 var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
                                 if (vwg_video_loop) {
-                                    if (!vwg_user_pause) {
+                                    if (vwg_controls_enabled) {
                                         vwgPlayer.play();
-                                        // Listen for the 'pause' event to detect when the video is paused
-                                        vwgPlayer.on('pause', function () {
-                                            vwgPlayer.pause();
-                                            var posterUrl = vwgPlayer.poster();
-                                            if (posterUrl) {
-                                                var posterStyle = 'url("' + posterUrl + '")';
-                                                vwgPlayer.el().style.display = 'block';
-                                                vwgPlayer.el().style.backgroundImage = posterStyle;
-                                                vwgPlayer.el().style.backgroundSize = 'cover';
-                                                vwgPlayer.el().style.backgroundPosition = 'center';
-                                            }
-                                            $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
-                                        });
+                                    } else {
+                                        if (!vwg_user_pause) {
+                                            vwgPlayer.play();
+                                            // Listen for the 'pause' event to detect when the video is paused
+                                            vwgPlayer.on('pause', function () {
+                                                vwgPlayer.pause();
+                                                var posterUrl = vwgPlayer.poster();
+                                                if (posterUrl) {
+                                                    var posterStyle = 'url("' + posterUrl + '")';
+                                                    vwgPlayer.el().style.display = 'block';
+                                                    vwgPlayer.el().style.backgroundImage = posterStyle;
+                                                    vwgPlayer.el().style.backgroundSize = 'cover';
+                                                    vwgPlayer.el().style.backgroundPosition = 'center';
+                                                }
+                                                $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
+                                            });
+                                        }
                                     }
                                 } else {
                                     vwgPlayer.play();
@@ -868,8 +913,14 @@ function vwg_add_video_to_product_gallery() {
 
     if ( $video_url ) {
         $countVideo = 0;
+        $break_rule = apply_filters('vwg_continue_video_loop', 2);
+        $video_html = '';
         foreach ($video_urls as $video) :
-            $countVideo++
+            $countVideo++;
+            if ($countVideo > $break_rule) {
+                break;
+            }
+            ob_start();
             ?>
             <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image <?php echo (isset($showFirstClassSettings) && $showFirstClassSettings == 1)?'vwg_show_first':''; ?>">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
@@ -878,7 +929,10 @@ function vwg_add_video_to_product_gallery() {
                     </video>
                 </a>
             </div>
-        <?php endforeach;
+        <?php
+        $video_html .= ob_get_clean();
+        endforeach;
+        echo apply_filters('vwg_product_gallery_html', $video_html);
     }
 }
 if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'] == 1) {
