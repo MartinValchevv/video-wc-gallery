@@ -84,9 +84,9 @@ add_action( 'admin_init', 'vwg_upgrader' );
 /**
  * Admin notice err
  *
- * @since 1.0
+ * @since 1.31
  */
-function vwg_admin_notice_err($msg) {
+function vwg_admin_notice_err($msg = '') {
     if (!empty($msg)) :
         ?>
         <div class="notice notice-error is-dismissible">
@@ -101,7 +101,7 @@ add_action( 'admin_notices', 'vwg_admin_notice_err' );
  *
  * @since 2.0
  */
-function vwg_settings_saved_notice($msg) {
+function vwg_settings_saved_notice($msg = '') {
     if (!empty($msg)) :
         ?>
         <div class="notice notice-success is-dismissible">

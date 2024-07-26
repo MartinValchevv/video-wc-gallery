@@ -3,7 +3,7 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
-Tested up to: 6.5
+Tested up to: 6.6.1
 Requires PHP: 7.4
 Stable tag: 2.0
 License: GPLv2 or later
@@ -75,6 +75,11 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * **Improvement:** Redesign admin products Video Gallery tab
 * **Improvement:** Code cleanup and improvements
 **Release date: April 3, 2024**
+
+= 1.31 =
+* **Fix:** Fatal Error with admin notices
+* Tested with WordPress 6.6.1
+**Release date: July 26, 2024**
 
 = 1.30 =
 * **Added:** Admin menu for Video Gallery for WooCommerce
