@@ -6,7 +6,7 @@
  * Author: Martin Valchev
  * Author URI: https://martinvalchev.com/
  *  Requires Plugins: woocommerce
- * Version: 1.30
+ * Version: 1.31
  * Text Domain: video-wc-gallery
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -84,9 +84,9 @@ add_action( 'admin_init', 'vwg_upgrader' );
 /**
  * Admin notice err
  *
- * @since 1.0
+ * @since 1.31
  */
-function vwg_admin_notice_err($msg) {
+function vwg_admin_notice_err($msg = '') {
     if (!empty($msg)) :
         ?>
         <div class="notice notice-error is-dismissible">
