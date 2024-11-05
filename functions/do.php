@@ -18,7 +18,7 @@ function vwg_enqueue_scripts( $hook ) {
 
     if ( is_product() ) {
         // CSS
-        wp_enqueue_style('vwg_fontawesome', VWG_VIDEO_WOO_GALLERY_URL . 'includes/fontawesome5/css/all.css', '', VWG_VERSION_NUM);
+        wp_enqueue_style('vwg_fontawesome', VWG_VIDEO_WOO_GALLERY_URL . 'includes/fontawesome_v6-6-0/css/all.css', '', VWG_VERSION_NUM);
         // Enqueue Video.js CSS
         wp_enqueue_style('videojs-css', VWG_VIDEO_WOO_GALLERY_URL . 'includes/video-js/video-js.css', '', VWG_VERSION_NUM);
 

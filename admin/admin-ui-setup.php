@@ -25,7 +25,7 @@ function vwg_enqueue_css_js( $hook ) {
 
         // CSS
         wp_enqueue_style('vwg-admin-css', VWG_VIDEO_WOO_GALLERY_URL . 'includes/css/admin/admin.css', '', VWG_VERSION_NUM);
-        wp_enqueue_style('vwg_fontawesome', VWG_VIDEO_WOO_GALLERY_URL . 'includes/fontawesome5/css/all.css', '', VWG_VERSION_NUM);
+        wp_enqueue_style('vwg_fontawesome', VWG_VIDEO_WOO_GALLERY_URL . 'includes/fontawesome_v6-6-0/css/all.css', '', VWG_VERSION_NUM);
         wp_enqueue_style('wp-color-picker');
 
         // JS
@@ -60,6 +60,11 @@ function vwg_enqueue_css_js( $hook ) {
         'autoplay_settings_info' => __( 'Autoplay in most browsers requires muted audio to provide a better user experience. Autoplaying videos with sound can be disruptive, so browser vendors often restrict autoplay to muted videos by default to prevent unexpected and intrusive playback.', 'video-wc-gallery' ),
     );
     wp_localize_script( 'vwg-admin', 'translate_obj', $translation_array );
+
+    wp_localize_script('vwg-admin', 'vwg_AJAX', array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'security' => wp_create_nonce('remove_unused_thumbnails_nonce')
+    ));
 
     $variable_array = array(
         'VWG_Url' => VWG_VIDEO_WOO_GALLERY_URL,
@@ -901,9 +906,17 @@ function vwg_detect_attached_thumbs() {
 
 /**
  * AJAX function for remove unused thumbnails
- * @since 1.3
+ * @since 1.32
  */
 function remove_unused_thumbnails() {
+
+    // Verify nonce
+    check_ajax_referer('remove_unused_thumbnails_nonce', 'security');
+    // Check if the user has the appropriate capability
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => 'Unauthorized'));
+        wp_die();
+    }
 
     $for_delete = explode(',', $_POST['files_for_del']);
 

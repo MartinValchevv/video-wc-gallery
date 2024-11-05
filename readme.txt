@@ -30,7 +30,7 @@ The options for this plugin include:
 
 The helper libraries plugin uses the following:
 
-*   [FontAwesome v5](https://fontawesome.com/)
+*   [FontAwesome v6.6.0](https://fontawesome.com/)
 *   [SweetAlert2 v11.4.8](https://sweetalert2.github.io/)
 *   [VideoJS v7.15.4](https://videojs.com/)
 
@@ -75,6 +75,11 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * **Improvement:** Redesign admin products Video Gallery tab
 * **Improvement:** Code cleanup and improvements
 **Release date: April 3, 2024**
+
+= 1.32 =
+* **Fix:** Security issue
+* **Update:** FontAwesome v5 to FontAwesome v6.6.0
+**Release date: November 5, 2024**
 
 = 1.31 =
 * **Fix:** Fatal Error with admin notices

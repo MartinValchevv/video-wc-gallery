@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
     })
 
     /**
-     * @since 1.20 Function for delete unused thumbs
+     * @since 1.32 Function for delete unused thumbs
      */
     $('#delete_unused_thumbs').on('click', function(e) {
         e.preventDefault();
@@ -94,6 +94,7 @@ jQuery(document).ready(function($) {
                     type: 'POST',
                     data: {
                         action: 'remove_unused_thumbnails',
+                        security: vwg_AJAX.security,
                         files_for_del: $('#files_for_delete').val()
                     },
                     success: function(response) {
