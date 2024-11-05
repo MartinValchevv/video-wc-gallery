@@ -5,7 +5,7 @@ Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 1.31
+Stable tag: 1.32
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ The options for this plugin include:
 
 The helper libraries plugin uses the following:
 
-*   [FontAwesome v5](https://fontawesome.com/)
+*   [FontAwesome v6.6.0](https://fontawesome.com/)
 *   [SweetAlert2 v11.4.8](https://sweetalert2.github.io/)
 *   [VideoJS v7.15.4](https://videojs.com/)
 
@@ -68,6 +68,11 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.32 =
+* **Fix:** Security issue
+* **Update:** FontAwesome v5 to FontAwesome v6.6.0
+**Release date: November 5, 2024**
 
 = 1.31 =
 * **Fix:** Fatal Error with admin notices
