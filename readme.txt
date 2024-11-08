@@ -76,6 +76,10 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * **Improvement:** Code cleanup and improvements
 **Release date: April 3, 2024**
 
+= 1.33 =
+* **Fix:** Issue with "srcset" attribute
+**Release date: November 8, 2024**
+
 = 1.32 =
 * **Fix:** Security issue
 * **Update:** FontAwesome v5 to FontAwesome v6.6.0
