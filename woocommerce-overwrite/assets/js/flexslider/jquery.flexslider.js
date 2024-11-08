@@ -254,12 +254,13 @@
               item = $( '<a></a>' ).attr( 'href', '#' ).text( j );
               if (slider.vars.controlNav === "thumbnails") {
                 /**
-                 * Added ( VWG v1.20 )
+                 * Added ( VWG v1.33 )
                  */
-                if (slide.attr('data-woocommerce_gallery_thumbnail_url')) {
+                if (slide.attr('data-woocommerce_gallery_thumbnail_url') || slide.attr('data-woocommerce_thumbnail_url') ) {
                   item = $('<img/>', {
                     onload: 'this.width = this.naturalWidth; this.height = this.naturalHeight',
-                    src: slide.attr('data-woocommerce_gallery_thumbnail_url'),
+                    src: (this.clientWidth < 100) ? slide.attr('data-woocommerce_gallery_thumbnail_url') : slide.attr('data-woocommerce_thumbnail_url'),
+                    srcset: slide.attr('data-thumb-srcset'),
                     alt: slide.attr('alt'),
                     class: 'vwg-generated-thumb'
                   })
@@ -267,11 +268,12 @@
                   item = $('<img/>', {
                     onload: 'this.width = this.naturalWidth; this.height = this.naturalHeight',
                     src: slide.attr('data-thumb'),
+                    srcset: slide.attr('data-thumb-srcset'),
                     alt: slide.attr('alt')
                   })
                 }
                 /**
-                 * END ( VWG v1.20 )
+                 * END ( VWG v1.33 )
                  */
               }
 

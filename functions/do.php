@@ -838,7 +838,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.25
+ * @since 1.33
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -871,7 +871,12 @@ function vwg_add_video_to_product_gallery() {
         foreach ($video_urls as $video) :
             $countVideo++
             ?>
-            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>" data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>" data-thumb-alt="" data-vwg-video="<?=esc_attr($countVideo) ?>" class="woocommerce-product-gallery__image <?php echo (isset($showFirstClassSettings) && $showFirstClassSettings == 1)?'vwg_show_first':''; ?>">
+            <div data-thumb="<?=esc_url($video['video_thumb_url']) ?>"
+                 data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>"
+                 data-woocommerce_thumbnail_url="<?=esc_url((isset($video['woocommerce_thumbnail_url']))?$video['woocommerce_thumbnail_url']:'') ?>"
+                 data-thumb-alt=""
+                 data-vwg-video="<?=esc_attr($countVideo) ?>"
+                 class="woocommerce-product-gallery__image <?php echo (isset($showFirstClassSettings) && $showFirstClassSettings == 1)?'vwg_show_first':''; ?>">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
                     <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js <?=esc_attr($adaptClass) ?> vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
