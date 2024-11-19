@@ -1,11 +1,11 @@
 === Video Gallery for WooCommerce ===
 Contributors: martinvalchev
-Donate link: https://revolut.me/mvalchev
+Donate link: https://linktr.ee/martinvalchev
 Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.33
+Stable tag: 1.34
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,12 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.34 =
+* **Added:** New donate link
+* **Removed:** Unused file from FontAwesome v6.6.0
+* Tested with WordPress 6.7
+**Release date: November 19, 2024**
 
 = 1.33 =
 * **Fix:** Issue with "srcset" attribute

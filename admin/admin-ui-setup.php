@@ -127,7 +127,7 @@ function vwg_custom_settings() {
 
 /**
  * Plugin info view
- * @since 1.1
+ * @since 1.34
  */
 function vwg_plugin_info() {
     $allowed_tags = array(
@@ -138,7 +138,7 @@ function vwg_plugin_info() {
         'br' => array(),
     );
     $vwg_footer_text = sprintf( __( 'If you like this plugin, please <a href="%s" target="_blank">make a donation</a> or leave me a <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating to support continued development. Thanks a bunch!', 'video-wc-gallery' ),
-        esc_url('https://revolut.me/mvalchev'),
+        esc_url('https://linktr.ee/martinvalchev'),
         esc_url('https://wordpress.org/support/plugin/video-wc-gallery/reviews/?rate=5#new-post')
     );
     $vwg_support_links = sprintf( __( '<a href="%s" target="_blank">Get support</a>', 'video-wc-gallery' ),
