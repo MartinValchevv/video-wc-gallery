@@ -331,8 +331,8 @@ function vwg_render_support() {
 function vwg_render_donate() {
     $donate_text  = '';
     $donate_text .= '<div class="sidebar-promo">';
-    $donate_text .= __( '<p>By donating to <b>Video Gallery for WooCommerce</b>, you\'re investing in its future and ensuring it remains a reliable and accessible resource for all. Will you join us in this mission and make a contribution today? Every donation, no matter the amount, helps us continue our work and reach even greater heights. <a href="https://revolut.me/mvalchev" target="_blank">Click here to donate now</a></p>', 'video-wc-gallery' );
-    $donate_text .= __( '<p><a href="https://revolut.me/mvalchev" target="_blank" class="button button-primary">Donate</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
+    $donate_text .= __( '<p>By donating to <b>Video Gallery for WooCommerce</b>, you\'re investing in its future and ensuring it remains a reliable and accessible resource for all. Will you join us in this mission and make a contribution today? Every donation, no matter the amount, helps us continue our work and reach even greater heights. <a href="https://linktr.ee/martinvalchev" target="_blank">Click here to donate now</a></p>', 'video-wc-gallery' );
+    $donate_text .= __( '<p><a href="https://linktr.ee/martinvalchev" target="_blank" class="button button-primary">Donate</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
     $donate_text .= '</div>';
     echo $donate_text; // phpcs:ignore WordPress.Security.EscapeOutput
 }
