@@ -75,7 +75,18 @@ div.radio-with-Icon p.radioOption input[type="radio"] + label:before, div.radio-
 }
 
 .vwg-settings-warning {
-    color: #ee974b !important;
+    color: red !important;
+    font-weight: 400 !important;
+}
+
+.woocommerce-help-tip.dashicons-warning::after {
+    content: "\f534" !important;
+    cursor: pointer !important;
+}
+
+.woocommerce-help-tip.dashicons-info::after {
+    content: "\f348" !important;
+    cursor: pointer !important;
 }
 
 /*Responsive*/

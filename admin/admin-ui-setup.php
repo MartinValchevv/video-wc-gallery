@@ -167,7 +167,7 @@ add_action( 'woocommerce_after_settings_vwg_tab', 'vwg_plugin_info' );
 
 /**
  * Register Settings
- * @since 1.14
+ * @since 1.35
  */
 function vwg_register_settings() {
     add_settings_section(
@@ -228,15 +228,15 @@ function vwg_register_settings() {
 
     add_settings_field(
         'vwg_settings_show_first',
-        __( 'Show video first in product gallery', 'video-wc-gallery' ),
-        'vwg_settings_show_first_callback',
+        __( 'Show video first in product gallery', 'video-wc-gallery' ) . wc_help_tip(__('This setting may not work properly with some themes', 'video-wc-gallery'), 'warning'),
+        'vwg_settings_show_first_callback', 
         'vwg_settings_group',
         'vwg_settings_section'
     );
 
     add_settings_field(
         'vwg_settings_video_adapt_sizes',
-        __( 'Adjust the video size according to the theme settings', 'video-wc-gallery' ),
+        __( 'Adjust the video size according to the theme settings', 'video-wc-gallery' ) . wc_help_tip(__('This setting may not work properly with some themes', 'video-wc-gallery'), 'warning'),
         'vwg_settings_video_adapt_sizes_callback',
         'vwg_settings_group',
         'vwg_settings_section'
@@ -594,5 +594,28 @@ function remove_unused_thumbnails() {
 }
 add_action('wp_ajax_remove_unused_thumbnails', 'remove_unused_thumbnails');
 add_action('wp_ajax_nopriv_remove_unused_thumbnails', 'remove_unused_thumbnails');
+
+/**
+ * Custom filter to modify help tip icon
+ * @since 1.35
+ */
+function vwg_custom_help_tip($tip, $sanitized_tip, $original_tip, $allow_html) {
+    // Check if 'info' is passed as second parameter to wp_help_tip()
+    if (func_num_args() > 2 && $allow_html === 'info') {
+        return sprintf(
+            '<span class="woocommerce-help-tip dashicons dashicons-info" data-tip="%s"></span>',
+            $sanitized_tip
+        );
+    } elseif (func_num_args() > 2 && $allow_html === 'warning') {
+        return sprintf(
+            '<span class="woocommerce-help-tip dashicons dashicons-warning" data-tip="%s"></span>',
+            $sanitized_tip
+        );
+    }
+    
+    // Return original tip if not info
+    return $tip;
+}
+add_filter('wc_help_tip', 'vwg_custom_help_tip', 10, 4);
 
 
