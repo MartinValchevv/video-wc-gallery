@@ -8,6 +8,11 @@ jQuery(document).ready(function($) {
     });
 
     /**
+     * @since 2.0 Initializes WooCommerce help tips using TipTip.
+     */
+    $('.woocommerce-help-tip').tipTip({attribute: 'data-tip', fadeIn: 50, fadeOut: 50});
+
+    /**
      * @since 1.13 Function if mute is off automatically turns off autoplay
      */
     $('#vwg_settings_muted').on('change', function (){

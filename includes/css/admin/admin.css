@@ -294,6 +294,15 @@ label sup {
     top: 2px;
 }
 
+.woocommerce-help-tip.dashicons-warning::after {
+    content: "\f534" !important;
+    cursor: pointer !important;
+}
+.woocommerce-help-tip.dashicons-info::after {
+    content: "\f348" !important;
+    cursor: pointer !important;
+}
+
 /*Responsive*/
 @media only screen and (max-width: 768px) {
     div.radio-with-Icon {
