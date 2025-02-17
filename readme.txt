@@ -5,7 +5,7 @@ Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.7.2
 Requires PHP: 7.4
-Stable tag: 1.35
+Stable tag: 1.36
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,12 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 3. Product pages
 
 == Changelog ==
+
+= 1.36 =
+* **Fix:** Issue with Default Form Values in variable products
+* **Added:** Better support for Flatsome theme for variable products
+* **Improved:** Code optimization and improvements
+**Release date: February 17, 2025**
 
 = 1.35 =
 * **Added:** Explanatory information for two settings: "Show video first" and "Adjust video size"
