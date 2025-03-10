@@ -363,6 +363,17 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
         global $product;
+
+        // Ensure $product is a valid object and initialize if necessary
+        if (!is_object($product)) {
+            $product = wc_get_product(get_the_ID());
+        }
+
+        // Verify that we now have a valid product object
+        if (!is_object($product)) {
+            return; // Exit the function if $product is still not valid
+        }
+
         $iconColor = get_option('vwg_settings_group')['vwg_settings_icon_color'];
         $icon = get_option('vwg_settings_group')['vwg_settings_icon'];
         $adaptSettings = get_option('vwg_settings_group')['vwg_settings_video_adapt_sizes'];
@@ -934,10 +945,21 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.33
+ * @since 1.37
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
+
+    // Ensure $product is a valid object and initialize if necessary
+    if (!is_object($product)) {
+        $product = wc_get_product(get_the_ID());
+    }
+
+    // Verify that we now have a valid product object
+    if (!is_object($product)) {
+        return; // Exit the function if $product is still not valid
+    }
+    
     $video_url = get_post_meta( $product->get_id(), 'vwg_video_url', true );
     $video_urls = maybe_unserialize($video_url);
     // $icon = get_option('vwg_settings_group')['vwg_settings_icon'];

@@ -76,6 +76,11 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * **Improvement:** Code cleanup and improvements
 **Release date: April 3, 2024**
 
+= 1.37 =
+ * **Fix:** Fatal error when product object is not properly initialized by page builders or themes
+ * **Added:** Validation checks for product object to ensure compatibility with various page builders
+ **Release date: March 10, 2025**
+
 = 1.36 =
 * **Fix:** Issue with Default Form Values in variable products
 * **Added:** Better support for Flatsome theme for variable products
