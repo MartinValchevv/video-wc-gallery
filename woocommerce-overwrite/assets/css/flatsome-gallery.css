@@ -1,0 +1,103 @@
+/* Styles for equalizing video and image sizes in the gallery */
+
+/* Thumbnail styles */
+.vwg-flatsome-theme.vwg-equal-thumbs .col {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1/1;
+    margin-bottom: 10px;
+}
+
+.vwg-flatsome-theme.vwg-equal-thumbs .col a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Vertical gallery thumbnails */
+.vertical-thumbnails .vwg-flatsome-theme.vwg-equal-thumbs .col {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Image styling in thumbnails */
+.vwg-flatsome-theme.vwg-equal-thumbs .col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Play icon positioning */
+.vwg-flatsome-theme.vwg-equal-thumbs .col i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Main gallery image container */
+.product-gallery-slider .woocommerce-product-gallery__image {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Video container in main gallery */
+.product-gallery-slider .woocommerce-product-gallery__image.vwg-video-container {
+    aspect-ratio: 16/9;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Video iframe styling */
+.product-gallery-slider .woocommerce-product-gallery__image.vwg-video-container iframe,
+.product-gallery-slider .woocommerce-product-gallery__image.vwg-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-height: 100%;
+}
+
+/* Hover effects */
+.vwg-flatsome-theme.vwg-equal-thumbs .col:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.product-thumbnails a:hover img, .product-thumbnails .is-nav-selected a img {
+    border: none;
+    -webkit-transform: translateY(0) !important;
+    -ms-transform: translateY(0) !important;
+    transform: translateY(0) !important;
+}
+
+/* Active thumbnail */
+.vwg-flatsome-theme.vwg-equal-thumbs .col.is-nav-selected {
+    opacity: 1;
+}
+
+/* Vertical gallery layout */
+.vertical-thumbnails .vwg-flatsome-theme.vwg-equal-thumbs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 849px) {
+    .vertical-thumbnails .vwg-flatsome-theme.vwg-equal-thumbs {
+        flex-direction: row;
+    }
+    
+    .vertical-thumbnails .vwg-flatsome-theme.vwg-equal-thumbs .col {
+        width: auto;
+        margin-right: 10px;
+    }
+}

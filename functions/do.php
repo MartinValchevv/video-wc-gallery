@@ -12,7 +12,7 @@ $option = get_option('vwg_settings_group');
 /**
  * Enqueue CSS and JS
  *
- * @since 1.12
+ * @since 1.38
  */
 function vwg_enqueue_scripts( $hook ) {
 
@@ -21,6 +21,11 @@ function vwg_enqueue_scripts( $hook ) {
         wp_enqueue_style('vwg_fontawesome', VWG_VIDEO_WOO_GALLERY_URL . 'includes/fontawesome_v6-6-0/css/all.css', '', VWG_VERSION_NUM);
         // Enqueue Video.js CSS
         wp_enqueue_style('videojs-css', VWG_VIDEO_WOO_GALLERY_URL . 'includes/video-js/video-js.css', '', VWG_VERSION_NUM);
+        
+        // Enqueue Flatsome theme specific styles
+        if (vwg_active_theme_checker() === 'Flatsome') {
+            wp_enqueue_style('vwg-flatsome-gallery', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/css/flatsome-gallery.css', '', VWG_VERSION_NUM);
+        }
 
         // JS
         // Enqueue Video.js JavaScript
