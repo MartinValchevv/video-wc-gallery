@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
                 text: translate_obj.remove_plugin_data_txt,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
+                confirmButtonColor: '#7e3fec',
                 cancelButtonColor: '#d33',
                 confirmButtonText: translate_obj.yes,
                 cancelButtonText: translate_obj.cancel_text,
@@ -57,7 +57,7 @@ jQuery(document).ready(function($) {
                 text: translate_obj.remove_video_txt,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
+                confirmButtonColor: '#7e3fec',
                 cancelButtonColor: '#d33',
                 confirmButtonText: translate_obj.yes,
                 cancelButtonText: translate_obj.cancel_text,
@@ -81,6 +81,7 @@ jQuery(document).ready(function($) {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
+            cancelButtonColor: '#7e3fec',
             confirmButtonText: translate_obj.yes,
             cancelButtonText: translate_obj.cancel_text,
         }).then((result) => {
@@ -108,6 +109,7 @@ jQuery(document).ready(function($) {
                                 title: response.data.count_delete + ' ' + translate_obj.deleting_thumbs,
                                 html: `<textarea readonly style="width: 100%; min-height: 150px;">${response.data.deleted_file.join('\n')}</textarea>`,
                                 icon: 'success',
+                                confirmButtonColor: '#7e3fec',
                             });
                             $('.vwg-dashboard-widgets-unused-thumbs').remove();
                         } else {
@@ -117,6 +119,7 @@ jQuery(document).ready(function($) {
                                 title: translate_obj.error,
                                 text: translate_obj.ajaxError + response.data,
                                 icon: 'error',
+                                confirmButtonColor: '#7e3fec',
                             });
                         }
                     },
@@ -126,6 +129,7 @@ jQuery(document).ready(function($) {
                             title: translate_obj.error,
                             text: translate_obj.ajaxError + errorThrown,
                             icon: 'error',
+                            confirmButtonColor: '#7e3fec',
                         });
                     }
                 });

@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Video Gallery for WooCommerce
- * Plugin URI:
+ * Plugin URI: https://nitramix.com/projects/video-gallery-for-woocommerce
  * Description: The Video Gallery for WooCommerce is a plugin that enables the addition of video files from the WordPress library to a product page, with several customizable options.
- * Author: Afowsoft, Martin Valchev
- * Author URI: https://afowsoft.com/
+ * Author: Nitramix, Martin Valchev
+ * Author URI: https://nitramix.com/
  * Requires Plugins: woocommerce
  * Version: 2.0
  * Text Domain: video-wc-gallery

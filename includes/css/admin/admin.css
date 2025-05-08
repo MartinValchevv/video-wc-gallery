@@ -23,11 +23,11 @@ div.radio-with-Icon p.radioOption label {
     width: 100%;
     padding: 10px 10px 0px 10px;
     border-radius: 10px;
-    border: 1px solid #222;
-    color: #222;
+    border: 1px solid #7e3fec;
+    color: #7e3fec;
     cursor: pointer;
     opacity: .8;
-    transition: none;
+    transition: all 0.3s ease;
     font-size: 20px;
     text-align: center;
     margin: 0 !important;
@@ -39,8 +39,8 @@ div.radio-with-Icon p.radioOption label i {
     transform: translate(-50%, -50%);
 }
 div.radio-with-Icon p.radioOption label:hover, div.radio-with-Icon p.radioOption label:focus, div.radio-with-Icon p.radioOption label:active {
-    opacity: .5;
-    background-color: #222;
+    opacity: .9;
+    background-color: #7e3fec;
     color: #fff;
     margin: 0 !important;
 }
@@ -65,7 +65,7 @@ div.radio-with-Icon p.radioOption input[type="radio"]:active ~ label {
 div.radio-with-Icon p.radioOption input[type="radio"]:checked ~ label {
     opacity: 1;
     border: none;
-    background-color: #222;
+    background-color: #7e3fec;
     color: #fff;
 }
 div.radio-with-Icon p.radioOption input[type="radio"]:hover, div.radio-with-Icon p.radioOption input[type="radio"]:focus, div.radio-with-Icon p.radioOption input[type="radio"]:active {
@@ -167,7 +167,7 @@ div.radio-with-Icon p.radioOption input[type="radio"] + label:before, div.radio-
 }
 
 label sup {
-    color: #0387e6;
+    color: #7e3fec;
     font-weight: 600;
     font-size: 10px;
     font-style: italic;
@@ -208,7 +208,7 @@ label sup {
 }
 
 .get-pro-version-info span.dashicons-yes {
-    color: #0387e6;
+    color: #7e3fec;
 }
 
 .get-pro-version-info p.btn-wrap {
@@ -216,6 +216,25 @@ label sup {
     margin-top: 1em;
 }
 
+.get-pro-version-info-btn {
+    display: inline-block;
+    background-color: #7e3fec;
+    color: white !important;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.get-pro-version-info-btn:hover {
+    background-color: #6930c3;
+    text-decoration: none;
+}
 
 #vwg_metabox_general_uninstall_settings {
     background: rgba(255, 0, 0, 10% );
@@ -227,7 +246,7 @@ label sup {
 
 #vwg-options sup {
     font-size: 11px;
-    color: #0387e6;
+    color: #7e3fec;
     font-style: italic;
     font-weight: 600;
 }
@@ -277,7 +296,7 @@ label sup {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
 }
 .vwg-toggle-checkbox:checked + .vwg-toggle-switch {
-    background: #0387e6;
+    background: #7e3fec;
 }
 .vwg-toggle-checkbox:checked + .vwg-toggle-switch:before {
     left: 30px;
@@ -301,6 +320,234 @@ label sup {
 .woocommerce-help-tip.dashicons-info::after {
     content: "\f348" !important;
     cursor: pointer !important;
+}
+
+/* Get PRO button styling */
+.wrap .page-title-action,
+#vwg-options .button-primary,
+#vwg-options .wp-core-ui .button-primary {
+    background: #7e3fec;
+    border-color: #7e3fec;
+    color: white;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.wrap .page-title-action:hover,
+#vwg-options .button-primary:hover,
+#vwg-options .wp-core-ui .button-primary:hover {
+    background: #6930c3;
+    border-color: #6930c3;
+    color: white;
+}
+
+/* Secondary button styling */
+#vwg-options .button.button-secondary,
+#vwg-options .wp-core-ui .button-secondary {
+    background: white;
+    border-color: #7e3fec;
+    color: #7e3fec;
+    box-shadow: none;
+    text-shadow: none;
+    transition: all 0.3s ease;
+}
+
+#vwg-options .button.button-secondary:hover,
+#vwg-options .wp-core-ui .button-secondary:hover {
+    background: rgba(126, 63, 236, 0.05);
+    border-color: #6930c3;
+    color: #6930c3;
+}
+
+/* Ensure buttons have consistent styling */
+#vwg-options .button,
+#vwg-options .wp-core-ui .button {
+    border-radius: 4px;
+    font-weight: 500;
+    height: auto;
+    padding: 5px 15px;
+    line-height: 1.5;
+}
+
+/* Focus styles for buttons */
+#vwg-options .button:focus,
+#vwg-options .wp-core-ui .button:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px rgba(126, 63, 236, 0.5);
+    outline: none;
+}
+
+/* Global focus styles */
+#vwg-options input[type="text"]:focus,
+#vwg-options input[type="email"]:focus,
+#vwg-options input[type="number"]:focus,
+#vwg-options input[type="password"]:focus,
+#vwg-options input[type="search"]:focus,
+#vwg-options input[type="tel"]:focus,
+#vwg-options input[type="url"]:focus,
+#vwg-options textarea:focus,
+#vwg-options select:focus {
+    border-color: #7e3fec;
+    box-shadow: 0 0 0 1px #7e3fec;
+    outline: none;
+}
+
+#vwg-options input[type="checkbox"]:focus,
+#vwg-options input[type="radio"]:focus {
+    border-color: #7e3fec;
+    box-shadow: 0 0 0 1px #7e3fec;
+    outline: none;
+}
+
+#vwg-options a:focus {
+    color: #6930c3;
+    box-shadow: 0 0 0 1px #fff, 0 0 0 2px #7e3fec;
+    outline: none;
+}
+
+#vwg-options .nav-tab:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 2px #7e3fec;
+    outline: none;
+}
+
+#vwg-options div.radio-with-Icon p.radioOption input[type="radio"]:focus ~ label {
+    border-color: #7e3fec;
+    box-shadow: 0 0 0 1px #7e3fec;
+    outline: none;
+}
+
+/* Links styling */
+#vwg-options a,
+.vwg-pricing-container a,
+.vwg-swal-container-pro-info a:not(.buy-now-btn) {
+    color: #7e3fec;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+#vwg-options a:hover,
+#vwg-options a:focus,
+.vwg-pricing-container a:hover,
+.vwg-pricing-container a:focus,
+.vwg-swal-container-pro-info a:not(.buy-now-btn):hover,
+.vwg-swal-container-pro-info a:not(.buy-now-btn):focus {
+    color: #6930c3;
+    text-decoration: underline;
+}
+
+#vwg-options a.button {
+    text-decoration: none;
+}
+
+#vwg-options a.button:hover {
+    text-decoration: none;
+}
+
+#vwg-options .nav-tab {
+    border-color: #ccc;
+    background: #f7f7f7;
+    color: #555;
+}
+
+#vwg-options .nav-tab:hover,
+#vwg-options .nav-tab:focus {
+    background-color: #fff;
+    color: #444;
+}
+
+#vwg-options .nav-tab-active,
+#vwg-options .nav-tab-active:focus,
+#vwg-options .nav-tab-active:focus:active,
+#vwg-options .nav-tab-active:hover {
+    border-bottom: 1px solid #f1f1f1;
+    background: #fff;
+    color: #7e3fec;
+}
+
+/* Color Picker Styling */
+.wp-picker-container {
+    position: relative;
+}
+
+.wp-picker-container .wp-color-result.button {
+    border-color: #ddd;
+    box-shadow: none;
+}
+
+.wp-picker-container .wp-color-result:focus,
+.wp-picker-container .wp-color-result:hover {
+    border-color: #7e3fec;
+}
+
+.wp-picker-container .wp-color-result-text {
+    background: #f7f7f7;
+    border-left: 1px solid #ddd;
+    color: #555;
+}
+
+.wp-picker-container .wp-color-result:focus .wp-color-result-text,
+.wp-picker-container .wp-color-result:hover .wp-color-result-text {
+    color: #7e3fec;
+}
+
+.wp-picker-container .wp-picker-open + .wp-picker-input-wrap {
+    display: inline-block;
+}
+
+.wp-picker-container .wp-picker-input-wrap input[type="text"] {
+    border-color: #ddd;
+    vertical-align: top;
+}
+
+.wp-picker-container .wp-picker-input-wrap input[type="text"]:focus {
+    border-color: #7e3fec;
+    box-shadow: 0 0 0 1px #7e3fec;
+}
+
+.wp-picker-container .button.wp-picker-default {
+    background: white;
+    border-color: #7e3fec;
+    color: #7e3fec;
+    transition: all 0.3s ease;
+}
+
+.wp-picker-container .button.wp-picker-default:hover {
+    background: rgba(126, 63, 236, 0.05);
+    border-color: #6930c3;
+    color: #6930c3;
+}
+
+.wp-picker-container .button.wp-picker-clear {
+    margin-left: 6px;
+}
+
+.wp-picker-container .iris-picker {
+    border-color: #ddd;
+    border-radius: 4px;
+}
+
+.wp-picker-container .iris-border {
+    background-color: #fff;
+}
+
+.wp-picker-container .iris-picker .iris-square-inner {
+    box-shadow: none;
+}
+
+.wp-picker-container .iris-picker .iris-slider {
+    border-color: #ddd;
+}
+
+.wp-picker-container .iris-picker .iris-square,
+.wp-picker-container .iris-picker .iris-slider,
+.wp-picker-container .iris-picker .iris-square-inner,
+.wp-picker-container .iris-picker .iris-palette {
+    box-shadow: none;
+    border-radius: 2px;
+}
+
+.wp-picker-container .iris-picker .iris-palette:hover {
+    border-color: #7e3fec;
+    box-shadow: 0 0 0 2px #7e3fec;
 }
 
 /*Responsive*/

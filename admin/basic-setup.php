@@ -150,7 +150,7 @@ function vwg_plugin_row_meta( $links, $file ) {
 	if ( strpos( $file, 'video-wc-gallery.php' ) !== false ) {
 		$new_links = array(
 				'donate' 	=> '<a href="https://linktr.ee/martinvalchev" target="_blank">Donate</a>',
-				'hireme' 	=> '<a href="https://martinvalchev.com/#contact" target="_blank">Hire Me For A Project</a>',
+				'hireme' 	=> '<a href="https://nitramix.com/contact" target="_blank">Hire Me For A Project</a>',
 				);
 		$links = array_merge( $links, $new_links );
 	}
@@ -172,7 +172,7 @@ function vwg_footer_text($default) {
         return $default;
     }
 
-    $text = '<i><a target="_blank" href="#">Video Gallery for WooCommerce</a> v' . VWG_VERSION_NUM . ' by <a href="https://afowsoft.com/" title="' . __('Visit our site to get more great plugins', 'video-wc-gallery') . '" target="_blank">Afowsoft</a>.';
+    $text = '<i><a target="_blank" href="#">Video Gallery for WooCommerce</a> v' . VWG_VERSION_NUM . ' by <a href="https://nitramix.com/" title="' . __('Visit our site to get more great plugins', 'video-wc-gallery') . '" target="_blank">Nitramix</a>.';
     $text .= ' Please <a target="_blank" href="https://wordpress.org/support/plugin/video-wc-gallery/#new-post" title="' . __('Rate the plugin', 'video-wc-gallery') . '">' . __('Rate the plugin ★★★★★', 'video-wc-gallery') . '</a>.</i> | <a href="https://translate.wordpress.org/projects/wp-plugins/video-wc-gallery/" target="_blank"><span class="dashicons dashicons-translation"></span></a> ';
     return $text;
 }
