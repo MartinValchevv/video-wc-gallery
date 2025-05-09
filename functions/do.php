@@ -54,7 +54,7 @@ add_filter( 'woocommerce_product_data_tabs', 'vwg_add_custom_product_tab', 10, 1
 /**
  * Add the tab content
  *
- * @since 1.3
+ * @since 2.0
  */
 function vwg_add_custom_product_tab_content() {
     global $post;
@@ -63,14 +63,16 @@ function vwg_add_custom_product_tab_content() {
         <?php
         $video_url = get_post_meta( $post->ID, 'vwg_video_url', true );
         ?>
-        <p class="form-field">
+        <p class="form-field vwg-add-video-button-container">
             <label for="add_video_button"><?php echo esc_html__('Add video from' , 'video-wc-gallery') ?></label>
-            <button id="add_video_button" type="button" class="button"><?php echo esc_html__('WP Media' , 'video-wc-gallery') ?></button>
+            <button id="add_video_button" type="button" class="button">
+                <i class="fas fa-plus-circle"></i> <?php echo esc_html__('WP Media' , 'video-wc-gallery') ?>
+            </button>
         </p>
         <ul id="sortable" class="video_gallery_wrapper">
             <?php if (!empty($video_url)) :
                 $video_url = maybe_unserialize( $video_url );
-                $break_rule = apply_filters('vwg_continue_video_loop', 2);
+                $break_rule = vwg_get_video_limit();
                 $position_counter = 0;
                 ?>
                 <?php foreach ($video_url as $key => $video) :
@@ -80,14 +82,26 @@ function vwg_add_custom_product_tab_content() {
                 }
                 ?>
                 <li class="ui-state video_id_<?php echo esc_attr($key) ?>" data-position="<?php echo esc_attr($position_counter) ?>" >
-                    <div class="video-player" style="width:220px;height:200px; background:#222;">
-                        <video width="230" height="200" controls preload="auto">
-                            <source src="<?php echo esc_url($video['video_url']); ?>" type="video/webm">
+                    <div class="video-player" style="background-image: url('<?php echo esc_url($video['video_thumb_url']); ?>');">
+                        <video width="100%" height="100%" controls preload="auto">
+                            <source src="<?php echo esc_url($video['video_url']); ?>" type="video/mp4">
                         </video>
+                    </div>
+                    <div class="video-actions">
+                        <div class="action-btn seo-btn" data-video-id="<?php echo esc_attr($key) ?>" title="<?php echo esc_attr__('SEO settings', 'video-wc-gallery'); ?>">
+                            <i class="fas fa-cog"></i>
+                            <?php if (!vwg_is_pro_addon()): ?>
+                            <span class="pro-badge">PRO</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="action-btn delete-btn" data-video-id="<?php echo esc_attr($key) ?>" title="<?php echo esc_attr__('Delete', 'video-wc-gallery'); ?>">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
                     </div>
                     <input type="hidden" class="video_url" name="video_url[<?php echo esc_attr($key) ?>][video_url]" value="<?php echo esc_url($video['video_url']); ?>"/>
                     <input type="hidden" class="video_thumb_url" name="video_url[<?php echo esc_attr($key) ?>][video_thumb_url]" value="<?php echo esc_url($video['video_thumb_url']); ?>"/>
-                    <button data-video-id="<?php echo esc_attr($key) ?>" type="button" class="button delete_video_btn" title="Delete">X</button>
+                    <input type="hidden" class="video_title" name="video_url[<?php echo esc_attr($key) ?>][video_title]" value="<?php echo isset($video['video_title']) ? esc_attr($video['video_title']) : ''; ?>"/>
+                    <input type="hidden" class="video_description" name="video_url[<?php echo esc_attr($key) ?>][video_description]" value="<?php echo isset($video['video_description']) ? esc_attr($video['video_description']) : ''; ?>"/>
                 </li>
             <?php endforeach; ?>
             <?php endif; ?>
@@ -95,11 +109,42 @@ function vwg_add_custom_product_tab_content() {
 
         <div class="bar-btns" <?php echo (!empty($video_url)) ? '' : 'style="display:none"'?>>
             <p>
-                <button id="delete_all_video_button" type="button" class="button"><?php echo esc_html__('Delete all' , 'video-wc-gallery') ?></button>
+                <button id="delete_all_video_button" type="button" class="button">
+                    <i class="fas fa-trash-alt"></i> <?php echo esc_html__('Delete all' , 'video-wc-gallery') ?>
+                </button>
             </p>
+            <div class="vwg-footer">
+                <div class="vwg-video-counter">
+                    <?php 
+                    $video_count = !empty($video_url) ? min(count($video_url), vwg_get_video_limit()) : 0;
+                    $limit = vwg_get_video_limit();
+                    $is_full = ($video_count >= $limit);
+                    $percentage = ($limit > 0) ? min(100, round(($video_count / $limit) * 100)) : 0;
+                    ?>
+                    <div class="counter-label"><?php echo esc_html__('Videos Used', 'video-wc-gallery'); ?></div>
+                    <div class="counter-progress-container">
+                        <div class="counter-progress-bar" style="width: <?php echo esc_attr($percentage); ?>%;" data-count="<?php echo esc_attr($video_count); ?>" data-limit="<?php echo esc_attr($limit); ?>"></div>
+                    </div>
+                    <div class="counter-numbers">
+                        <span class="current-count <?php echo $is_full ? 'counter-limit-reached' : ''; ?>"><?php echo esc_html($video_count); ?></span>
+                        <span class="separator">/</span>
+                        <span class="max-count"><?php echo esc_html($limit); ?></span>
+                    </div>
+                </div>
+                <?php if (!vwg_is_pro_addon()): ?>
+                <div class="vwg-upgrade-prompt">
+                    <button id="upgrade-to-pro-btn" type="button" class="button button-pro">
+                        <i class="fas fa-crown"></i> <?php echo esc_html__('Upgrade to PRO' , 'video-wc-gallery') ?>
+                    </button>
+                </div>
+                <?php endif; ?>
+            </div>
         </div>
+        
     </div>
     <?php
+    // Allows the PRO version to add its SEO modal or other content after the gallery
+    echo apply_filters('vwg_after_video_gallery_content', '');
 }
 add_action( 'woocommerce_product_data_panels', 'vwg_add_custom_product_tab_content' );
 
@@ -107,7 +152,7 @@ add_action( 'woocommerce_product_data_panels', 'vwg_add_custom_product_tab_conte
 /**
  * Save the tab content data
  *
- * @since 1.20
+ * @since 2.0
  */
 function vwg_save_custom_product_tab_content( $post_id ) {
     if ( isset( $_POST['video_url'] ) )  {
@@ -120,6 +165,15 @@ function vwg_save_custom_product_tab_content( $post_id ) {
                 'video_url' => wp_kses_post( $attachment['video_url'] ),
                 'video_thumb_url' => wp_kses_post( $attachment['video_thumb_url'] ),
             );
+            
+            // Add SEO fields if they exist
+            if ( isset( $attachment['video_title'] ) ) {
+                $sanitized_attachment['video_title'] = sanitize_text_field( $attachment['video_title'] );
+            }
+            
+            if ( isset( $attachment['video_description'] ) ) {
+                $sanitized_attachment['video_description'] = sanitize_textarea_field( $attachment['video_description'] );
+            }
 
             if ( isset( $attachment['video_thumb_url'] ) ) {
 
@@ -192,49 +246,200 @@ function vwg_add_video_upload_script() {
     <script type="text/javascript">
         jQuery(document).ready(function($) {
 
-            $('#vwg_video_tab_content').attr('v-limit', 2)
-            $('#vwg_video_tab_content').attr('is-pro', 0)
+            $('#vwg_video_tab_content').attr('v-limit', <?php echo vwg_get_video_limit(); ?>)
+            $('#vwg_video_tab_content').attr('is-pro', <?php echo vwg_is_pro_addon() ? 1 : 0; ?>)
 
+            var media_uploader;
+            var currentVideoCount = $('#sortable li').length;
+            var videoLimit = $('#vwg_video_tab_content').attr('v-limit');
+            var isPro = $('#vwg_video_tab_content').attr('is-pro');
+
+            // Simple sortable initialization
             $(".video_gallery_wrapper").sortable({
-                opacity: 0.9,
-                // placeholder: "ui-state ui-sortable-handle",
+                helper: "original",
+                containment: "parent",
+                cursor: "move",
                 tolerance: "pointer",
-                cursor: 'move',
-                start: function(event, ui) {
-                    var draggingItem = $(ui.helper);
-                    var height = draggingItem.height();
-                    var width = draggingItem.width();
-                    $(".video_gallery_wrapper .ui-sortable-handle")
-                        .height(height)
-                        .width(width);
+                forceHelperSize: true,
+                forcePlaceholderSize: true,
+                placeholder: "ui-sortable-placeholder",
+                start: function(e, ui) {
+                    ui.placeholder.height(ui.item.height());
+                    ui.placeholder.width(ui.item.width());
+                    // Remove hover effects during sorting
+                    $('#vwg_video_tab_content .ui-state').css('transform', 'none');
+                },
+                stop: function(e, ui) {
+                    // Restore hover effects after sorting
+                    $('#vwg_video_tab_content .ui-state').css('transform', '');
                 }
             });
             $(".video_gallery_wrapper").disableSelection();
 
-            $( '#delete_all_video_button').on('click', function () {
-                $( '.video_gallery_wrapper' ).empty()
-                $('.bar-btns').hide();
-            })
+            // Delete all videos button
+            $('#delete_all_video_button').on('click', function() {
+                // Show confirmation dialog before deleting all videos
+                Swal.fire({
+                    title: '<?php echo esc_js(__('Delete All Videos?', 'video-wc-gallery')); ?>',
+                    text: '<?php echo esc_js(__('Are you sure you want to delete all videos? This action cannot be undone.', 'video-wc-gallery')); ?>',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '<?php echo esc_js(__('Yes, delete all', 'video-wc-gallery')); ?>',
+                    cancelButtonText: '<?php echo esc_js(__('Cancel', 'video-wc-gallery')); ?>',
+                    buttonsStyling: true,
+                    focusConfirm: false,
+                    focusCancel: false,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOut'
+                    },
+                    background: '#fff',
+                    backdrop: 'rgba(0,0,0,0.4)'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If user confirms, delete all videos
+                        $('.video_gallery_wrapper').empty();
+                        $('.bar-btns').hide();
+                        currentVideoCount = 0;
+                    }
+                });
+            });
 
-            $(document).on('click', '.delete_video_btn', function () {
-                var videoID = $(this).data('video-id')
-                $(`.video_id_${videoID}`).remove()
-
-                if ( $('.video_gallery_wrapper li').length === 0) {
-                    $('.bar-btns').hide();
+            // Upgrade to PRO button
+            $('#upgrade-to-pro-btn').on('click', function(e) {
+                e.preventDefault();
+                // Create a hidden element and trigger a click on it to open the pricing popup
+                var proInfoLink = $('<a href="#" class="open-vwg-modal-pro-info" style="display:none;">Pro Info</a>');
+                $('body').append(proInfoLink);
+                proInfoLink.trigger('click');
+                proInfoLink.remove();
+            });
+            
+            // Delete single video button
+            $(document).on('click', '.action-btn.delete-btn', function() {
+                const videoId = $(this).data('video-id');
+                
+                // Show confirmation dialog before deleting
+                Swal.fire({
+                    title: '<?php echo esc_js(__('Delete Video?', 'video-wc-gallery')); ?>',
+                    text: '<?php echo esc_js(__('Are you sure you want to delete this video? This action cannot be undone.', 'video-wc-gallery')); ?>',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '<?php echo esc_js(__('Yes, delete it!', 'video-wc-gallery')); ?>',
+                    cancelButtonText: '<?php echo esc_js(__('Cancel', 'video-wc-gallery')); ?>',
+                    buttonsStyling: true,
+                    customClass: {
+                        confirmButton: 'swal-button-no-outline',
+                        cancelButton: 'swal-button-no-outline'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.video_id_' + videoId).remove();
+                        resetVideoPositions();
+                        updateVideoCounter();
+                    }
+                });
+            });
+            
+            // SEO button functionality
+            $(document).on('click', '.action-btn.seo-btn', function() {
+                var videoID = $(this).data('video-id');
+                var videoItem = $(`.video_id_${videoID}`);
+                var video_title = videoItem.find('.video_title').val() || '';
+                var video_description = videoItem.find('.video_description').val() || '';
+                
+                // Check if PRO version is activated
+                if ($('#vwg_video_tab_content').attr('is-pro') === '1') {
+                    // Open SEO modal window in PRO version
+                    $('#vwg-seo-modal').data('video-id', videoID);
+                    $('#video_title_field').val(video_title);
+                    $('#video_description_field').val(video_description);
+                    $('#vwg-seo-modal').show();
+                } else {
+                    // Show PRO version popup in free version
+                    // Create a hidden element and trigger a click on it to open the pricing popup
+                    var proInfoLink = $('<a href="#" class="open-vwg-modal-pro-info" style="display:none;">Pro Info</a>');
+                    $('body').append(proInfoLink);
+                    proInfoLink.trigger('click');
+                    proInfoLink.remove();
                 }
-            })
+            });
+            
+            // Modal close functionality
+            $('.vwg-modal-close').on('click', function() {
+                $(this).closest('.vwg-modal').hide();
+            });
+            
+            // Click outside modal to close
+            $(window).on('click', function(event) {
+                if ($(event.target).hasClass('vwg-modal')) {
+                    $('.vwg-modal').hide();
+                }
+            });
+            
+            // Save SEO settings
+            $('#save-seo-settings').on('click', function() {
+                var videoID = $('#vwg-seo-modal').data('video-id');
+                var videoItem = $(`.video_id_${videoID}`);
+                var video_title = $('#video_title_field').val();
+                var video_description = $('#video_description_field').val();
+                
+                videoItem.find('.video_title').val(video_title);
+                videoItem.find('.video_description').val(video_description);
+                
+                $('#vwg-seo-modal').hide();
+            });
 
-
-            var add_position = -1;
-            var file_frame;
-            $('#add_video_button').on('click', function(event) {
-                event.preventDefault();
-                if (file_frame) {
-                    file_frame.open();
+            $('#add_video_button').on('click', function(e) {
+                e.preventDefault();
+                
+                if(currentVideoCount >= videoLimit && isPro == 0) {
+                    // Show modal for upgrading to PRO version with SweetAlert
+                    Swal.fire({
+                        title: '<?php echo esc_js(__('Video Limit Reached', 'video-wc-gallery')); ?>',
+                        html: `
+                            <div class="swal-limit-content">
+                                <p><?php echo esc_html(__('You\'ve reached the maximum limit of <strong>2 videos</strong> in the free version.', 'video-wc-gallery')); ?></p>
+                                <p><?php echo esc_html(__('Upgrade to PRO to add up to <strong>6 videos</strong> per product!', 'video-wc-gallery')); ?></p>
+                            </div>
+                        `,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#6C5CE7',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: '<?php echo esc_js(__('Upgrade to PRO', 'video-wc-gallery')); ?>',
+                        cancelButtonText: '<?php echo esc_js(__('Maybe Later', 'video-wc-gallery')); ?>',
+                        buttonsStyling: true,
+                        focusConfirm: false,
+                        focusCancel: false,
+                        background: '#fff',
+                        backdrop: 'rgba(0,0,0,0.4)',
+                        showClass: {
+                            popup: 'animate__animated animate__fadeIn'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOut'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.open('https://nitramix.com/projects/video-gallery-for-woocommerce', '_blank');
+                        }
+                    });
                     return;
                 }
-                file_frame = wp.media.frames.file_frame = wp.media({
+
+                if (media_uploader) {
+                    media_uploader.open();
+                    return;
+                }
+                
+                media_uploader = wp.media.frames.file_frame = wp.media({
                     title: '<?php echo esc_html__('Select video' , 'video-wc-gallery') ?>',
                     button: {
                         text: '<?php echo esc_html__('Select video' , 'video-wc-gallery') ?>'
@@ -244,28 +449,38 @@ function vwg_add_video_upload_script() {
                     },
                     multiple: false
                 });
-                file_frame.on('select', function() {
-                    var attachment = file_frame.state().get('selection').first().toJSON();
+                media_uploader.on('select', function() {
+                    var attachment = media_uploader.state().get('selection').first().toJSON();
 
-                    add_position++
+                    currentVideoCount++
 
                     if ($('.video_gallery_wrapper li').length !== 0) {
                         var last_pos = parseInt($('.video_gallery_wrapper li').last().data('position'))
-                        add_position = last_pos + 1
+                        currentVideoCount = last_pos + 1
                     }
 
                     if ($('.video_gallery_wrapper li').length < $('#vwg_video_tab_content').attr('v-limit') ) {
 
                         $('.video_gallery_wrapper').append(`
-                            <li class="ui-state video_id_${attachment.id}" data-position="${add_position}" >
-                                <div class="video-player" style="width:220px;height:200px; background:#222;">
-                                    <video width="230" height="200" controls preload="auto">
-                                        <source src="${attachment.url}" type="video/webm">
+                            <li class="ui-state video_id_${attachment.id}" data-position="${currentVideoCount}" >
+                                <div class="video-player" style="background-image: url('${attachment.url}');">
+                                    <video width="100%" height="100%" controls preload="auto">
+                                        <source src="${attachment.url}" type="video/mp4">
                                     </video>
-                                <div>
+                                </div>
+                                <div class="video-actions">
+                                    <div class="action-btn seo-btn" data-video-id="${attachment.id}" title="${'SEO settings'}">
+                                        <i class="fas fa-cog"></i>
+                                        ${$('#vwg_video_tab_content').attr('is-pro') === '0' ? '<span class="pro-badge">PRO</span>' : ''}
+                                    </div>
+                                    <div class="action-btn delete-btn" data-video-id="${attachment.id}" title="${'Delete'}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </div>
+                                </div>
                                 <input type="hidden" class="video_url" name="video_url[${attachment.id}][video_url]" value="${attachment.url}"/>
                                 <input type="hidden" class="video_thumb_url" name="video_url[${attachment.id}][video_thumb_url]" value=""/>
-                                <button data-video-id="${attachment.id}" type="button" class="button delete_video_btn" title="Delete">X</button>
+                                <input type="hidden" class="video_title" name="video_url[${attachment.id}][video_title]" value="${attachment.title}"/>
+                                <input type="hidden" class="video_description" name="video_url[${attachment.id}][video_description]" value="${attachment.caption}"/>
                             </li>
                         `)
 
@@ -293,26 +508,61 @@ function vwg_add_video_upload_script() {
 
                     } else {
                         if ( $('#vwg_video_tab_content').attr('is-pro') === '1') {
-                            Swal.fire(
-                                '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
-                                `<?php echo esc_html__('Can add only', 'video-wc-gallery') ?> ${ $('#vwg_video_tab_content').attr('v-limit') } <?php echo esc_html__('videos !', 'video-wc-gallery') ?>`,
-                                'warning'
-                            )
+                            Swal.fire({
+                                title: '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
+                                text: `<?php echo esc_html__('Can add only', 'video-wc-gallery') ?> ${ $('#vwg_video_tab_content').attr('v-limit') } <?php echo esc_html__('videos !', 'video-wc-gallery') ?>`,
+                                icon: 'warning',
+                                confirmButtonColor: '#6C5CE7',
+                                confirmButtonText: '<?php echo esc_js(__('OK', 'video-wc-gallery')); ?>',
+                                buttonsStyling: true,
+                                focusConfirm: false,
+                                background: '#fff',
+                                backdrop: 'rgba(0,0,0,0.4)'
+                            });
                         } else {
-                            Swal.fire(
-                                '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
-                                `<?php echo esc_html__('Can add only', 'video-wc-gallery') ?> ${ $('#vwg_video_tab_content').attr('v-limit') } <?php echo esc_html__('videos !', 'video-wc-gallery') ?>
-                                 <?php echo esc_html__('To be able to add more videos get', 'video-wc-gallery') ?> <a class="open-vwg-modal-pro-info" href="#"><?php echo esc_html__('PRO version', 'video-wc-gallery') ?></a>
+                            Swal.fire({
+                                title: '<?php echo esc_html__('Ops..' , 'video-wc-gallery') ?>',
+                                html: `<?php echo esc_html__('Can add only', 'video-wc-gallery') ?> ${ $('#vwg_video_tab_content').attr('v-limit') } <?php echo esc_html__('videos !', 'video-wc-gallery') ?>
+                                 <br><br><?php echo esc_html__('To be able to add more videos get', 'video-wc-gallery') ?> <a class="open-vwg-modal-pro-info" href="#"><?php echo esc_html__('PRO version', 'video-wc-gallery') ?></a>
                                 `,
-                                'warning'
-                            )
+                                icon: 'warning',
+                                confirmButtonColor: '#6C5CE7',
+                                confirmButtonText: '<?php echo esc_js(__('OK', 'video-wc-gallery')); ?>',
+                                buttonsStyling: true,
+                                focusConfirm: false,
+                                background: '#fff',
+                                backdrop: 'rgba(0,0,0,0.4)'
+                            });
                         }
                     }
 
                     $('.bar-btns').show();
+                    
+                    // Update video counter
+                    updateVideoCounter();
                 });
-                file_frame.open();
+                media_uploader.open();
             });
+
+            // Function to update video counter
+            function updateVideoCounter() {
+                var currentCount = $('.video_gallery_wrapper li').length;
+                var maxLimit = $('#vwg_video_tab_content').attr('v-limit');
+                var percentage = (maxLimit > 0) ? Math.min(100, Math.round((currentCount / maxLimit) * 100)) : 0;
+                var isLimitReached = currentCount >= maxLimit;
+                
+                $('.counter-progress-bar').css('width', percentage + '%');
+                $('.current-count').text(currentCount);
+                $('.counter-progress-bar').attr('data-count', currentCount);
+                
+                if (isLimitReached) {
+                    $('.current-count').addClass('counter-limit-reached');
+                    $('.counter-progress-bar').addClass('progress-limit-reached');
+                } else {
+                    $('.current-count').removeClass('counter-limit-reached');
+                    $('.counter-progress-bar').removeClass('progress-limit-reached');
+                }
+            }
         });
     </script>
 
@@ -320,38 +570,318 @@ function vwg_add_video_upload_script() {
         #vwg_video_tab_content .video_gallery_wrapper {
             display: flex;
             position: relative;
-            align-items: center;
+            align-items: flex-start;
             flex-wrap: wrap;
-            column-gap: 20px;
-            margin-left: 15px;
-            margin-right: 15px
+            gap: 20px;
+            margin: 20px 10px;
         }
         #vwg_video_tab_content .ui-state {
-            margin-bottom: 25px;
             position: relative;
-            padding: 20px;
-            box-shadow: 0 0px 38px rgba(0,0,0,0.30), 0 8px 12px rgba(0,0,0,0.22);
-            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            background: #fff;
+            width: calc(33.33% - 14px);
+            min-width: 220px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        #vwg_video_tab_content .ui-state:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        #vwg_video_tab_content .video-player {
+            position: relative;
+            width: 100% !important;
+            height: 180px !important;
+            background: #f0f0f0 !important;
+            overflow: hidden;
+        }
+        #vwg_video_tab_content .video-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 10px;
+            gap: 8px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        #vwg_video_tab_content .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            background: #fff;
+            border: 1px solid #ddd;
+            transition: all 0.2s ease;
+        }
+        #vwg_video_tab_content .action-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        #vwg_video_tab_content .action-btn.seo-btn {
+            color: #6c5ce7;
+            position: relative;
+        }
+        
+        /* PRO Badge */
+        .pro-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #6c5ce7;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 2px 4px;
+            border-radius: 4px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        #vwg_video_tab_content .action-btn.delete-btn {
+            color: #ff5252;
+        }
+        #vwg_video_tab_content .action-btn.delete-btn:hover {
+            background: #ff5252;
+            color: #fff;
+            border-color: #ff5252;
         }
         #vwg_video_tab_content .mejs-container {
             width: 100% !important;
             height: 100% !important;
-        }
-        #vwg_video_tab_content .ui-state .button {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            border-radius: 50%;
-            background: red;
-            border-color: red;
-            color: #fff;
-            font-weight: bold;
+            overflow: hidden;
         }
         #vwg_video_tab_content video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             cursor: move;
         }
         #woocommerce-product-data ul.wc-tabs li.vwg_video_tab_tab a::before {
             content: "\f236";
+        }
+        
+        /* Sortable styles */
+        .ui-sortable-helper {
+            transform: none !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+            opacity: 0.8 !important;
+            width: calc(33.33% - 14px) !important;
+            max-width: 250px !important;
+            width: 100% !important;
+        }
+        
+        .ui-sortable-placeholder {
+            visibility: visible !important;
+            border: 2px dashed #6c5ce7 !important;
+            background-color: rgba(108, 92, 231, 0.08) !important;
+            border-radius: 10px;
+            min-height: 100px !important;
+            width: calc(33.33% - 14px) !important;
+            max-width: 250px !important;
+            width: 100% !important;
+        }
+        
+        /* Fix for items not jumping during drag */
+        #vwg_video_tab_content .video_gallery_wrapper.ui-sortable {
+            min-height: 230px;
+        }
+        
+        #vwg_video_tab_content .ui-state:hover {
+            transform: none !important;
+        }
+
+        .vwg-add-video-button-container {
+           display: flex;
+           align-items: center;
+           flex-wrap: wrap;
+           gap: 20px;
+        }
+
+        .vwg-add-video-button-container label {
+           font-size: 18px;
+        }
+        
+        /* Button styles */
+        #vwg_video_tab_content #add_video_button {
+            background: #6c5ce7;
+            color: white;
+            border-color: #6c5ce7;
+            padding: 8px 16px;
+            height: auto;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #vwg_video_tab_content #add_video_button:hover {
+            background: #5649c0;
+            border-color: #5649c0;
+        }
+        #vwg_video_tab_content .bar-btns {
+            margin-top: 16px;
+        }
+        #vwg_video_tab_content .bar-btns button {
+            background: #f0f0f0;
+            color: #666;
+            border-color: #ddd;
+            padding: 8px 16px;
+            height: auto;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #vwg_video_tab_content .bar-btns button:hover {
+            background: #e5e5e5;
+            color: #333;
+        }
+        
+        /* Footer styles */
+        .vwg-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .vwg-video-counter {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 200px;
+        }
+        
+        .counter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 2px;
+        }
+        
+        .counter-progress-container {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .counter-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+            border-radius: 20px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+        
+        .progress-limit-reached {
+            background: linear-gradient(90deg, #ff6b6b, #ff8787);
+        }
+        
+        .counter-numbers {
+            display: flex;
+            font-size: 13px;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 3px;
+        }
+        
+        .current-count {
+            font-weight: 700;
+            color: #495057;
+        }
+        
+        .separator {
+            color: #adb5bd;
+            margin: 0 3px;
+        }
+        
+        .max-count {
+            color: #6c757d;
+        }
+        
+        .counter-limit-reached {
+            color: #fa5252;
+        }
+        
+        .vwg-upgrade-prompt .button-pro {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            padding: 6px 15px;
+            height: auto;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .vwg-upgrade-prompt .button-pro:hover {
+            background: linear-gradient(45deg, #5649c0, #6c5ce7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.4);
+        }
+        
+        .vwg-upgrade-prompt .button-pro:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(108, 92, 231, 0.3);
+        }
+        
+        .vwg-upgrade-prompt .button-pro i {
+            font-size: 12px;
+        }
+                
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            #vwg_video_tab_content .ui-state {
+                width: calc(50% - 10px);
+            }
+        }
+        @media (max-width: 768px) {
+            #vwg_video_tab_content .ui-state {
+                width: 100%;
+            }
+        }
+
+        /* SweetAlert custom styles */
+        .swal-limit-content {
+            padding: 20px 0 10px;
+            text-align: center;
+        }
+        
+        .swal-limit-content p {
+            margin: 12px 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4A5568;
+        }
+        
+        .swal-limit-content strong {
+            color: #2D3748;
+            font-weight: 600;
+        }
+        
+        /* Specific styles for SweetAlert buttons */
+        .swal2-styled:focus {
+            box-shadow: none !important;
+            outline: none !important;
         }
     </style>
 
@@ -718,7 +1248,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
                                 var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
                                 if (vwg_video_loop) {
-                                    if (vwg_controls_enabled) {
+                                    if(vwg_controls_enabled) {
                                         vwgPlayer.play();
                                     } else {
                                         if (!vwg_user_pause) {
@@ -950,7 +1480,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 1.37
+ * @since 2.0
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -991,7 +1521,7 @@ function vwg_add_video_to_product_gallery() {
 
     if ( $video_url ) {
         $countVideo = 0;
-        $break_rule = apply_filters('vwg_continue_video_loop', 2);
+        $break_rule = vwg_get_video_limit();
         $video_html = '';
         foreach ($video_urls as $video) :
             $countVideo++;
@@ -1081,3 +1611,23 @@ function vwg_enqueue_overwrite_scripts() {
     }
 }
 add_action('wp_enqueue_scripts', 'vwg_enqueue_overwrite_scripts', 20);
+
+/**
+ * Check if PRO version is active
+ * 
+ * @since 2.0
+ * @return bool
+ */
+function vwg_is_pro_addon() {
+    return apply_filters('vwg_is_pro_addon', false);
+}
+
+/**
+ * Get the video limit based on version
+ * 
+ * @since 2.0
+ * @return int
+ */
+function vwg_get_video_limit() {
+    return apply_filters('vwg_continue_video_loop', 2);
+}

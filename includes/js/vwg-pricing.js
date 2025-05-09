@@ -22,15 +22,17 @@ jQuery(document).ready(function($) {
             title: `<img src="${vwg_variable_obj.VWG_Url}/includes/images/vwg-logo.png" class="logo-image" title="Video Gallery for WooCommerce" alt="Video Gallery for WooCommerce">`,
             icon: false,
             width: 1000,
-            showCloseButton: false,
+            showCloseButton: true,
             showCancelButton: false,
             focusConfirm: false,
             showConfirmButton: false,
+            closeButtonHtml: '<i class="fas fa-times"></i>',
             customClass: {
                 container: 'vwg-swal-container-pro-info',
                 popup: 'vwg-swal-popup-pro-info',
                 header: 'vwg-swal-header-pro-info',
                 title: 'vwg-swal-title-pro-info',
+                closeButton: 'vwg-swal-close-button'
             },
             willOpen: () => {
                 $('#wpadminbar').css('z-index', '999') // WP admin bar under modal
@@ -106,7 +108,7 @@ jQuery(document).ready(function($) {
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>Unlimited WordPress sites</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
-                                    <li><i class="fas fa-check"></i>Lifetime updates</li>
+                                    <li><i class="fas fa-check"></i>Free updates</li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">
