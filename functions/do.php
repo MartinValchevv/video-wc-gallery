@@ -157,6 +157,7 @@ add_action( 'woocommerce_product_data_panels', 'vwg_add_custom_product_tab_conte
 function vwg_save_custom_product_tab_content( $post_id ) {
     if ( isset( $_POST['video_url'] ) )  {
         $sanitized_urls = array();
+        
         foreach ( $_POST['video_url'] as $key => $attachment ) {
 
             $unique_id = uniqid(); // Generate a unique identifier
@@ -166,15 +167,6 @@ function vwg_save_custom_product_tab_content( $post_id ) {
                 'video_thumb_url' => wp_kses_post( $attachment['video_thumb_url'] ),
             );
             
-            // Add SEO fields if they exist
-            if ( isset( $attachment['video_title'] ) ) {
-                $sanitized_attachment['video_title'] = sanitize_text_field( $attachment['video_title'] );
-            }
-            
-            if ( isset( $attachment['video_description'] ) ) {
-                $sanitized_attachment['video_description'] = sanitize_textarea_field( $attachment['video_description'] );
-            }
-
             if ( isset( $attachment['video_thumb_url'] ) ) {
 
                 // The string contains 'data:image/png;base64,'
