@@ -1469,21 +1469,53 @@ function vwg_add_custom_style_and_scripts_product_page() {
         if ( $video_url ) {
             $countVideo = 0;
             foreach ($video_urls as $video) :
-                $countVideo++
+                $countVideo++;
                 ?>
                 <script type="application/ld+json">
                     {
                     "@context": "http://schema.org",
                     "@type": "VideoObject",
-                    "name": "<?= esc_attr($product->get_name() . ' Video - ' . esc_attr($countVideo)) ?>",
-                    "description": "<?= esc_attr($product->get_short_description()) ?>",
+                    "name": "<?php 
+                        $seo_settings = get_post_meta($product->get_id(), 'vwg_video_seo_settings', true);
+                        $video_id = array_keys($video_urls)[$countVideo-1];
+                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_title'])) {
+                            echo esc_attr($seo_settings[$video_id]['video_title']);
+                        } else {
+                            echo esc_attr($product->get_name() . ' Video - ' . esc_attr($countVideo));
+                        }
+                    ?>",
+                    "description": "<?php 
+                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_description'])) {
+                            echo esc_attr($seo_settings[$video_id]['video_description']);
+                        } else {
+                            echo esc_attr($product->get_short_description());
+                        }
+                    ?>",
                     "thumbnailUrl": "<?=esc_url($video['video_thumb_url']) ?>",
                     "contentUrl": "<?=esc_url($video['video_url']) ?>",
-                    "encodingFormat": "video/mp4",
+                    "encodingFormat": "<?php 
+                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_encoding_format'])) {
+                            echo esc_attr($seo_settings[$video_id]['video_encoding_format']);
+                        } else {
+                            echo 'video/mp4';
+                        }
+                    ?>",
                     "width": "<?=esc_attr($width) ?>",
                     "height": "<?=esc_attr($height) ?>",
-                    "uploadDate": "<?=esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s')))) ?>",
-                    "duration": "PT1M30S"
+                    "uploadDate": "<?php 
+                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_upload_date'])) {
+                            echo esc_attr($seo_settings[$video_id]['video_upload_date']);
+                        } else {
+                            echo esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s'))));
+                        }
+                    ?>",
+                    "duration": "<?php 
+                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_duration'])) {
+                            echo esc_attr($seo_settings[$video_id]['video_duration']);
+                        } else {
+                            echo 'PT1M30S';
+                        }
+                    ?>"
                 }
                 </script>
             <?php endforeach;
