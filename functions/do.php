@@ -272,6 +272,8 @@ function vwg_add_video_upload_script() {
                 stop: function(e, ui) {
                     // Restore hover effects after sorting
                     $('#vwg_video_tab_content .ui-state').css('transform', '');
+                    // Update position attributes
+                    resetVideoPositions();
                 }
             });
             $(".video_gallery_wrapper").disableSelection();
@@ -305,6 +307,7 @@ function vwg_add_video_upload_script() {
                         $('.video_gallery_wrapper').empty();
                         $('.bar-btns').hide();
                         currentVideoCount = 0;
+                        updateVideoCounter(); // Update the counter after deletion
                     }
                 });
             });
@@ -341,11 +344,49 @@ function vwg_add_video_upload_script() {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $('.video_id_' + videoId).remove();
+                        
+                        // Check if there are any videos left
+                        if ($('.video_gallery_wrapper li').length === 0) {
+                            $('.bar-btns').hide();
+                            currentVideoCount = 0;
+                        }
+                        
                         resetVideoPositions();
                         updateVideoCounter();
                     }
                 });
             });
+            
+            // Function to reset video positions after deletion
+            function resetVideoPositions() {
+                // Reset position counters
+                $('.video_gallery_wrapper li').each(function(index) {
+                    $(this).attr('data-position', index + 1);
+                });
+                
+                // Update currentVideoCount
+                currentVideoCount = $('.video_gallery_wrapper li').length;
+            }
+            
+            // Function to update video counter
+            function updateVideoCounter() {
+                var currentCount = $('.video_gallery_wrapper li').length;
+                var maxLimit = $('#vwg_video_tab_content').attr('v-limit');
+                var percentage = (maxLimit > 0) ? Math.min(100, Math.round((currentCount / maxLimit) * 100)) : 0;
+                var isLimitReached = currentCount >= maxLimit;
+                
+                $('.counter-progress-bar').css('width', percentage + '%');
+                $('.current-count').text(currentCount);
+                $('.counter-progress-bar').attr('data-count', currentCount);
+                
+                if (isLimitReached) {
+                    $('.current-count').addClass('counter-limit-reached');
+                    $('.counter-progress-bar').addClass('progress-limit-reached');
+                } else {
+                    $('.current-count').removeClass('counter-limit-reached');
+                    $('.counter-progress-bar').removeClass('progress-limit-reached');
+                }
+            }
             
             // SEO button functionality
             $(document).on('click', '.action-btn.seo-btn', function() {
@@ -502,8 +543,10 @@ function vwg_add_video_upload_script() {
                             // Get the image data from the canvas and create a URL for the image
                             dataURI = canvas.toDataURL('image/png');
 
-                            $(`.video_id_${attachment.id} .video_thumb_url`).val(dataURI)
-
+                            $(`.video_id_${attachment.id} .video_thumb_url`).val(dataURI);
+                            
+                            // Update the counter after adding a new video
+                            updateVideoCounter();
                         });
 
                     } else {
@@ -544,25 +587,6 @@ function vwg_add_video_upload_script() {
                 media_uploader.open();
             });
 
-            // Function to update video counter
-            function updateVideoCounter() {
-                var currentCount = $('.video_gallery_wrapper li').length;
-                var maxLimit = $('#vwg_video_tab_content').attr('v-limit');
-                var percentage = (maxLimit > 0) ? Math.min(100, Math.round((currentCount / maxLimit) * 100)) : 0;
-                var isLimitReached = currentCount >= maxLimit;
-                
-                $('.counter-progress-bar').css('width', percentage + '%');
-                $('.current-count').text(currentCount);
-                $('.counter-progress-bar').attr('data-count', currentCount);
-                
-                if (isLimitReached) {
-                    $('.current-count').addClass('counter-limit-reached');
-                    $('.counter-progress-bar').addClass('progress-limit-reached');
-                } else {
-                    $('.current-count').removeClass('counter-limit-reached');
-                    $('.counter-progress-bar').removeClass('progress-limit-reached');
-                }
-            }
         });
     </script>
 
