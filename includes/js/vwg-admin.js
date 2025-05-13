@@ -26,7 +26,7 @@ jQuery(document).ready(function($) {
     })
 
     /**
-     * @since 1.0 Add confirm change this settings remove_settings_data
+     * @since 2.0 Add confirm change this settings remove_settings_data
      */
     $('#vwg_settings_remove_settings_data').on('change', function (){
         if (this.checked) {
@@ -35,8 +35,8 @@ jQuery(document).ready(function($) {
                 text: translate_obj.remove_plugin_data_txt,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#7e3fec',
-                cancelButtonColor: '#d33',
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
                 confirmButtonText: translate_obj.yes,
                 cancelButtonText: translate_obj.cancel_text,
             }).then((result) => {
@@ -48,7 +48,7 @@ jQuery(document).ready(function($) {
     })
 
     /**
-     * @since 1.0 Add confirm change this settings remove_videos_data
+     * @since 2.0 Add confirm change this settings remove_videos_data
      */
     $('#vwg_settings_remove_videos_data').on('change', function (){
         if (this.checked) {
@@ -57,8 +57,8 @@ jQuery(document).ready(function($) {
                 text: translate_obj.remove_video_txt,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#7e3fec',
-                cancelButtonColor: '#d33',
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
                 confirmButtonText: translate_obj.yes,
                 cancelButtonText: translate_obj.cancel_text,
             }).then((result) => {
@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
     })
 
     /**
-     * @since 1.32 Function for delete unused thumbs
+     * @since 2.0 Function for delete unused thumbs
      */
     $('#delete_unused_thumbs').on('click', function(e) {
         e.preventDefault();
@@ -80,8 +80,8 @@ jQuery(document).ready(function($) {
             text: translate_obj.to_delete_unused_thumbs,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#7e3fec',
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
             confirmButtonText: translate_obj.yes,
             cancelButtonText: translate_obj.cancel_text,
         }).then((result) => {
