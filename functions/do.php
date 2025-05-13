@@ -931,6 +931,8 @@ function vwg_add_custom_style_and_scripts_product_page() {
         $showFirstClassSettings = get_option('vwg_settings_group')['vwg_settings_show_first'];
         $useDefaultAttrVariable = 0;
 
+        // {{ ! }}
+
         if ($product->is_type('variable')) {
             $default_attributes = $product->get_default_attributes();
             if ($default_attributes && isset($showFirstClassSettings) && $showFirstClassSettings == 1) {
@@ -968,6 +970,8 @@ function vwg_add_custom_style_and_scripts_product_page() {
             .vwg-video-wrapper i { font-size: 24px; color: <?=esc_attr($iconColor)?>; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
             .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper {cursor: pointer;opacity: .5;margin: 0;}
             .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper:hover, .woocommerce div.product div.images .flex-control-thumbs li .vwg-video-wrapper.flex-active {opacity: 1;}
+
+            /* {{ ! }} */
 
             /*.woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video .video-js {*/
             /*    background-color: #000;*/
@@ -1214,21 +1218,25 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         jQuery('ol.flex-control-nav').each(function() {
                             jQuery(this).find('li img').each(function(index) {
                                 var src = jQuery(this).attr('src');
+                                // {{ ! }}
                                 if (!src.includes('/video-wc-gallery-thumb')) {
                                     li_height = jQuery(this).height();
                                 }
+                                // {{ ! }}
 
                                 // Check if use default variable value and show first option
                                 if (index === 0 ) {
                                     jQuery(this).parent('li').attr('use-default-att-variable', <?php echo esc_attr($useDefaultAttrVariable) ?>)
                                     if (jQuery(this).parent('li').attr('use-default-att-variable') === 1 && jQuery(this).closest('.vwg-video-wrapper').length === 0) {
                                         jQuery(this).wrap(`<div class="vwg-video-wrapper"></div>`);
+                                        // {{ ! }}
                                         jQuery(this).closest('.vwg-video-wrapper').append('<i class="<?= esc_html($icon) ?>"></i>');
                                     }
                                     jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
                                 }
 
                                 // Check if the src attribute includes '/video-wc-gallery-thumb'
+                                // {{ ! }}
                                 if (src.includes('/video-wc-gallery-thumb')) {
                                     var vwg_video_wrapper = jQuery(this).closest('.vwg-video-wrapper')
                                     if (vwg_video_wrapper.length === 0) {
@@ -1237,11 +1245,13 @@ function vwg_add_custom_style_and_scripts_product_page() {
                                     }
                                     jQuery(this).closest('.vwg-video-wrapper').css(`height`, `${li_height}px`)
                                 }
+                                // {{ ! }}
                             });
                         });
 
                     }, 500); // Check every 0.5 seconds
 
+                    // {{ ! }}
                     jQuery(document).on('click touchend', '.vwg-video-wrapper i', function(event) {
                         event.preventDefault();
                         if (event.type === 'touchend' || (event.originalEvent && event.originalEvent.touches)) {
@@ -1250,6 +1260,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             jQuery(this).prev().trigger('click');
                         }
                     });
+                    // {{ ! }}
 
                     setInterval(function () {
                         var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
@@ -1468,57 +1479,27 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
         if ( $video_url ) {
             $countVideo = 0;
+            // {{ ! }}
             foreach ($video_urls as $video) :
                 $countVideo++;
                 ?>
-                <script type="application/ld+json">
+               <script type="application/ld+json">
                     {
                     "@context": "http://schema.org",
                     "@type": "VideoObject",
-                    "name": "<?php 
-                        $seo_settings = get_post_meta($product->get_id(), 'vwg_video_seo_settings', true);
-                        $video_id = array_keys($video_urls)[$countVideo-1];
-                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_title'])) {
-                            echo esc_attr($seo_settings[$video_id]['video_title']);
-                        } else {
-                            echo esc_attr($product->get_name() . ' Video - ' . esc_attr($countVideo));
-                        }
-                    ?>",
-                    "description": "<?php 
-                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_description'])) {
-                            echo esc_attr($seo_settings[$video_id]['video_description']);
-                        } else {
-                            echo esc_attr($product->get_short_description());
-                        }
-                    ?>",
+                    "name": "<?= esc_attr($product->get_name() . ' Video - ' . esc_attr($countVideo)) ?>",
+                    "description": "<?= esc_attr($product->get_short_description()) ?>",
                     "thumbnailUrl": "<?=esc_url($video['video_thumb_url']) ?>",
                     "contentUrl": "<?=esc_url($video['video_url']) ?>",
-                    "encodingFormat": "<?php 
-                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_encoding_format'])) {
-                            echo esc_attr($seo_settings[$video_id]['video_encoding_format']);
-                        } else {
-                            echo 'video/mp4';
-                        }
-                    ?>",
+                    "encodingFormat": "video/mp4",
                     "width": "<?=esc_attr($width) ?>",
                     "height": "<?=esc_attr($height) ?>",
-                    "uploadDate": "<?php 
-                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_upload_date'])) {
-                            echo esc_attr($seo_settings[$video_id]['video_upload_date']);
-                        } else {
-                            echo esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s'))));
-                        }
-                    ?>",
-                    "duration": "<?php 
-                        if (is_array($seo_settings) && isset($seo_settings[$video_id]) && !empty($seo_settings[$video_id]['video_duration'])) {
-                            echo esc_attr($seo_settings[$video_id]['video_duration']);
-                        } else {
-                            echo 'PT1M30S';
-                        }
-                    ?>"
+                    "uploadDate": "<?=esc_attr(date('c', strtotime($product->get_date_created()->date('Y-m-d H:i:s')))) ?>",
+                    "duration": "PT1M30S"
                 }
                 </script>
             <?php endforeach;
+            // {{ ! }}
         }
 
     }
