@@ -29,7 +29,7 @@ if ($option['vwg_settings_remove_videos_data'] == 1) {
             'vwg_video_url'
         )
     );
-    
+
     // Delete all instances of the 'vwg_video_seo_settings' custom field
     $wpdb->query(
         $wpdb->prepare(
