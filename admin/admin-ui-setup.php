@@ -900,7 +900,16 @@ function vwg_detect_attached_thumbs() {
     $upload_dir = wp_upload_dir();
     $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
 
-    $files = scandir($target_dir);
+    // Check if directory exists before trying to scan it
+    if (!file_exists($target_dir)) {
+        // Directory doesn't exist, create it or return empty result
+        if (!wp_mkdir_p($target_dir)) {
+            // Cannot create directory, return empty result
+            return array();
+        }
+    }
+
+    $files = @scandir($target_dir);
     if ($files !== false) {
         foreach ($files as $file) {
             if ($file !== '.' && $file !== '..') {
@@ -944,7 +953,18 @@ function remove_unused_thumbnails() {
     $counter = 0;
     $deleted_attachedThumbs = array();
 
-    $files = scandir($target_dir);
+    // Check if directory exists before trying to scan it
+    if (!file_exists($target_dir)) {
+        // Directory doesn't exist, so there's nothing to delete
+        wp_send_json_success(array(
+            'count_delete' => 0,
+            'deleted_file' => array(),
+            'message' => 'Directory does not exist'
+        ));
+        wp_die();
+    }
+
+    $files = @scandir($target_dir);
 
     if ($files !== false) {
         foreach ($files as $file) {
@@ -952,7 +972,7 @@ function remove_unused_thumbnails() {
                 $file_path = $target_dir . $file;
                 if (in_array($file, $for_delete)) {
                     // The file is not in the list of attached thumbs, perform necessary action
-                    unlink($file_path);
+                    @unlink($file_path);
                     $counter++;
                     $deleted_attachedThumbs['count_delete'] = $counter;
                     $deleted_attachedThumbs['deleted_file'][] = $file;
@@ -963,8 +983,8 @@ function remove_unused_thumbnails() {
 
     // Prepare the response
     $response = array(
-        'count_delete' => $deleted_attachedThumbs['count_delete'],
-        'deleted_file' => $deleted_attachedThumbs['deleted_file'],
+        'count_delete' => isset($deleted_attachedThumbs['count_delete']) ? $deleted_attachedThumbs['count_delete'] : 0,
+        'deleted_file' => isset($deleted_attachedThumbs['deleted_file']) ? $deleted_attachedThumbs['deleted_file'] : array(),
     );
 
     // Send the response back to the AJAX request
