@@ -1022,6 +1022,15 @@ function vwg_add_custom_style_and_scripts_product_page() {
 
         <?php if (vwg_active_theme_checker() === 'Flatsome') : ?>
 
+        <!-- fix for stacket option -->
+        <style>
+            .product-gallery-stacked .woocommerce-product-gallery__image[data-vwg-video] {
+                position: unset !important;
+                margin-top: 1.5em !important;
+            }
+        </style>
+        <!-- fix for stacket option -->
+
         <script>
             jQuery( document ).ready(function($) {
                 setInterval(function () {

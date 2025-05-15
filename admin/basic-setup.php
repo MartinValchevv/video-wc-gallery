@@ -134,7 +134,7 @@ function vwg_settings_link( $links ) {
 	return array_merge(
 		array(
 			'settings' => '<a href="' . admin_url( 'admin.php?page=video-gallery-wc-settings' ) . '">' . __( 'Settings', 'video-wc-gallery' ) . '</a>',
-            'get_pro' => '<a href="' . admin_url('admin.php?page=video-gallery-wc-settings#open-pro-dialog') . '" title="' . __('Get PRO', 'video-wc-gallery') . '"><b>' . __('Get PRO', 'video-wc-gallery') . '</b></a>'
+            'get_pro' => '<a href="https://nitramix.com/projects/video-gallery-for-woocommerce" title="' . __('Get PRO', 'video-wc-gallery') . '"><b>' . __('Get PRO', 'video-wc-gallery') . '</b></a>'
 		),
 		$links
 	);
@@ -172,8 +172,8 @@ function vwg_footer_text($default) {
         return $default;
     }
 
-    $text = '<i><a target="_blank" href="#">Video Gallery for WooCommerce</a> v' . VWG_VERSION_NUM . ' by <a href="https://nitramix.com/" title="' . __('Visit our site to get more great plugins', 'video-wc-gallery') . '" target="_blank">Nitramix</a>.';
-    $text .= ' Please <a target="_blank" href="https://wordpress.org/support/plugin/video-wc-gallery/#new-post" title="' . __('Rate the plugin', 'video-wc-gallery') . '">' . __('Rate the plugin ★★★★★', 'video-wc-gallery') . '</a>.</i> | <a href="https://translate.wordpress.org/projects/wp-plugins/video-wc-gallery/" target="_blank"><span class="dashicons dashicons-translation"></span></a> ';
+    $text = '<i><a target="_blank" href="https://nitramix.com/projects/video-gallery-for-woocommerce">Video Gallery for WooCommerce</a> v' . VWG_VERSION_NUM . ' by <a href="https://nitramix.com/" title="' . __('Visit our site to get more great plugins', 'video-wc-gallery') . '" target="_blank">Nitramix</a>.';
+    $text .= ' Please <a target="_blank" href="https://wordpress.org/support/plugin/video-wc-gallery/reviews/?filter=5" title="' . __('Rate the plugin', 'video-wc-gallery') . '">' . __('Rate the plugin ★★★★★', 'video-wc-gallery') . '</a>.</i> | <a href="https://translate.wordpress.org/projects/wp-plugins/video-wc-gallery/" target="_blank"><span class="dashicons dashicons-translation"></span></a> ';
     return $text;
 }
 add_filter('admin_footer_text', 'vwg_footer_text');
@@ -210,14 +210,14 @@ function vwg_display_monthly_admin_notice()
 
     if (!$is_dismissed) {
         ?>
-        <div class="notice notice-info is-dismissible" id="vwg_monthly-donation-notice">
+        <div class="notice notice-info is-dismissible" style="border-left-color: #7e3fec;" id="vwg_monthly-donation-notice">
             <img src="https://ps.w.org/video-wc-gallery/assets/icon-128x128.png" style="max-width: 40px; position: absolute; top: 50%; left: 20px; transform: translateY(-50%);">
             <div class="vwg-notice-wrapper" style="margin-left: 60px; padding: 15px;">
                 <p style="font-size: 16px; font-weight: bold;">🚀 <?php echo esc_html__('Help Us Improve Video Gallery for WooCommerce', 'video-wc-gallery'); ?>!</p>
                 <p><?php echo esc_html__('Dear valued user,', 'video-wc-gallery'); ?></p>
                 <p><?php echo esc_html__('We hope you are enjoying using Video Gallery for WooCommerce. Your support is crucial to the continued development and improvement of our plugin.', 'video-wc-gallery'); ?></p>
                 <p><?php echo esc_html__('Consider making a donation to ensure we can keep providing you with top-notch features, updates, and support.', 'video-wc-gallery'); ?></p>
-                <a href="https://linktr.ee/martinvalchev" target="_blank" class="button button-primary" style="text-decoration: none; color: #fff; padding: 8px 16px; background-color: #0073aa; border-color: #0073aa; border-radius: 4px; display: inline-block;"><?php echo esc_html__('Make a Donation', 'video-wc-gallery'); ?></a>
+                <a href="https://linktr.ee/martinvalchev" target="_blank" class="button button-primary" style="text-decoration: none; color: #fff; background-color: #7e3fec; border-color: #7e3fec; border-radius: 4px; display: inline-block;"><?php echo esc_html__('Make a Donation', 'video-wc-gallery'); ?></a>
             </div>
         </div>
         <script>

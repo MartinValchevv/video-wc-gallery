@@ -310,6 +310,7 @@ function vwg_render_get_pro_version() {
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use custom SVG icon</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use optimized thumbnails</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Auto convert to optimized thumbnail on upload</p>', 'video-wc-gallery' );
+    $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> SEO settings for each video</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Premium Support</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="btn-wrap"><a href="javascript:;" class="get-vwg-pro-version-info-btn button button-primary">Get PRO</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
     $get_pro_info .= '</div>';
@@ -323,8 +324,8 @@ function vwg_render_get_pro_version() {
 function vwg_render_review() {
     $review_text  = '';
     $review_text .= '<div class="sidebar-promo">';
-    $review_text .= __( '<p><b>Your review means a lot!</b> Please help us spread the word so that others know this plugin is free and well maintained! Thank you very much for <a href="https://wordpress.org/support/plugin/video-wc-gallery/#new-post" target="_blank">reviewing the Video Gallery for WooCommerce plugin with ★★★★★ stars</a>!</p>', 'video-wc-gallery' );
-    $review_text .= __( '<p><a href="https://wordpress.org/support/plugin/video-wc-gallery/#new-post" target="_blank" class="button button-primary">Leave a Review</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
+    $review_text .= __( '<p><b>Your review means a lot!</b> Please help us spread the word so that others know this plugin is free and well maintained! Thank you very much for <a href="https://wordpress.org/support/plugin/video-wc-gallery/reviews/?filter=5" target="_blank">reviewing the Video Gallery for WooCommerce plugin with ★★★★★ stars</a>!</p>', 'video-wc-gallery' );
+    $review_text .= __( '<p><a href="https://wordpress.org/support/plugin/video-wc-gallery/reviews/?filter=5" target="_blank" class="button button-primary">Leave a Review</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
     $review_text .= '</div>';
     echo $review_text; // phpcs:ignore WordPress.Security.EscapeOutput
 }
