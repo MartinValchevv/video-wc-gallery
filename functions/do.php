@@ -484,147 +484,115 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 /**
                  * Add function fix variable product with option video show first
                  *
-                 * @since 1.36
+                 * @since 1.39
                  */
                 <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
-                var isFirstLoad = true;
-                $.fn.wc_variations_image_update = function(variation) {
-                    var $form             = this,
-                        $product          = $form.closest('.product'),
-                        $product_gallery  = $product.find('.images'),
-                        $gallery_nav      = $product.find('.flex-control-nav'),
-                        $gallery_img      = $gallery_nav.find('li:not(:has(div.vwg-video-wrapper)):eq(0) img'),
-                        $product_img_wrap = $product_gallery
-                            .find('.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)')
-                            .eq(0),
-                        $product_img      = $product_img_wrap.find('.wp-post-image'),
-                        $product_link     = $product_img_wrap.find('a').eq(0);
-
-                    if (variation && variation.image && variation.image.src && variation.image.src.length > 1) {
-                        // Update main image
-                        $product_img.wc_set_variation_attr('src', variation.image.src);
-                        $product_img.wc_set_variation_attr('height', variation.image.src_h);
-                        $product_img.wc_set_variation_attr('width', variation.image.src_w);
-                        $product_img.wc_set_variation_attr('srcset', variation.image.srcset);
-                        $product_img.wc_set_variation_attr('sizes', variation.image.sizes);
-                        $product_img.wc_set_variation_attr('title', variation.image.title);
-                        $product_img.wc_set_variation_attr('data-caption', variation.image.caption);
-                        $product_img.wc_set_variation_attr('alt', variation.image.alt);
-                        $product_img.wc_set_variation_attr('data-src', variation.image.full_src);
-                        $product_img.wc_set_variation_attr('data-large_image', variation.image.full_src);
-                        $product_img.wc_set_variation_attr('data-large_image_width', variation.image.full_src_w);
-                        $product_img.wc_set_variation_attr('data-large_image_height', variation.image.full_src_h);
-                        $product_img_wrap.wc_set_variation_attr('data-thumb', variation.image.src);
-                        $product_link.wc_set_variation_attr('href', variation.image.full_src);
-
-                        window.setTimeout(function() {
-                            $(window).trigger('resize');
-                            $product_gallery.trigger('woocommerce_gallery_init_zoom');
-                            
-                            // Additional support for Flatsome theme
-                            if (typeof $.fn.flickity === 'function') {
-                                var $slider = $('.product-gallery-slider');
-                                if ($slider.length) {
-                                    $slider.flickity('resize');
-                                }
-                            }
-                        }, 20);
-                    } else {
-                        $form.wc_variations_image_reset();
-                    }
-                };
-
-                $.fn.wc_variations_image_reset = function() {
-                    var $form             = this,
-                        $product          = $form.closest('.product'),
-                        $product_gallery  = $product.find('.images'),
-                        $product_img_wrap = $product_gallery
-                            .find('.woocommerce-product-gallery__image:not(.vwg_show_first), .woocommerce-product-gallery__image--placeholder:not(.vwg_show_first)')
-                            .eq(0),
-                        $product_img      = $product_img_wrap.find('.wp-post-image'),
-                        $product_link     = $product_img_wrap.find('a').eq(0);
-
-                    // Reset all variation attributes
-                    $product_img.wc_reset_variation_attr('src');
-                    $product_img.wc_reset_variation_attr('width');
-                    $product_img.wc_reset_variation_attr('height');
-                    $product_img.wc_reset_variation_attr('srcset');
-                    $product_img.wc_reset_variation_attr('sizes');
-                    $product_img.wc_reset_variation_attr('title');
-                    $product_img.wc_reset_variation_attr('data-caption');
-                    $product_img.wc_reset_variation_attr('alt');
-                    $product_img.wc_reset_variation_attr('data-src');
-                    $product_img.wc_reset_variation_attr('data-large_image');
-                    $product_img.wc_reset_variation_attr('data-large_image_width');
-                    $product_img.wc_reset_variation_attr('data-large_image_height');
-                    $product_img_wrap.wc_reset_variation_attr('data-thumb');
-                    $product_link.wc_reset_variation_attr('href');
-
-                    // Additional support for Flatsome theme
-                    if (typeof $.fn.flickity === 'function') {
-                        var $slider = $('.product-gallery-slider');
-                        if ($slider.length) {
-                            $slider.flickity('select', 0);
-                            $slider.flickity('resize');
-                        }
-                    }
-                };
-                <?php endif; ?>
-
-                // Add new variation functionality
-                if (<?php echo $useDefaultAttrVariable; ?> === 1) {
-                    var $variationForm = $('.variations_form');
+                    var isFirstLoad = true;
                     
-                    $variationForm.on('wc_variation_form', function() {
+                    // Use event model instead of overwriting WooCommerce functions
+                    $(document).ready(function() {
                         setTimeout(function() {
-                            $variationForm.find('.variations select').first().trigger('change');
-                        }, 100);
-                    });
-
-                    $variationForm.on('found_variation', function(event, variation) {
-                        if (variation) {
-                            console.log('variation', variation);
-                            
-                            // Function to wait for gallery thumbnail to be ready
-                            function waitForGalleryThumbnail(selector, callback) {
-                                const interval = setInterval(() => {
-                                    const element = document.querySelector(selector);
-                                    if (element) {
-                                        clearInterval(interval);
-                                        callback(element);
+                            // Handle found_variation event
+                            $(document).on('found_variation', 'form.variations_form', function(event, variation) {
+                                // Modify first slide to show variation image
+                                if (variation && variation.image && variation.image.src) {
+                                    var $product_gallery = $('.images');
+                                    var $product_img_wrap = $product_gallery
+                                        .find('.woocommerce-product-gallery__image.vwg_show_first, .woocommerce-product-gallery__image--placeholder.vwg_show_first')
+                                        .eq(0);
+                                 
+                                    var $vwg_video = $product_img_wrap.find('div.vwg_video_js');
+                                    var $gallery_first_img_icon = $('.product-thumbnails .flickity-slider').find('div.col.first a i');
+                                    
+                                    // Hide video and icon
+                                    $vwg_video.hide();
+                                    $gallery_first_img_icon.hide();
+                                    
+                                    // Check if we have vwg-test image, if not - create it
+                                    var $vwg_custom_img = $product_img_wrap.find('a').find('img.vwg-test');
+                                    if (!$vwg_custom_img.length) {
+                                        $product_img_wrap.find('a').append('<img class="vwg-test" />');
+                                        $vwg_custom_img = $product_img_wrap.find('a').find('img.vwg-test');
                                     }
-                                }, 50);
-                            }
-
-                            // Wait for active thumbnail and click the first one
-                            waitForGalleryThumbnail('.woocommerce-product-gallery .flex-control-thumbs li img.flex-active', (element) => {
-                                const firstThumb = document.querySelector('.woocommerce-product-gallery .flex-control-thumbs li:first-child img');
-                                
-                                if (firstThumb) {
-                                    setTimeout(() => {
-                                        console.log('firstThumb', firstThumb);
-                                        firstThumb.click();
-                                    }, 350);
+                                    
+                                    // Set image attributes
+                                    $vwg_custom_img.attr('src', variation.image.src);
+                                    if (variation.image.srcset) {
+                                        $vwg_custom_img.attr('srcset', variation.image.srcset);
+                                    }
+                                    $vwg_custom_img.attr('height', variation.image.src_h);
+                                    $vwg_custom_img.attr('width', variation.image.src_w);
+                                    $vwg_custom_img.attr('title', variation.image.title || '');
+                                    $vwg_custom_img.attr('alt', variation.image.alt || '');
+                                    $vwg_custom_img.attr('data-src', variation.image.full_src || '');
+                                    $vwg_custom_img.attr('data-large_image', variation.image.full_src || '');                                
+                                    
+                                    // Resize and zoom after processing
+                                    setTimeout(function() {
+                                        $(window).trigger('resize');
+                                        $product_gallery.trigger('woocommerce_gallery_init_zoom');
+                                    }, 20);
                                 }
                             });
-
-                            // Keep original video logic
-                            var $gallery = $('.woocommerce-product-gallery');
-                            var $slides = $gallery.find('.woocommerce-product-gallery__image');
                             
-                            var $videoSlide = $slides.filter(function() {
-                                return $(this).find('.woocommerce-product-gallery__vwg_video').length > 0;
-                            }).first();
+                            // Handle reset_image event
+                            $(document).on('reset_image', 'form.variations_form', function(event) {
+                                var $product_gallery = $('.images');
+                                var $product_img_wrap = $product_gallery
+                                    .find('.woocommerce-product-gallery__image.vwg_show_first, .woocommerce-product-gallery__image--placeholder.vwg_show_first')
+                                    .eq(0);
+                                
+                                var $vwg_video = $product_img_wrap.find('div.vwg_video_js');
+                                var $vwg_custom_img = $product_img_wrap.find('a').find('img.vwg-test');
+                                var $gallery_first_img_icon = $('.product-thumbnails .flickity-slider').find('div.col.first a i');
+                                
+                                // Show video and icon again
+                                $vwg_video.show();
+                                $gallery_first_img_icon.show();
+                                
+                                // Remove custom image
+                                if ($vwg_custom_img.length) {
+                                    $vwg_custom_img.remove();
+                                }
+                                
+                                // Additional attempt to show icons
+                                setTimeout(function() {
+                                    $('.product-thumbnails .flickity-slider').find('div.col.first a i').show();
+                                }, 50);
+                            });
+                            
+                            // Handle reset_variations button
+                            $(document).on('click', '.reset_variations', function() {
+                                var $product_gallery = $('.images');
+                                var $product_img_wrap = $product_gallery
+                                    .find('.woocommerce-product-gallery__image.vwg_show_first, .woocommerce-product-gallery__image--placeholder.vwg_show_first')
+                                    .eq(0);
+                                
+                                var $vwg_video = $product_img_wrap.find('div.vwg_video_js');
+                                var $vwg_custom_img = $product_img_wrap.find('a').find('img.vwg-test');
+                                var $gallery_first_img_icon = $('.product-thumbnails .flickity-slider').find('div.col.first a i');
+                                
+                                // Show video and icon again
+                                $vwg_video.show();
+                                $gallery_first_img_icon.show();
+                                
+                                // Remove custom image
+                                if ($vwg_custom_img.length) {
+                                    $vwg_custom_img.remove();
+                                }
+                            });
+                        }, 500); // Give enough time for WooCommerce to load
+                    });
+                    <?php endif; ?>
 
-                            if ($videoSlide.length) {
-                                setTimeout(() => {
-                                    $videoSlide.trigger('click');
-                                }, 400); // Slightly later than first thumb click
-                            }
-                        }
+                // Add vwg-variable class to first element
+                if (<?php echo $useDefaultAttrVariable; ?> === 1) {
+                    $(document).on('wc_variation_form', function() {
+                        setTimeout(function() {
+                            $('.product-thumbnails .flickity-slider').find('div.col.first a i').hide();
+                        }, 50);
                     });
                 }
-
             });
         </script>
 
@@ -718,7 +686,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     /**
                      * Add function fix variable product with option video show first
                      *
-                     * @since 1.36
+                     * @since 1.39
                      */
                     <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
                     var isFirstLoad = true;
@@ -750,19 +718,33 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             $product_img.wc_set_variation_attr('data-large_image_height', variation.image.full_src_h);
                             $product_img_wrap.wc_set_variation_attr('data-thumb', variation.image.src);
                             $product_link.wc_set_variation_attr('href', variation.image.full_src);
+                            $product_img_wrap.addClass('vwg-variation-image-changed');
 
                             window.setTimeout(function() {
-                                $(window).trigger('resize');
-                                $product_gallery.trigger('woocommerce_gallery_init_zoom');
+                                // Clear previous executions
+                                clearTimeout(window.vwgClickTimeout);
                                 
-                                // Additional support for Flatsome theme
-                                if (typeof $.fn.flickity === 'function') {
-                                    var $slider = $('.product-gallery-slider');
-                                    if ($slider.length) {
-                                        $slider.flickity('resize');
+                                We always use the flexAnimate method that we know works
+                                var $flexSlider = $('.woocommerce-product-gallery').data('flexslider');
+                                if ($flexSlider && $flexSlider.slides) {
+                                    var slideIndex = -1;
+                                    $($flexSlider.slides).each(function(index) {
+                                        if ($(this).hasClass('vwg-variation-image-changed')) {
+                                            slideIndex = index;
+                                            return false;
+                                        }
+                                    });
+                                    
+                                    if (slideIndex >= 0) {
+                                        // Activate the variation slide
+                                        $flexSlider.flexAnimate(slideIndex, true);
                                     }
                                 }
-                            }, 20);
+                                
+                                // Trigger resize and zoom after processing
+                                $(window).trigger('resize');
+                                $product_gallery.trigger('woocommerce_gallery_init_zoom');
+                            }, 100);
                         } else {
                             $form.wc_variations_image_reset();
                         }
@@ -793,71 +775,9 @@ function vwg_add_custom_style_and_scripts_product_page() {
                         $product_img.wc_reset_variation_attr('data-large_image_height');
                         $product_img_wrap.wc_reset_variation_attr('data-thumb');
                         $product_link.wc_reset_variation_attr('href');
-
-                        // Additional support for Flatsome theme
-                        if (typeof $.fn.flickity === 'function') {
-                            var $slider = $('.product-gallery-slider');
-                            if ($slider.length) {
-                                $slider.flickity('select', 0);
-                                $slider.flickity('resize');
-                            }
-                        }
+                        $product_img_wrap.removeClass('vwg-variation-image-changed');
                     };
                     <?php endif; ?>
-
-                    // Add new variation functionality
-                    if (<?php echo $useDefaultAttrVariable; ?> === 1) {
-                        var $variationForm = $('.variations_form');
-                        
-                        $variationForm.on('wc_variation_form', function() {
-                            setTimeout(function() {
-                                $variationForm.find('.variations select').first().trigger('change');
-                            }, 100);
-                        });
-
-                        $variationForm.on('found_variation', function(event, variation) {
-                            if (variation) {
-                                console.log('variation', variation);
-                                
-                                // Function to wait for gallery thumbnail to be ready
-                                function waitForGalleryThumbnail(selector, callback) {
-                                    const interval = setInterval(() => {
-                                        const element = document.querySelector(selector);
-                                        if (element) {
-                                            clearInterval(interval);
-                                            callback(element);
-                                        }
-                                    }, 50);
-                                }
-
-                                // Wait for active thumbnail and click the first one
-                                waitForGalleryThumbnail('.woocommerce-product-gallery .flex-control-thumbs li img.flex-active', (element) => {
-                                    const firstThumb = document.querySelector('.woocommerce-product-gallery .flex-control-thumbs li:first-child img');
-                                    
-                                    if (firstThumb) {
-                                        setTimeout(() => {
-                                            console.log('firstThumb', firstThumb);
-                                            firstThumb.click();
-                                        }, 350);
-                                    }
-                                });
-
-                                // Keep original video logic
-                                var $gallery = $('.woocommerce-product-gallery');
-                                var $slides = $gallery.find('.woocommerce-product-gallery__image');
-                                
-                                var $videoSlide = $slides.filter(function() {
-                                    return $(this).find('.woocommerce-product-gallery__vwg_video').length > 0;
-                                }).first();
-
-                                if ($videoSlide.length) {
-                                    setTimeout(() => {
-                                        $videoSlide.trigger('click');
-                                    }, 400); // Slightly later than first thumb click
-                                }
-                            }
-                        });
-                    }
 
                 });
             </script>
@@ -993,52 +913,74 @@ if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_firs
 /**
  * Enqueue JS - if theme not support wc-product-gallery-zoom
  *
- * @since 1.20
+ * @since 1.39
  */
 function vwg_enqueue_overwrite_scripts() {
+    // Check if we are on the product page
+    if (!is_product()) {
+        return;
+    }
+    
+    // Get the current product
+    global $product;
+    
+    // Check if we have a valid product object
+    if (!is_object($product)) {
+        $product = wc_get_product(get_the_ID());
+    }
+    
+    // If we still don't have a valid product, exit
+    if (!is_object($product)) {
+        return;
+    }
+    
+    // Check if the product has videos
+    $video_url = get_post_meta($product->get_id(), 'vwg_video_url', true);
+    
+    // Continue only if there is at least one video
+    if (!empty($video_url)) {
+        wp_dequeue_script('flexslider');
+        wp_enqueue_script('vwg-flexslider', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/flexslider/jquery.flexslider.js',  array('jquery'), VWG_VERSION_NUM, true);
 
-    wp_dequeue_script('flexslider');
-    wp_enqueue_script('vwg-flexslider', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/flexslider/jquery.flexslider.js',  array('jquery'), VWG_VERSION_NUM, true);
+        if (!current_theme_supports('wc-product-gallery-zoom')) {
+            wp_dequeue_script('wc-single-product');
+            wp_enqueue_script('vwg-single-product', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/frontend/single-product.js',  array('jquery'), VWG_VERSION_NUM, true);
 
-    if ( is_product() && !current_theme_supports( 'wc-product-gallery-zoom' ) ) {
+            $params = array(
+                'i18n_required_rating_text' => esc_attr__( 'Please select a rating', 'woocommerce' ),
+                'review_rating_required'    => wc_review_ratings_required() ? 'yes' : 'no',
+                'flexslider'                => apply_filters(
+                    'woocommerce_single_product_carousel_options',
+                    array(
+                        'rtl'            => is_rtl(),
+                        'animation'      => 'slide',
+                        'smoothHeight'   => true,
+                        'directionNav'   => false,
+                        'controlNav'     => 'thumbnails',
+                        'slideshow'      => false,
+                        'animationSpeed' => 500,
+                        'animationLoop'  => false, // Breaks photoswipe pagination if true.
+                        'allowOneSlide'  => false,
+                    )
+                ),
+                'zoom_enabled'              => apply_filters( 'woocommerce_single_product_zoom_enabled', get_theme_support( 'wc-product-gallery-zoom' ) ),
+                'zoom_options'              => apply_filters( 'woocommerce_single_product_zoom_options', array() ),
+                'photoswipe_enabled'        => apply_filters( 'woocommerce_single_product_photoswipe_enabled', get_theme_support( 'wc-product-gallery-lightbox' ) ),
+                'photoswipe_options'        => apply_filters(
+                    'woocommerce_single_product_photoswipe_options',
+                    array(
+                        'shareEl'               => false,
+                        'closeOnScroll'         => false,
+                        'history'               => false,
+                        'hideAnimationDuration' => 0,
+                        'showAnimationDuration' => 0,
+                    )
+                ),
+                'flexslider_enabled'        => apply_filters( 'woocommerce_single_product_flexslider_enabled', get_theme_support( 'wc-product-gallery-slider' ) ),
+            );
 
-        wp_dequeue_script('wc-single-product');
-        wp_enqueue_script('vwg-single-product', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/frontend/single-product.js',  array('jquery'), VWG_VERSION_NUM, true);
-
-        $params = array(
-            'i18n_required_rating_text' => esc_attr__( 'Please select a rating', 'woocommerce' ),
-            'review_rating_required'    => wc_review_ratings_required() ? 'yes' : 'no',
-            'flexslider'                => apply_filters(
-                'woocommerce_single_product_carousel_options',
-                array(
-                    'rtl'            => is_rtl(),
-                    'animation'      => 'slide',
-                    'smoothHeight'   => true,
-                    'directionNav'   => false,
-                    'controlNav'     => 'thumbnails',
-                    'slideshow'      => false,
-                    'animationSpeed' => 500,
-                    'animationLoop'  => false, // Breaks photoswipe pagination if true.
-                    'allowOneSlide'  => false,
-                )
-            ),
-            'zoom_enabled'              => apply_filters( 'woocommerce_single_product_zoom_enabled', get_theme_support( 'wc-product-gallery-zoom' ) ),
-            'zoom_options'              => apply_filters( 'woocommerce_single_product_zoom_options', array() ),
-            'photoswipe_enabled'        => apply_filters( 'woocommerce_single_product_photoswipe_enabled', get_theme_support( 'wc-product-gallery-lightbox' ) ),
-            'photoswipe_options'        => apply_filters(
-                'woocommerce_single_product_photoswipe_options',
-                array(
-                    'shareEl'               => false,
-                    'closeOnScroll'         => false,
-                    'history'               => false,
-                    'hideAnimationDuration' => 0,
-                    'showAnimationDuration' => 0,
-                )
-            ),
-            'flexslider_enabled'        => apply_filters( 'woocommerce_single_product_flexslider_enabled', get_theme_support( 'wc-product-gallery-slider' ) ),
-        );
-
-        wp_localize_script( 'vwg-single-product', 'wc_single_product_params', $params );
+            wp_localize_script( 'vwg-single-product', 'wc_single_product_params', $params );
+        }
     }
 }
 add_action('wp_enqueue_scripts', 'vwg_enqueue_overwrite_scripts', 20);
