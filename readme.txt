@@ -76,6 +76,12 @@ Video Gallery for WooCommerce is compatible with most WordPress themes and plugi
 * **Improvement:** Code cleanup and improvements
 **Release date: April 3, 2024**
 
+= 1.39 =
+* **Improved:** Optimized handling of variable products with images
+* **Fixed:** Issues with FlexSlider when displaying video in the first slide
+* **Optimized:** Reworked functionality when changing variations that correctly preserves video attributes
+**Release date: May 24, 2025**
+
 = 1.38 =
  * **Improved:** Enhanced CSS styling for video thumbnails to ensure consistent sizing for Flatsome theme
  * **Fixed:** Vertical gallery layout for Flatsome theme
