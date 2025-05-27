@@ -978,10 +978,6 @@ function vwg_add_custom_style_and_scripts_product_page() {
             /*    margin: 0 auto;*/
             /*}*/
 
-            .woocommerce-product-gallery__image .woocommerce-product-gallery__vwg_video video:not(:playing) {
-                opacity: 0;
-                visibility: hidden;
-            }
             /* Center the play button */
             .vwg_video_js .vjs-big-play-button {
                 top: 50% !important;
@@ -1297,7 +1293,7 @@ function vwg_add_custom_style_and_scripts_product_page() {
                      /**
                      * Add function fix variable product with option video show first
                      *
-                     * @since 1.39
+                     * @since 1.40
                      */
                     <?php if (isset($showFirstClassSettings) && $showFirstClassSettings == 1) : ?>
                     var isFirstLoad = true;
@@ -1335,7 +1331,6 @@ function vwg_add_custom_style_and_scripts_product_page() {
                                 // Clear previous executions
                                 clearTimeout(window.vwgClickTimeout);
                                 
-                                We always use the flexAnimate method that we know works
                                 var $flexSlider = $('.woocommerce-product-gallery').data('flexslider');
                                 if ($flexSlider && $flexSlider.slides) {
                                     var slideIndex = -1;
