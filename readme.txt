@@ -1,6 +1,6 @@
 === Video Gallery for WooCommerce ===
 Contributors: martinvalchev
-Donate link: https://nitramix.com/donate
+Donate link: https://nitramix.com/donate/
 Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.8

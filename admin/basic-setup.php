@@ -144,13 +144,13 @@ add_filter( 'plugin_action_links_' . VWG_VIDEO_WOO_GALLERY . '/video-wc-gallery.
 /**
  * Add donate and other links to plugins list
  *
- * @since 1.34
+ * @since 2.0
  */
 function vwg_plugin_row_meta( $links, $file ) {
 	if ( strpos( $file, 'video-wc-gallery.php' ) !== false ) {
 		$new_links = array(
-				'donate' 	=> '<a href="https://linktr.ee/martinvalchev" target="_blank">Donate</a>',
-				'hireme' 	=> '<a href="https://nitramix.com/contact" target="_blank">Hire Me For A Project</a>',
+				'donate' 	=> '<a href="https://nitramix.com/donate/" target="_blank">Donate</a>',
+				'hireme' 	=> '<a href="https://nitramix.com/contact/" target="_blank">Hire Me For A Project</a>',
 				);
 		$links = array_merge( $links, $new_links );
 	}
@@ -182,7 +182,7 @@ add_filter('admin_footer_text', 'vwg_footer_text');
 /**
  * Add donate notice
  *
- * @since 1.34
+ * @since 2.0
  */
 function vwg_admin_init_notice_monthly() {
 
@@ -217,7 +217,7 @@ function vwg_display_monthly_admin_notice()
                 <p><?php echo esc_html__('Dear valued user,', 'video-wc-gallery'); ?></p>
                 <p><?php echo esc_html__('We hope you are enjoying using Video Gallery for WooCommerce. Your support is crucial to the continued development and improvement of our plugin.', 'video-wc-gallery'); ?></p>
                 <p><?php echo esc_html__('Consider making a donation to ensure we can keep providing you with top-notch features, updates, and support.', 'video-wc-gallery'); ?></p>
-                <a href="https://linktr.ee/martinvalchev" target="_blank" class="button button-primary" style="text-decoration: none; color: #fff; background-color: #7e3fec; border-color: #7e3fec; border-radius: 4px; display: inline-block;"><?php echo esc_html__('Make a Donation', 'video-wc-gallery'); ?></a>
+                <a href="https://nitramix.com/donate/" target="_blank" class="button button-primary" style="text-decoration: none; color: #fff; background-color: #7e3fec; border-color: #7e3fec; border-radius: 4px; display: inline-block;"><?php echo esc_html__('Make a Donation', 'video-wc-gallery'); ?></a>
             </div>
         </div>
         <script>

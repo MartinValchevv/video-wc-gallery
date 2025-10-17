@@ -308,6 +308,7 @@ function vwg_render_get_pro_version() {
     $get_pro_info .= ' <div class="get-pro-version-info">';
     $get_pro_info .= __( '<p>Unlock all features with the Pro version:</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Up to 6 videos per product</p>', 'video-wc-gallery' );
+    $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Add YouTube videos</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use custom SVG icon</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use optimized thumbnails</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Auto convert to optimized thumbnail on upload</p>', 'video-wc-gallery' );
@@ -351,8 +352,8 @@ function vwg_render_support() {
 function vwg_render_donate() {
     $donate_text  = '';
     $donate_text .= '<div class="sidebar-promo">';
-    $donate_text .= __( '<p>By donating to <b>Video Gallery for WooCommerce</b>, you\'re investing in its future and ensuring it remains a reliable and accessible resource for all. Will you join us in this mission and make a contribution today? Every donation, no matter the amount, helps us continue our work and reach even greater heights. <a href="https://linktr.ee/martinvalchev" target="_blank">Click here to donate now</a></p>', 'video-wc-gallery' );
-    $donate_text .= __( '<p><a href="https://linktr.ee/martinvalchev" target="_blank" class="button button-primary">Donate</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
+    $donate_text .= __( '<p>By donating to <b>Video Gallery for WooCommerce</b>, you\'re investing in its future and ensuring it remains a reliable and accessible resource for all. Will you join us in this mission and make a contribution today? Every donation, no matter the amount, helps us continue our work and reach even greater heights. <a href="https://nitramix.com/donate/" target="_blank">Click here to donate now</a></p>', 'video-wc-gallery' );
+    $donate_text .= __( '<p><a href="https://nitramix.com/donate/" target="_blank" class="button button-primary">Donate</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
     $donate_text .= '</div>';
     echo $donate_text; // phpcs:ignore WordPress.Security.EscapeOutput
 }
