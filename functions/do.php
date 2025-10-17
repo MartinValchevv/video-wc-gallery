@@ -68,7 +68,23 @@ function vwg_add_custom_product_tab_content() {
             <button id="add_video_button" type="button" class="button">
                 <i class="fas fa-plus-circle"></i> <?php echo esc_html__('WP Media' , 'video-wc-gallery') ?>
             </button>
+            <button id="add_youtube_button" type="button" class="button button-secondary vwg-youtube-btn">
+                <i class="fab fa-youtube"></i> <?php echo esc_html__('YouTube Video' , 'video-wc-gallery') ?>
+                <span class="pro-badge">PRO</span>
+            </button>
         </p>
+
+        <!-- YouTube URL input field (shown only in PRO version) -->
+        <div id="youtube_url_container" class="vwg-youtube-input-container" style="display: none;">
+            <input type="url" id="youtube_url_input" placeholder="<?php echo esc_attr__('Enter YouTube URL...' , 'video-wc-gallery') ?>" class="vwg-youtube-input" />
+            <button id="confirm_youtube_button" type="button" class="button button-primary">
+                <?php echo esc_html__('Add Video' , 'video-wc-gallery') ?>
+            </button>
+            <button id="cancel_youtube_button" type="button" class="button button-secondary">
+                <?php echo esc_html__('Cancel' , 'video-wc-gallery') ?>
+            </button>
+        </div>
+
         <ul id="sortable" class="video_gallery_wrapper">
             <?php if (!empty($video_url)) :
                 $video_url = maybe_unserialize( $video_url );
@@ -243,8 +259,19 @@ function vwg_add_video_upload_script() {
 
             var media_uploader;
             var currentVideoCount = $('#sortable li').length;
-            var videoLimit = $('#vwg_video_tab_content').attr('v-limit');
-            var isPro = $('#vwg_video_tab_content').attr('is-pro');
+            var videoLimit = parseInt($('#vwg_video_tab_content').attr('v-limit'));
+            var isPro = parseInt($('#vwg_video_tab_content').attr('is-pro'));
+
+            // YouTube button click handler
+            $('#add_youtube_button').on('click', function(e) {
+                e.preventDefault();
+
+                // Create a hidden element and trigger a click on it to open the pricing popup
+                var proInfoLink = $('<a href="#" class="open-vwg-modal-pro-info" style="display:none;">Pro Info</a>');
+                $('body').append(proInfoLink);
+                proInfoLink.trigger('click');
+                proInfoLink.remove();
+            });
 
             // Simple sortable initialization
             $(".video_gallery_wrapper").sortable({
@@ -338,7 +365,7 @@ function vwg_add_video_upload_script() {
                         $('.video_id_' + videoId).remove();
                         
                         // Check if there are any videos left
-                        if ($('.video_gallery_wrapper li').length === 0) {
+                        if ($('.video_gallery_wrapper > li[class*="video_id_"]').length === 0) {
                             $('.bar-btns').hide();
                             currentVideoCount = 0;
                         }
@@ -352,21 +379,21 @@ function vwg_add_video_upload_script() {
             // Function to reset video positions after deletion
             function resetVideoPositions() {
                 // Reset position counters
-                $('.video_gallery_wrapper li').each(function(index) {
+                $('.video_gallery_wrapper > li[class*="video_id_"]').each(function(index) {
                     $(this).attr('data-position', index + 1);
                 });
                 
                 // Update currentVideoCount
-                currentVideoCount = $('.video_gallery_wrapper li').length;
+                currentVideoCount = $('.video_gallery_wrapper > li[class*="video_id_"]').length;
             }
             
             // Function to update video counter
             function updateVideoCounter() {
-                var currentCount = $('.video_gallery_wrapper li').length;
-                var maxLimit = $('#vwg_video_tab_content').attr('v-limit');
+                var currentCount = $('.video_gallery_wrapper > li[class*="video_id_"]').length;
+                var maxLimit = parseInt($('#vwg_video_tab_content').attr('v-limit'));
                 var percentage = (maxLimit > 0) ? Math.min(100, Math.round((currentCount / maxLimit) * 100)) : 0;
                 var isLimitReached = currentCount >= maxLimit;
-                
+
                 $('.counter-progress-bar').css('width', percentage + '%');
                 $('.current-count').text(currentCount);
                 $('.counter-progress-bar').attr('data-count', currentCount);
@@ -487,12 +514,12 @@ function vwg_add_video_upload_script() {
 
                     currentVideoCount++
 
-                    if ($('.video_gallery_wrapper li').length !== 0) {
-                        var last_pos = parseInt($('.video_gallery_wrapper li').last().data('position'))
+                    if ($('.video_gallery_wrapper > li[class*="video_id_"]').length !== 0) {
+                        var last_pos = parseInt($('.video_gallery_wrapper > li[class*="video_id_"]').last().data('position'))
                         currentVideoCount = last_pos + 1
                     }
-
-                    if ($('.video_gallery_wrapper li').length < $('#vwg_video_tab_content').attr('v-limit') ) {
+                    
+                    if ($('.video_gallery_wrapper > li[class*="video_id_"]').length < parseInt($('#vwg_video_tab_content').attr('v-limit')) ) {
 
                         $('.video_gallery_wrapper').append(`
                             <li class="ui-state video_id_${attachment.id}" data-position="${currentVideoCount}" >
@@ -657,6 +684,35 @@ function vwg_add_video_upload_script() {
             border-radius: 4px;
             line-height: 1;
             text-transform: uppercase;
+        }
+
+        /* YouTube button styles */
+        #vwg_video_tab_content #add_youtube_button {
+            background: #ff0000;
+            color: white;
+            border-color: #ff0000;
+            margin-left: 8px;
+            position: relative;
+        }
+
+        #vwg_video_tab_content #add_youtube_button:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+        }
+
+        #vwg_video_tab_content #add_youtube_button .pro-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #6c5ce7;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 3px;
+            line-height: 1;
+            text-transform: uppercase;
+            z-index: 1;
         }
         #vwg_video_tab_content .action-btn.delete-btn {
             color: #ff5252;

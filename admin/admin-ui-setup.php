@@ -42,6 +42,7 @@ function vwg_enqueue_css_js( $hook ) {
         wp_enqueue_style('vwg-admin-pricing-css', VWG_VIDEO_WOO_GALLERY_URL . 'includes/css/admin/pricing-modal.css', '', VWG_VERSION_NUM);
 
         // JS
+        wp_enqueue_script('videojs', VWG_VIDEO_WOO_GALLERY_URL . 'includes/video-js/video-js.min.js', array('jquery'), VWG_VERSION_NUM, true);
         wp_enqueue_script( 'sweetalert2', VWG_VIDEO_WOO_GALLERY_URL . 'includes/sweetalert2/sweetalert2.all.min.js', __FILE__ );
         wp_enqueue_script('vwg-pricing', VWG_VIDEO_WOO_GALLERY_URL . 'includes/js/vwg-pricing.js', array('jquery'), false, true);
 
