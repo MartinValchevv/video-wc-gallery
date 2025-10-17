@@ -68,13 +68,17 @@ function vwg_add_custom_product_tab_content() {
             <button id="add_video_button" type="button" class="button">
                 <i class="fas fa-plus-circle"></i> <?php echo esc_html__('WP Media' , 'video-wc-gallery') ?>
             </button>
-            <button id="add_youtube_button" type="button" class="button button-secondary vwg-youtube-btn">
+            <span class="vwg-button-separator"><?php echo esc_html__('- or -' , 'video-wc-gallery') ?></span>
+            <button id="add_youtube_button" type="button" class="button vwg-youtube-btn">
                 <i class="fab fa-youtube"></i> <?php echo esc_html__('YouTube Video' , 'video-wc-gallery') ?>
-                <span class="pro-badge">PRO</span>
+                <?php if (!vwg_is_pro_addon()): ?>
+                    <span class="pro-badge">PRO</span>
+                <?php endif; ?>
             </button>
         </p>
 
         <!-- YouTube URL input field (shown only in PRO version) -->
+        <?php if (vwg_is_pro_addon()): ?>
         <div id="youtube_url_container" class="vwg-youtube-input-container" style="display: none;">
             <input type="url" id="youtube_url_input" placeholder="<?php echo esc_attr__('Enter YouTube URL...' , 'video-wc-gallery') ?>" class="vwg-youtube-input" />
             <button id="confirm_youtube_button" type="button" class="button button-primary">
@@ -84,6 +88,7 @@ function vwg_add_custom_product_tab_content() {
                 <?php echo esc_html__('Cancel' , 'video-wc-gallery') ?>
             </button>
         </div>
+        <?php endif; ?>
 
         <ul id="sortable" class="video_gallery_wrapper">
             <?php if (!empty($video_url)) :
@@ -697,7 +702,6 @@ function vwg_add_video_upload_script() {
             background: #ff0000;
             color: white;
             border-color: #ff0000;
-            margin-left: 8px;
             position: relative;
         }
 
@@ -707,18 +711,8 @@ function vwg_add_video_upload_script() {
         }
 
         #vwg_video_tab_content #add_youtube_button .pro-badge {
-            position: absolute;
             top: -8px;
             right: -8px;
-            background-color: #6c5ce7;
-            color: white;
-            font-size: 8px;
-            font-weight: bold;
-            padding: 1px 3px;
-            border-radius: 3px;
-            line-height: 1;
-            text-transform: uppercase;
-            z-index: 1;
         }
         #vwg_video_tab_content .action-btn.delete-btn {
             color: #ff5252;
@@ -782,13 +776,50 @@ function vwg_add_video_upload_script() {
 
         .vwg-add-video-button-container label {
            font-size: 18px;
+           margin-bottom: 0;
+        }
+
+        /* Keep label and buttons on same line */
+        .vwg-add-video-button-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .vwg-button-separator {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: lowercase;
+            padding: 0 4px;
+        }
+
+        /* Responsive styles for mobile */
+        @media (max-width: 768px) {
+            .vwg-add-video-button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            #vwg_video_tab_content #add_video_button,
+            #vwg_video_tab_content #add_youtube_button {
+                width: 100%;
+                min-width: auto;
+                font-size: 14px;
+                padding: 10px 16px;
+                justify-content: center;
+            }
+
+            .vwg-button-separator {
+                font-size: 13px;
+            }
         }
         
         /* Button styles */
-        #vwg_video_tab_content #add_video_button {
-            background: #6c5ce7;
-            color: white;
-            border-color: #6c5ce7;
+        #vwg_video_tab_content #add_video_button,
+        #vwg_video_tab_content #add_youtube_button {
             padding: 8px 16px;
             height: auto;
             border-radius: 6px;
@@ -797,7 +828,18 @@ function vwg_add_video_upload_script() {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 13px;
+            margin: 0;
+            min-width: 140px;
+            justify-content: center;
         }
+
+        #vwg_video_tab_content #add_video_button {
+            background: #6c5ce7;
+            color: white;
+            border-color: #6c5ce7;
+        }
+
         #vwg_video_tab_content #add_video_button:hover {
             background: #5649c0;
             border-color: #5649c0;
