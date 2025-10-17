@@ -465,8 +465,14 @@ function vwg_add_video_upload_script() {
                         title: '<?php echo esc_js(__('Video Limit Reached', 'video-wc-gallery')); ?>',
                         html: `
                             <div class="swal-limit-content">
-                                <p><?php echo esc_html(__('You\'ve reached the maximum limit of <strong>2 videos</strong> in the free version.', 'video-wc-gallery')); ?></p>
-                                <p><?php echo esc_html(__('Upgrade to PRO to add up to <strong>6 videos</strong> per product!', 'video-wc-gallery')); ?></p>
+                                <p><?php echo sprintf(
+                                    __('You\'ve reached the maximum limit of %s in the free version.', 'video-wc-gallery'), 
+                                    '<strong>2 videos</strong>'
+                                ); ?></p>
+                                <p><?php echo sprintf(
+                                    __('Upgrade to PRO to add up to %s per product!', 'video-wc-gallery'), 
+                                    '<strong>6 videos</strong>'
+                                ); ?></p>
                             </div>
                         `,
                         icon: 'warning',
