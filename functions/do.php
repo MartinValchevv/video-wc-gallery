@@ -104,7 +104,7 @@ function vwg_add_custom_product_tab_content() {
                 ?>
                 <li class="ui-state video_id_<?php echo esc_attr($key) ?>" data-position="<?php echo esc_attr($position_counter) ?>" >
                     <div class="video-player" style="background-image: url('<?php echo esc_url($video['video_thumb_url']); ?>');">
-                        <video width="100%" height="100%" controls preload="auto">
+                        <video width="100%" height="100%" controls preload="auto" crossorigin="anonymous">
                             <source src="<?php echo esc_url($video['video_url']); ?>" type="video/mp4">
                         </video>
                     </div>
@@ -535,7 +535,7 @@ function vwg_add_video_upload_script() {
                         $('.video_gallery_wrapper').append(`
                             <li class="ui-state video_id_${attachment.id}" data-position="${currentVideoCount}" >
                                 <div class="video-player" style="background-image: url('${attachment.url}');">
-                                    <video width="100%" height="100%" controls preload="auto">
+                                    <video width="100%" height="100%" controls preload="auto" crossorigin="anonymous">
                                         <source src="${attachment.url}" type="video/mp4">
                                     </video>
                                 </div>
@@ -1609,7 +1609,7 @@ function vwg_add_video_to_product_gallery() {
                  data-vwg-video="<?=esc_attr($countVideo) ?>"
                  class="woocommerce-product-gallery__image <?php echo (isset($showFirstClassSettings) && $showFirstClassSettings == 1)?'vwg_show_first':''; ?>">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
-                    <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js <?=esc_attr($adaptClass) ?> vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>">
+                    <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js <?=esc_attr($adaptClass) ?> vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>" crossorigin="anonymous">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
                     </video>
                 </a>
