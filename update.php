@@ -6,13 +6,31 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Update function when update to new version
  *
- * @since 1.24
+ * @since 2.0
  */
 function vwg_update_to_new_version() {
     $plugin_data = get_file_data( VWG_VIDEO_WOO_GALLERY_DIR . '/video-wc-gallery.php', array( 'Version' ) );
     $plugin_version = $plugin_data[0];
 
     // Check if the current plugin version matches the desired version
+    if ($plugin_version === '2.0') {
+        $existing_settings = get_option('vwg_settings_group', array());
+        $uninstall_settings = get_option('vwg_uninstall_settings_group', array());
+        if (isset($existing_settings['vwg_settings_remove_settings_data'])) {
+            $uninstall_settings['vwg_settings_remove_settings_data'] = $existing_settings['vwg_settings_remove_settings_data'];
+            unset($existing_settings['vwg_settings_remove_settings_data']);
+            update_option('vwg_uninstall_settings_group', $uninstall_settings);
+            update_option('vwg_settings_group', $existing_settings);
+        }
+
+        if (isset($existing_settings['vwg_settings_remove_videos_data'])) {
+            $uninstall_settings['vwg_settings_remove_videos_data'] = $existing_settings['vwg_settings_remove_videos_data'];
+            unset($existing_settings['vwg_settings_remove_videos_data']);
+            update_option('vwg_uninstall_settings_group', $uninstall_settings);
+            update_option('vwg_settings_group', $existing_settings);
+        }
+    }
+
     if ($plugin_version === '1.24') {
         $existing_settings = get_option('vwg_settings_group', array());
         if (!isset($existing_settings['vwg_settings_video_adapt_sizes'])) {

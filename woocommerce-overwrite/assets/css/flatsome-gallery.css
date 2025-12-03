@@ -95,7 +95,7 @@
     .vertical-thumbnails .vwg-flatsome-theme.vwg-equal-thumbs {
         flex-direction: row;
     }
-    
+
     .vertical-thumbnails .vwg-flatsome-theme.vwg-equal-thumbs .col {
         width: auto;
         margin-right: 10px;

@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Video Gallery for WooCommerce
- * Plugin URI:
+ * Plugin URI: https://nitramix.com/projects/video-gallery-for-woocommerce
  * Description: The Video Gallery for WooCommerce is a plugin that enables the addition of video files from the WordPress library to a product page, with several customizable options.
- * Author: Martin Valchev
- * Author URI:https://linktr.ee/martinvalchev
- *  Requires Plugins: woocommerce
- * Version: 1.41
+ * Author: Nitramix, Martin Valchev
+ * Author URI: https://nitramix.com/
+ * Requires Plugins: woocommerce
+ * Version: 2.0
  * Text Domain: video-wc-gallery
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Define constants
  *
- * @since 1.2
+ * @since 2.0
  */
-if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '1.41' ); // Plugin version constant
+if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '2.0' ); // Plugin version constant
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY' ) )		define( 'VWG_VIDEO_WOO_GALLERY'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'video-wc-gallery'
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY_DIR' ) )	define( 'VWG_VIDEO_WOO_GALLERY_DIR'	, plugin_dir_path( __FILE__ ) ); // Plugin directory absolute path with the trailing slash. Useful for using with includes eg - /var/www/html/wp-content/plugins/video-wc-gallery/
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY_URL' ) )	define( 'VWG_VIDEO_WOO_GALLERY_URL'	, plugin_dir_url( __FILE__ ) ); // URL to the plugin folder with the trailing slash. Useful for referencing src eg - http://localhost/wp/wp-content/plugins/video-wc-gallery/
@@ -95,6 +95,21 @@ function vwg_admin_notice_err($msg = '') {
     <?php endif;
 }
 add_action( 'admin_notices', 'vwg_admin_notice_err' );
+
+/**
+ * Admin notice success
+ *
+ * @since 2.0
+ */
+function vwg_settings_saved_notice($msg = '') {
+    if (!empty($msg)) :
+        ?>
+        <div class="notice notice-success is-dismissible">
+            <p><?php echo esc_html($msg); ?></p>
+        </div>
+    <?php endif;
+}
+add_action('admin_notices', 'vwg_settings_saved_notice');
 
 /**
  * Deregister all scripts and styles contains id mediaelement - use defaults wordpress

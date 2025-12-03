@@ -15,9 +15,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) die;
 /**
  * Delete database settings
  *
- * @since		1.27
+ * @since		2.0
  */
-$option = get_option('vwg_settings_group');
+$option = get_option('vwg_uninstall_settings_group');
 
 if ($option['vwg_settings_remove_videos_data'] == 1) {
 
@@ -27,6 +27,14 @@ if ($option['vwg_settings_remove_videos_data'] == 1) {
         $wpdb->prepare(
             "DELETE FROM $wpdb->postmeta WHERE meta_key = %s",
             'vwg_video_url'
+        )
+    );
+
+    // Delete all instances of the 'vwg_video_seo_settings' custom field
+    $wpdb->query(
+        $wpdb->prepare(
+            "DELETE FROM $wpdb->postmeta WHERE meta_key = %s",
+            'vwg_video_seo_settings'
         )
     );
 
@@ -58,6 +66,7 @@ if ($option['vwg_settings_remove_videos_data'] == 1) {
 
 if ($option['vwg_settings_remove_settings_data'] == 1) {
     delete_option( 'vwg_settings_group' );
+    delete_option( 'vwg_uninstall_settings_group' );
 }
 delete_option( 'abl_vwg_version' );
 delete_option('vwg_monthly_notice_dismissed');
