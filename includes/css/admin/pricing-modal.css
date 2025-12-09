@@ -207,7 +207,7 @@
 }
 
 .vwg-pricing-container .pricing-features li.premium-features:hover::after {
-    content: "• Up to 6 videos per product\A • Add YouTube videos\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Premium Support";
+    content: "• Unlimited products with videos\A • Up to 6 videos per product\A • Add YouTube videos\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Premium Support";
     position: absolute;
     left: 0;
     top: 100%;

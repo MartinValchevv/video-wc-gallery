@@ -67,7 +67,18 @@ To install this plugin:
 
 1. Install the plugin through the WordPress admin interface, or upload the plugin folder to /wp-content/plugins/ using ftp.
 2. Activate the plugin through the 'Plugins' screen in WordPress. On a Multisite you can either network activate it or let users activate it individually.
-3. Go to WordPress Admin > WooCommerce > Settings > Video Gallery for WooCommerce
+3. Go to the "Video Gallery" admin menu in your WordPress dashboard
+
+How to add a video to a product
+
+1. Go to Products in WooCommerce.
+2. Click Edit on the product you want to add a video to.
+3. Scroll down to the Product Data section.
+4. Open the tab "Video Gallery for WooCommerce".
+5. You will see the option to add a video from your media library.
+6. After adding a video, make sure to click Update to save the changes.
+
+
 
 == Frequently Asked Questions ==
 
@@ -99,8 +110,13 @@ The FREE version supports basic video functionality with up to 2 videos per prod
 == Changelog ==
 
 = 2.1 =
-* **Added:** Function to pause a video clip if we move to another slide in the gallery 
-**Release date: December 9, 2025**
+* **Added:** Function to pause a video if we move to another slide in the gallery 
+* **Added:** Product list column indicator for videos
+* **Added:** Show counter above products table for products with video
+* **Added:** Delete videos from product by ID
+* **Added:** Products with video 20 limit
+* **Improvement:** Code cleanup and improvements
+**Release date: December 10, 2025**
 
 = 2.0 =
 * **Added:** Admin menu and redesign 

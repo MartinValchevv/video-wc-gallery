@@ -252,7 +252,7 @@ add_action( 'woocommerce_process_product_meta', 'vwg_save_custom_product_tab_con
 /**
  * Add the media upload script
  *
- * @since 2.0
+ * @since 2.1
  */
 function vwg_add_video_upload_script() {
     ?>
@@ -261,6 +261,11 @@ function vwg_add_video_upload_script() {
 
             $('#vwg_video_tab_content').attr('v-limit', <?php echo vwg_get_video_limit(); ?>)
             $('#vwg_video_tab_content').attr('is-pro', <?php echo vwg_is_pro_addon() ? 1 : 0; ?>)
+            
+            var pvc = <?php echo intval(vwg_pvc()); ?>;
+            var pml = <?php echo intval(vwg_pml()); ?>;
+            var php = <?php echo !empty(get_post_meta(get_the_ID(), 'vwg_video_url', true)) ? 1 : 0; ?>;
+            var isPro = <?php echo vwg_is_pro_addon() ? 1 : 0; ?>;
 
             var media_uploader;
             var currentVideoCount = $('#sortable li').length;
@@ -463,6 +468,38 @@ function vwg_add_video_upload_script() {
 
             $('#add_video_button').on('click', function(e) {
                 e.preventDefault();
+                
+                if (!isPro && !php && pvc >= pml) {
+                    Swal.fire({
+                        title: '<?php echo esc_js(__('Product Limit Reached', 'video-wc-gallery')); ?>',
+                        html: '<div class="swal-limit-content">' +
+                              '<p><?php echo esc_js(__('You have reached the maximum limit of', 'video-wc-gallery')); ?> <strong>' + pml + ' <?php echo esc_js(__('products', 'video-wc-gallery')); ?></strong> <?php echo esc_js(__('with videos in the free version.', 'video-wc-gallery')); ?></p>' +
+                              '<p><?php echo esc_js(__('Upgrade to PRO for', 'video-wc-gallery')); ?> <strong><?php echo esc_js(__('unlimited', 'video-wc-gallery')); ?></strong> <?php echo esc_js(__('products with videos!', 'video-wc-gallery')); ?></p>' +
+                              '</div>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#6C5CE7',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: '<?php echo esc_js(__('View Plans', 'video-wc-gallery')); ?>',
+                        cancelButtonText: '<?php echo esc_js(__('Maybe Later', 'video-wc-gallery')); ?>',
+                        buttonsStyling: true,
+                        focusConfirm: false,
+                        focusCancel: false,
+                        background: '#fff',
+                        backdrop: 'rgba(0,0,0,0.4)',
+                        showClass: {
+                            popup: 'animate__animated animate__fadeIn'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOut'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.open('https://nitramix.com/projects/video-gallery-for-woocommerce', '_blank');
+                        }
+                    });
+                    return;
+                }
                 
                 if(currentVideoCount >= videoLimit && isPro == 0) {
                     // Show modal for upgrading to PRO version with SweetAlert
@@ -1764,7 +1801,32 @@ function vwg_is_pro_addon() {
 }
 
 /**
- * Get the video limit based on version
+ * Get count of products with videos
+ * 
+ * @since 2.1
+ * @return int
+ */
+function vwg_pvc() {
+    $p = get_posts(array('post_type' => 'product', 'posts_per_page' => -1, 'fields' => 'ids', 'meta_query' => array(array('key' => 'vwg_video_url', 'compare' => 'EXISTS'))));
+    $c = 0;
+    if (!empty($p)) {
+        foreach ($p as $i) {
+            $d = maybe_unserialize(get_post_meta($i, 'vwg_video_url', true));
+            if (!empty($d) && is_array($d) && count($d) > 0) $c++;
+        }
+    }
+    return $c;
+}
+
+/**
+ * @since 2.1
+ * @return int
+ */
+function vwg_pml() {
+    return apply_filters('vwg_pml_f', 20);
+}
+
+/**
  * 
  * @since 2.0
  * @return int

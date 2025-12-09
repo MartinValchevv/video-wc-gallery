@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 2.0 Function show modal pricing info
+     * @since 2.1 Function show modal pricing info
      */
     const selectorTrigger = [
         '.open-vwg-modal-pro-info',                               // URL info PRO feature
@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">
-                                    <a class="buy-now-btn" href="https://nitramix.com/projects/video-gallery-for-woocommerce#pricing" target="_blank">Buy Now</a>
+                                    <a class="buy-now-btn" href="https://nitramix.com/projects/video-gallery-for-woocommerce?utm_source=video-wc-gallery&utm_medium=plugin&utm_campaign=single_site#pricing" target="_blank">Buy Now</a>
                                 </div>
                             </div>
                        </li>
@@ -93,7 +93,7 @@ jQuery(document).ready(function($) {
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">
-                                    <a class="buy-now-btn" href="https://nitramix.com/projects/video-gallery-for-woocommerce#pricing" target="_blank">Buy Now</a>
+                                    <a class="buy-now-btn" href="https://nitramix.com/projects/video-gallery-for-woocommerce?utm_source=video-wc-gallery&utm_medium=plugin&utm_campaign=multiple_sites#pricing" target="_blank">Buy Now</a>
                                 </div>
                             </div>
                        </li>
@@ -112,7 +112,7 @@ jQuery(document).ready(function($) {
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">
-                                    <a class="buy-now-btn" href="https://nitramix.com/projects/video-gallery-for-woocommerce#pricing" target="_blank">Buy Now</a>
+                                    <a class="buy-now-btn" href="https://nitramix.com/projects/video-gallery-for-woocommerce?utm_source=video-wc-gallery&utm_medium=plugin&utm_campaign=unlimited_sites#pricing" target="_blank">Buy Now</a>
                                 </div>
                             </div>
                        </li>

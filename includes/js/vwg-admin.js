@@ -137,4 +137,81 @@ jQuery(document).ready(function($) {
         });
     });
 
+    /**
+     * @since 2.1 Function for delete videos by product ID
+     */
+    $('#vwg_delete_videos_by_id_btn').on('click', function(e) {
+        e.preventDefault();
+
+        var productIds = $('#vwg_product_ids_input').val().trim();
+        
+        if (!productIds) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Please enter at least one product ID',
+                icon: 'error',
+                confirmButtonColor: '#7e3fec',
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: translate_obj.are_you_sure,
+            text: 'This will permanently delete all videos and thumbnails from the specified products.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: translate_obj.yes,
+            cancelButtonText: translate_obj.cancel_text,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: translate_obj.deleting,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                });
+                Swal.showLoading();
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'vwg_delete_videos_by_product_id',
+                        security: vwg_AJAX.delete_videos_security,
+                        product_ids: productIds
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: translate_obj.changes_are_saved,
+                                text: response.data.message,
+                                icon: 'success',
+                                confirmButtonColor: '#7e3fec',
+                            });
+                            $('#vwg_product_ids_input').val('');
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.data.message || 'An error occurred',
+                                icon: 'error',
+                                confirmButtonColor: '#7e3fec',
+                            });
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.log('AJAX Error: ' + errorThrown);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'AJAX Error: ' + errorThrown,
+                            icon: 'error',
+                            confirmButtonColor: '#7e3fec',
+                        });
+                    }
+                });
+            }
+        });
+    });
+
 });

@@ -63,7 +63,7 @@ function vwg_enqueue_css_js( $hook ) {
     /**
      * Translate array for JS vwg-admin
      *
-     * @since 2.0
+     * @since 2.1
      */
     $translation_array = array(
         'yes' => __( 'Yes, confirm', 'video-wc-gallery' ),
@@ -82,7 +82,8 @@ function vwg_enqueue_css_js( $hook ) {
 
     wp_localize_script('vwg-admin', 'vwg_AJAX', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'security' => wp_create_nonce('remove_unused_thumbnails_nonce')
+        'security' => wp_create_nonce('remove_unused_thumbnails_nonce'),
+        'delete_videos_security' => wp_create_nonce('vwg_delete_videos_by_id_nonce')
     ));
 
     $variable_array = array(
@@ -301,12 +302,13 @@ function vwg_render_general_uninstall_settings() {
 
 /**
  * Render metabox Get the PRO version
- * @since 2.0
+ * @since 2.1
  */
 function vwg_render_get_pro_version() {
     $get_pro_info  = '';
     $get_pro_info .= ' <div class="get-pro-version-info">';
     $get_pro_info .= __( '<p>Unlock all features with the Pro version:</p>', 'video-wc-gallery' );
+    $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Unlimited products with videos</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Up to 6 videos per product</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Add YouTube videos</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use custom SVG icon</p>', 'video-wc-gallery' );
@@ -378,7 +380,7 @@ function vwg_added_admin_scripts() {
 
 /**
  * Register Settings
- * @since 2.0
+ * @since 2.1
  */
 function vwg_register_settings() {
     add_settings_section(
@@ -507,6 +509,15 @@ function vwg_register_settings() {
     /**
      * Uninstall Settings fields
      */
+
+     add_settings_field(
+        'vwg_settings_delete_videos_by_product_id',
+        __( 'Delete videos from product by ID', 'video-wc-gallery' ),
+        'vwg_settings_delete_videos_by_product_id_callback',
+        'vwg_uninstall_settings_group',
+        'vwg_uninstall_settings_section'
+    );
+
     add_settings_field(
         'vwg_settings_remove_settings_data',
         __( 'Delete all plugin settings when uninstalling the plugin', 'video-wc-gallery' ),
@@ -855,6 +866,20 @@ function vwg_settings_remove_videos_callback() {
     <input type="checkbox" name="vwg_settings_remove_videos_data" id="vwg_settings_remove_videos_data" value="1" <?php checked(isset($option['vwg_settings_remove_videos_data']) && $option['vwg_settings_remove_videos_data'], '1'); ?>>
     <?php
 }
+
+function vwg_settings_delete_videos_by_product_id_callback() {
+    ?>
+    <div class="vwg-delete-videos-by-id-wrapper">
+        <input type="text" id="vwg_product_ids_input" placeholder="<?php echo esc_attr__('Enter product IDs (comma separated)', 'video-wc-gallery'); ?>" style="width: 300px;" />
+        <button type="button" id="vwg_delete_videos_by_id_btn" class="button button-secondary">
+            <i class="fas fa-trash-alt"></i> <?php echo esc_html__('Delete Videos', 'video-wc-gallery'); ?>
+        </button>
+        <p class="description">
+            <?php echo esc_html__('Enter product IDs separated by commas (e.g., 123, 456, 789). This will delete all videos and thumbnails for the specified products.', 'video-wc-gallery'); ?>
+        </p>
+    </div>
+    <?php
+}
 add_action( 'admin_init', 'vwg_register_settings' );
 
 
@@ -933,6 +958,87 @@ function vwg_detect_attached_thumbs() {
 
 }
 
+
+/**
+ * AJAX function for delete videos by product ID
+ * @since 2.1
+ */
+function vwg_delete_videos_by_product_id() {
+    // Verify nonce
+    check_ajax_referer('vwg_delete_videos_by_id_nonce', 'security');
+    
+    // Check if the user has the appropriate capability
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => 'Unauthorized'));
+        wp_die();
+    }
+
+    $product_ids = isset($_POST['product_ids']) ? $_POST['product_ids'] : '';
+    
+    if (empty($product_ids)) {
+        wp_send_json_error(array('message' => __('No product IDs provided', 'video-wc-gallery')));
+        wp_die();
+    }
+
+    // Parse IDs
+    $ids_array = array_map('trim', explode(',', $product_ids));
+    $ids_array = array_filter($ids_array, 'is_numeric');
+    
+    if (empty($ids_array)) {
+        wp_send_json_error(array('message' => __('Invalid product IDs', 'video-wc-gallery')));
+        wp_die();
+    }
+
+    $deleted_count = 0;
+    $upload_dir = wp_upload_dir();
+    $target_dir = $upload_dir['basedir'] . '/video-wc-gallery-thumb/';
+
+    foreach ($ids_array as $product_id) {
+        $product_id = intval($product_id);
+        
+        // Get video URLs
+        $video_urls = get_post_meta($product_id, 'vwg_video_url', true);
+        
+        if (!empty($video_urls) && is_array($video_urls)) {
+            // Delete thumbnail files
+            foreach ($video_urls as $video) {
+                if (isset($video['video_thumb_url'])) {
+                    $filename_pattern = '/vwg-thumb_(.+)\.png/';
+                    if (preg_match($filename_pattern, $video['video_thumb_url'], $matches)) {
+                        $base_filename = $matches[1];
+                        
+                        // Delete all related files
+                        $files_to_delete = array(
+                            $target_dir . 'vwg-thumb_' . $base_filename . '.png',
+                            $target_dir . 'vwg-thumb_' . $base_filename . '-woocommerce_thumbnail.png',
+                            $target_dir . 'vwg-thumb_' . $base_filename . '-woocommerce_gallery_thumbnail.png',
+                            $target_dir . 'vwg-thumb_' . $base_filename . '.webp',
+                            $target_dir . 'vwg-thumb_' . $base_filename . '-woocommerce_thumbnail.webp',
+                            $target_dir . 'vwg-thumb_' . $base_filename . '-woocommerce_gallery_thumbnail.webp',
+                        );
+                        
+                        foreach ($files_to_delete as $file) {
+                            if (file_exists($file)) {
+                                @unlink($file);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Delete meta
+            delete_post_meta($product_id, 'vwg_video_url');
+            $deleted_count++;
+        }
+    }
+
+    wp_send_json_success(array(
+        'message' => sprintf(__('Videos deleted from %d product(s)', 'video-wc-gallery'), $deleted_count),
+        'deleted_count' => $deleted_count
+    ));
+    wp_die();
+}
+add_action('wp_ajax_vwg_delete_videos_by_product_id', 'vwg_delete_videos_by_product_id');
 
 /**
  * AJAX function for remove unused thumbnails
@@ -1018,5 +1124,113 @@ function vwg_custom_help_tip($tip, $sanitized_tip, $original_tip, $allow_html) {
     return $tip;
 }
 add_filter('wc_help_tip', 'vwg_custom_help_tip', 10, 4);
+
+
+/**
+ * Product list column indicator for videos
+ *
+ * @since 2.1
+ */
+function vwg_product_list_add_video_column( $columns ) {
+    $new_columns = array();
+    foreach ( $columns as $key => $label ) {
+        $new_columns[ $key ] = $label;
+        if ( $key === 'sku' ) {
+            $new_columns['vwg_video'] = __( 'Video', 'video-wc-gallery' );
+        }
+    }
+    if ( ! isset( $new_columns['vwg_video'] ) ) {
+        $new_columns['vwg_video'] = __( 'Video', 'video-wc-gallery' );
+    }
+    return $new_columns;
+}
+add_filter( 'manage_edit-product_columns', 'vwg_product_list_add_video_column', 20 );
+
+function vwg_product_list_render_video_column( $column, $post_id ) {
+    if ( $column !== 'vwg_video' ) {
+        return;
+    }
+
+    $video_meta_raw = get_post_meta( $post_id, 'vwg_video_url', true );
+    $video_meta = maybe_unserialize( $video_meta_raw );
+    if ( ! empty( $video_meta ) && is_array( $video_meta ) ) {
+        $count = count( $video_meta );
+        $title = sprintf(
+            _n( 'This product has %s video', 'This product has %s videos', $count, 'video-wc-gallery' ),
+            number_format_i18n( $count )
+        );
+        echo '<div class="vwg-video-col" title="' . esc_attr( $title ) . '" data-tip="' . esc_attr( $title ) . '">';
+        echo '<span class="dashicons dashicons-video-alt3 vwg-has-video"></span>';
+        echo '</div>';
+    } else {
+        echo '&ndash;';
+    }
+}
+add_action( 'manage_product_posts_custom_column', 'vwg_product_list_render_video_column', 20, 2 );
+
+function vwg_product_list_video_column_styles() {
+    ?>
+    <style>
+        .column-vwg_video { width: 50px; }
+        .vwg-video-col { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+        .vwg-has-video { color: #6c5ce7; font-size: 18px; vertical-align: middle; }
+        .vwg-video-col:hover .vwg-has-video { color: #4b3ab6; }
+    </style>
+    <script>
+    jQuery(function($){
+        if ($.fn.tipTip) {
+            $('.vwg-video-col[data-tip]').tipTip({attribute: 'data-tip', fadeIn: 50, fadeOut: 50, delay: 50});
+        }
+    });
+    </script>
+    <?php
+}
+add_action( 'admin_head', 'vwg_product_list_video_column_styles' );
+
+/**
+ * Show counter above products table for products with video
+ *
+ * @since 2.1
+ */
+function vwg_products_video_counter( $which ) {
+    global $typenow;
+    if ( $typenow !== 'product' || $which !== 'top' ) {
+        return;
+    }
+
+    if ( vwg_is_pro_addon() ) {
+        return;
+    }
+
+    $l = vwg_pml();
+    $total_with_video = vwg_pvc();
+
+    echo '<div class="vwg-video-counter-wrap open-vwg-modal-pro-info" style="cursor: pointer;">';
+    echo '<span class="vwg-video-counter-label">' . esc_html__( 'Products with video:', 'video-wc-gallery' ) . '</span> ';
+    echo '<span class="vwg-video-counter-value">' . intval( $total_with_video ) . ' / ' . intval( $l ) . '</span>';
+    echo '</div>';
+}
+add_action( 'manage_posts_extra_tablenav', 'vwg_products_video_counter', 10, 1 );
+
+function vwg_products_video_counter_styles() {
+    ?>
+    <style>
+        .vwg-video-counter-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            margin-left: 8px;
+            background: #f8f8fc;
+            border: 1px solid #e2e2f5;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .vwg-video-counter-label { color: #555; font-weight: 500; }
+        .vwg-video-counter-value { color: #6c5ce7; font-weight: 700; }
+    </style>
+    <?php
+}
+add_action( 'admin_head-edit.php', 'vwg_products_video_counter_styles' );
 
 
