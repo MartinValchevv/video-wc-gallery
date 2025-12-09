@@ -1013,7 +1013,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page (IMPORTANT)
  *
- * @since 2.0
+ * @since 2.1
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -1136,6 +1136,30 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 setInterval(function () {
                     var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                     var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.is-selected .woocommerce-product-gallery__vwg_video')
+                    
+                    // Pause all inactive videos
+                    jQuery('.woocommerce-product-gallery__image').each(function() {
+                        var $slide = jQuery(this);
+                        var isActive = $slide.hasClass('is-selected');
+                        var $video = $slide.find('.woocommerce-product-gallery__vwg_video video');
+                        
+                        if ($video.length > 0) {
+                            var videoId = $video.attr('id');
+                            
+                            if (!isActive) {
+                                // Pause inactive videos
+                                try {
+                                    if (typeof videojs !== 'undefined' && videoId) {
+                                        var player = videojs(videoId);
+                                        if (player && !player.paused()) {
+                                            player.pause();
+                                        }
+                                    }
+                                } catch(e) {}
+                            }
+                        }
+                    });
+                    
                     if ($activeVideoSlide.length > 0 ) {
                         var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.is-selected').attr('data-vwg-video')
                         var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')
@@ -1350,6 +1374,29 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     setInterval(function () {
                         var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                         var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.flex-active-slide .woocommerce-product-gallery__vwg_video')
+                        
+                        // Pause all inactive videos
+                        jQuery('.woocommerce-product-gallery__image').each(function() {
+                            var $slide = jQuery(this);
+                            var isActive = $slide.hasClass('flex-active-slide');
+                            var $video = $slide.find('.woocommerce-product-gallery__vwg_video video');
+                            
+                            if ($video.length > 0) {
+                                var videoId = $video.attr('id');
+                                if (!isActive) {
+                                    // Pause inactive videos
+                                    try {
+                                        if (typeof videojs !== 'undefined' && videoId) {
+                                            var player = videojs(videoId);
+                                            if (player && !player.paused()) {
+                                                player.pause();
+                                            }
+                                        }
+                                    } catch(e) {}
+                                }
+                            }
+                        });
+                        
                         if ($activeVideoSlide.length > 0 ) {
                             var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.flex-active-slide').attr('data-vwg-video')
                             var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')

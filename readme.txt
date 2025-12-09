@@ -5,7 +5,7 @@ Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ The FREE version supports basic video functionality with up to 2 videos per prod
 7. PRO - Custom SVG icon
 
 == Changelog ==
+
+= 2.1 =
+* **Added:** Function to pause a video clip if we move to another slide in the gallery 
+**Release date: December 9, 2025**
 
 = 2.0 =
 * **Added:** Admin menu and redesign 
