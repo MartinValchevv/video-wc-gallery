@@ -5,7 +5,7 @@ Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.1
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,15 +31,18 @@ The options for this plugin include:
 *   Compatible with Woocommerce plugin to ensure seamless integration with your online store
 
 **FREE Version Limitations:**
+*   Limited to 20 products with video
 *   Limited to 2 videos per product
 *   WordPress Media Library videos only (no YouTube support)
 *   Basic video icons only
 *   Basic thumbnail generation
+*   Basic SEO video
 
 **🚀 Upgrade to PRO Version:**
 Get access to advanced features including up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and premium support!
 
 **PRO Version Features:**
+*   **Unlimited products with video
 *   **Up to 6 videos per product** - Showcase products from multiple angles
 *   **YouTube video integration** - Embed videos directly from YouTube
 *   **Custom SVG icons** - Use your own brand icons
@@ -93,9 +96,9 @@ Yes, you can choose from a range of video clip settings, such as autoplay, sound
 = Is Video Gallery for WooCommerce compatible with other WordPress themes and plugins? =
 Video Gallery for WooCommerce is compatible with most WordPress themes and plugins, although some may require additional customization. It is designed to seamlessly integrate with Woocommerce, ensuring a smooth user experience.
 = Is there a PRO version with more features? =
-Yes! The PRO version unlocks advanced features including up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and priority support. Visit [Video Gallery for WooCommerce PRO](https://nitramix.com/projects/video-gallery-for-woocommerce/) to learn more and purchase.
+Yes! The PRO version unlocks advanced features including Unlimited products with video, up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and priority support. Visit [Video Gallery for WooCommerce PRO](https://nitramix.com/projects/video-gallery-for-woocommerce/) to learn more and purchase.
 = What's the difference between FREE and PRO versions? =
-The FREE version supports basic video functionality with up to 2 videos per product. The PRO version includes unlimited videos, YouTube support, custom icons, advanced SEO, and premium support.
+The FREE version supports basic video functionality with limit 20 products with vide and up to 2 videos per product. The PRO version includes unlimited videos, YouTube support, custom icons, advanced SEO, and premium support.
 
 == Screenshots ==
 
@@ -108,6 +111,10 @@ The FREE version supports basic video functionality with up to 2 videos per prod
 7. PRO - Custom SVG icon
 
 == Changelog ==
+
+= 2.2 =
+* **Added:** Added basic support for Blocksy theme
+**Release date: December 12, 2025**
 
 = 2.1 =
 * **Added:** Function to pause a video if we move to another slide in the gallery 

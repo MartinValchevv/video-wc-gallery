@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 2.1 Function show modal pricing info
+     * @since 2.2 Function show modal pricing info
      */
     const selectorTrigger = [
         '.open-vwg-modal-pro-info',                               // URL info PRO feature
@@ -121,8 +121,8 @@ jQuery(document).ready(function($) {
                        <div class="guarantee-icon">
                            <i class="fas fa-undo-alt"></i>
                        </div>
-                       <h3>14-Day Money Back Guarantee</h3>
-                       <p>If you're not satisfied, we offer a full refund within 14 days. No questions asked.</p>
+                       <h3>7-Days Money Back Guarantee</h3>
+                       <p>If you're not satisfied, we offer a full refund within 7 days. No questions asked.</p>
                    </div>
                </div>
                 `, // END HTML Pricing table
