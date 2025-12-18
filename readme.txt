@@ -5,7 +5,7 @@ Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,7 @@ The options for this plugin include:
 Get access to advanced features including up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and premium support!
 
 **PRO Version Features:**
-*   **Unlimited products with video
+*   **Unlimited products with video**
 *   **Up to 6 videos per product** - Showcase products from multiple angles
 *   **YouTube video integration** - Embed videos directly from YouTube
 *   **Custom SVG icons** - Use your own brand icons
@@ -111,6 +111,10 @@ The FREE version supports basic video functionality with limit 20 products with 
 7. PRO - Custom SVG icon
 
 == Changelog ==
+
+= 2.3 =
+* **Fix:** Function to pause a video if we move to another slide in the gallery - optimized
+**Release date: December 18, 2025**
 
 = 2.2 =
 * **Added:** Added basic support for Blocksy theme

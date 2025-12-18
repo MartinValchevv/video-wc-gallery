@@ -6,7 +6,7 @@
  * Author: Nitramix, Martin Valchev
  * Author URI: https://nitramix.com/
  * Requires Plugins: woocommerce
- * Version: 2.2
+ * Version: 2.3
  * Text Domain: video-wc-gallery
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Define constants
  *
- * @since 2.2
+ * @since 2.3
  */
-if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '2.2' ); // Plugin version constant
+if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '2.3' ); // Plugin version constant
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY' ) )		define( 'VWG_VIDEO_WOO_GALLERY'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'video-wc-gallery'
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY_DIR' ) )	define( 'VWG_VIDEO_WOO_GALLERY_DIR'	, plugin_dir_path( __FILE__ ) ); // Plugin directory absolute path with the trailing slash. Useful for using with includes eg - /var/www/html/wp-content/plugins/video-wc-gallery/
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY_URL' ) )	define( 'VWG_VIDEO_WOO_GALLERY_URL'	, plugin_dir_url( __FILE__ ) ); // URL to the plugin folder with the trailing slash. Useful for referencing src eg - http://localhost/wp/wp-content/plugins/video-wc-gallery/

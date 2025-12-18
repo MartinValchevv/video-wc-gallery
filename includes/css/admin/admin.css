@@ -92,11 +92,27 @@ div.radio-with-Icon p.radioOption input[type="radio"] + label:before, div.radio-
     display: none;
 }
 
-.logo-image {
+.vwg-swal-container-pro-info .logo-image {
+    width: 70px;
     height: auto;
-    width: auto;
-    display: inline-block;
-    margin-bottom: -20px;
+}
+
+.vwg-logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.vwg-logo-wrapper .logo-image {
+    width: 70px;
+    height: auto;
+}
+
+.vwg-logo-wrapper .logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #7e3fec;
+    margin-left: 10px;
 }
 
 .postbox-container.column-2 .postbox-header {
@@ -573,8 +589,15 @@ label sup {
         margin: 0px 10px;
     }
 
-    .logo-image {
-        width: 100%;
+    .vwg-logo-wrapper {
+        justify-content: center;
+    }
+
+    .vwg-logo-wrapper .logo-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: #7e3fec;
+        margin-left: 3px;
     }
 }
 

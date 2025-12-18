@@ -147,7 +147,7 @@ add_action('admin_init', 'vwg_save_settings');
 
 /**
  * Register Settings and view
- * @since 2.0
+ * @since 2.3
  */
 function vwg_custom_settings() {
     ?>
@@ -156,8 +156,9 @@ function vwg_custom_settings() {
             <?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false); ?>
             <?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false); ?>
             <div class="postbox-container1 header-container column-1 normal">
-                <h1 style="margin-bottom: 15px;">
+                <h1 class="vwg-logo-wrapper">
                     <img src="<?php echo esc_url(VWG_VIDEO_WOO_GALLERY_URL); ?>includes/images/vwg-logo.png" class="logo-image" title="Video Gallery for WooCommerce" alt="Video Gallery for WooCommerce">
+                    <span class="logo-text"><?php _e('Video Gallery for WooCommerce', 'video-wc-gallery'); ?></span>
                 </h1>
             </div>
             <div class="clear"></div>

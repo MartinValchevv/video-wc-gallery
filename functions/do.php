@@ -1050,7 +1050,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page (IMPORTANT)
  *
- * @since 2.1
+ * @since 2.3
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -1174,28 +1174,63 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                     var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.is-selected .woocommerce-product-gallery__vwg_video')
                     
-                    // Pause all inactive videos
-                    jQuery('.woocommerce-product-gallery__image').each(function() {
-                        var $slide = jQuery(this);
-                        var isActive = $slide.hasClass('is-selected');
-                        var $video = $slide.find('.woocommerce-product-gallery__vwg_video video');
-                        
-                        if ($video.length > 0) {
-                            var videoId = $video.attr('id');
+                        // Pause all inactive videos
+                        jQuery('.woocommerce-product-gallery__image').each(function() {
+                            var $slide = jQuery(this);
+                            var isActive = $slide.hasClass('flex-active-slide');
+                            var $video = $slide.find('.woocommerce-product-gallery__vwg_video video');
                             
-                            if (!isActive) {
-                                // Pause inactive videos
-                                try {
-                                    if (typeof videojs !== 'undefined' && videoId) {
-                                        var player = videojs(videoId);
-                                        if (player && !player.paused()) {
-                                            player.pause();
-                                        }
+                            if ($video.length > 0) {
+                                var videoId = $video.attr('id');
+                                var hasAutoplay = $video.attr('autoplay') !== undefined;
+                                var hasControls = $video.hasClass('.vjs-controls-enabled');
+
+                                // When video player is initialized
+                                if (typeof videojs !== 'undefined' && videoId) {
+                                    var player = videojs(videoId);
+
+                                    // Set user active/inactive state based on slide
+                                    if (isActive) {
+                                        player.options_.inactivityTimeout = 10000; // 10 seconds
+                                        player.userActive(true);
+                                    } else {
+                                        player.userActive(false);
                                     }
-                                } catch(e) {}
+
+                                    if (!hasControls) {
+                                        jQuery($slide).on('click', function() {
+                                            if (player.paused()) {  
+                                                player.play();
+                                            } else {
+                                                player.pause();
+                                            }
+                                        });
+                                    } 
+    
+                                    if (hasAutoplay) {
+                                        // User became inactive (vjs-user-inactive class added)
+                                        player.on('userinactive', function() {
+                                            player.pause();
+                                        });
+    
+                                        // User became active (vjs-user-inactive class removed)
+                                        player.on('useractive', function() {
+                                            player.play();
+                                        });
+
+                                        // Video was paused
+                                        // player.on('pause', function() {
+                                        //     console.log('Video paused');
+                                        // });
+
+                                        // Video started playing
+                                        // player.on('play', function() {
+                                        //     console.log('Video playing');
+                                        // });
+                                    }
+                                }
                             }
-                        }
-                    });
+                        });
                     
                     if ($activeVideoSlide.length > 0 ) {
                         var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.is-selected').attr('data-vwg-video')
@@ -1420,16 +1455,52 @@ function vwg_add_custom_style_and_scripts_product_page() {
                             
                             if ($video.length > 0) {
                                 var videoId = $video.attr('id');
-                                if (!isActive) {
-                                    // Pause inactive videos
-                                    try {
-                                        if (typeof videojs !== 'undefined' && videoId) {
-                                            var player = videojs(videoId);
-                                            if (player && !player.paused()) {
+                                var hasAutoplay = $video.attr('autoplay') !== undefined;
+                                var hasControls = $video.hasClass('.vjs-controls-enabled');
+
+                                // When video player is initialized
+                                if (typeof videojs !== 'undefined' && videoId) {
+                                    var player = videojs(videoId);
+
+                                    // Set user active/inactive state based on slide
+                                    if (isActive) {
+                                        player.options_.inactivityTimeout = 10000; // 10 seconds
+                                        player.userActive(true);
+                                    } else {
+                                        player.userActive(false);
+                                    }
+
+                                    if (!hasControls) {
+                                        jQuery($slide).on('click', function() {
+                                            if (player.paused()) {  
+                                                player.play();
+                                            } else {
                                                 player.pause();
                                             }
-                                        }
-                                    } catch(e) {}
+                                        });
+                                    } 
+    
+                                    if (hasAutoplay) {
+                                        // User became inactive (vjs-user-inactive class added)
+                                        player.on('userinactive', function() {
+                                            player.pause();
+                                        });
+    
+                                        // User became active (vjs-user-inactive class removed)
+                                        player.on('useractive', function() {
+                                            player.play();
+                                        });
+
+                                        // Video was paused
+                                        // player.on('pause', function() {
+                                        //     console.log('Video paused');
+                                        // });
+
+                                        // Video started playing
+                                        // player.on('play', function() {
+                                        //     console.log('Video playing');
+                                        // });
+                                    }
                                 }
                             }
                         });
