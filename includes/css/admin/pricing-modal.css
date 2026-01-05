@@ -12,6 +12,11 @@
     overflow-x: hidden;
 }
 
+.vwg-swal-container-pro-info .logo-image {
+    width: 70px;
+    height: auto;
+}
+
 .vwg-pricing-container {
     width: 100%;
     max-width: 900px;

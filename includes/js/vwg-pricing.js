@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 2.2 Function show modal pricing info
+     * @since 2.4 Function show modal pricing info
      */
     const selectorTrigger = [
         '.open-vwg-modal-pro-info',                               // URL info PRO feature
@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
                                 <h2>Single Site</h2>
                                 <div class="price">
                                     <span class="currency">$</span>
-                                    <span class="value">49</span>
+                                    <span class="value">69</span>
                                     <span class="duration">one-time</span>
                                 </div>
                                 <ul class="pricing-features">
@@ -83,7 +83,7 @@ jQuery(document).ready(function($) {
                                 <h2>Multiple Sites</h2>
                                 <div class="price">
                                     <span class="currency">$</span>
-                                    <span class="value">89</span>
+                                    <span class="value">99</span>
                                     <span class="duration">one-time</span>
                                 </div>
                                 <ul class="pricing-features">
@@ -102,7 +102,7 @@ jQuery(document).ready(function($) {
                                 <h2>Unlimited Sites</h2>
                                 <div class="price">
                                     <span class="currency">$</span>
-                                    <span class="value">189</span>
+                                    <span class="value">219</span>
                                     <span class="duration">one-time</span>
                                 </div>
                                 <ul class="pricing-features">

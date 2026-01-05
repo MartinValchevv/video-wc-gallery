@@ -182,7 +182,7 @@ add_filter('admin_footer_text', 'vwg_footer_text');
 /**
  * Add donate notice
  *
- * @since 2.0
+ * @since 2.4
  */
 function vwg_admin_init_notice_monthly() {
 
@@ -211,7 +211,7 @@ function vwg_display_monthly_admin_notice()
     if (!$is_dismissed) {
         ?>
         <div class="notice notice-info is-dismissible" style="border-left-color: #7e3fec;" id="vwg_monthly-donation-notice">
-            <img src="https://ps.w.org/video-wc-gallery/assets/icon-128x128.png" style="max-width: 40px; position: absolute; top: 50%; left: 20px; transform: translateY(-50%);">
+            <img src="<?php echo esc_url(VWG_VIDEO_WOO_GALLERY_URL); ?>includes/images/vwg-logo.png" style="max-width: 40px; position: absolute; top: 50%; left: 20px; transform: translateY(-50%);">
             <div class="vwg-notice-wrapper" style="margin-left: 60px; padding: 15px;">
                 <p style="font-size: 16px; font-weight: bold;">🚀 <?php echo esc_html__('Help Us Improve Video Gallery for WooCommerce', 'video-wc-gallery'); ?>!</p>
                 <p><?php echo esc_html__('Dear valued user,', 'video-wc-gallery'); ?></p>

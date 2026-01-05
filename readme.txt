@@ -5,7 +5,7 @@ Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,13 +104,18 @@ The FREE version supports basic video functionality with limit 20 products with 
 
 1. Settings
 2. Product settings
-3. Product pages
-4. PRO - Embed videos directly from YouTube
-5. PRO - Video SEO settings
-6. PRO - Thumbnails optimization settings
-7. PRO - Custom SVG icon
+3. All Products
+4. Product pages
+5. PRO - Embed videos directly from YouTube
+6. PRO - Video SEO settings
+7. PRO - Thumbnails optimization settings
+8. PRO - Custom SVG icon
 
 == Changelog ==
+
+= 2.4 =
+* **Improvement:** By visualization and code
+**Release date: January 5, 2026**
 
 = 2.3 =
 * **Fix:** Function to pause a video if we move to another slide in the gallery - optimized
