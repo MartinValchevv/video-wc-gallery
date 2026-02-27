@@ -1,13 +1,14 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 2.4 Function show modal pricing info
+     * @since 2.5 Function show modal pricing info
      */
     const selectorTrigger = [
         '.open-vwg-modal-pro-info',                               // URL info PRO feature
         '.get-vwg-pro-version-info-btn',                          // Get pro button in metabox
         '#vwg_settings_custom_svg_icon',                          // Settings Use custom SVG
         '#vwg_settings_optimized_thumbnails',                     // Settings optimized thumbnails switch button
+        '#vwg_settings_enable_analytics',                         // Settings enable analytics switch button
         '#vwg_settings_convert_on_upload',                        // Settings convert on upload
         '#vwg_bulk_convert',                                      // Button bulk convert
         '#vwg_delete_converted_files',                            // Button delete converted file
@@ -69,6 +70,7 @@ jQuery(document).ready(function($) {
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>1 WordPress site</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li><i class="fas fa-check"></i>Analytics Basic</li>
                                     <li><i class="fas fa-check"></i>Free updates</li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
@@ -83,12 +85,13 @@ jQuery(document).ready(function($) {
                                 <h2>Multiple Sites</h2>
                                 <div class="price">
                                     <span class="currency">$</span>
-                                    <span class="value">99</span>
+                                    <span class="value">149</span>
                                     <span class="duration">one-time</span>
                                 </div>
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>Up to 3 WordPress sites</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li class="premium-features-analytics"><i class="fas fa-check"></i>Analytics Advanced <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Free updates</li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
@@ -102,12 +105,13 @@ jQuery(document).ready(function($) {
                                 <h2>Unlimited Sites</h2>
                                 <div class="price">
                                     <span class="currency">$</span>
-                                    <span class="value">219</span>
+                                    <span class="value">299</span>
                                     <span class="duration">one-time</span>
                                 </div>
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>Unlimited WordPress sites</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li class="premium-features-analytics"><i class="fas fa-check"></i>Analytics Advanced <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Free updates</li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>

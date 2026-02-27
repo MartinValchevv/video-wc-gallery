@@ -3,9 +3,9 @@ Contributors: nitramix, martinvalchev
 Donate link: https://nitramix.com/donate/
 Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
-Tested up to: 6.9
+Tested up to: 6.9.1
 Requires PHP: 7.4
-Stable tag: 2.4
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Video Gallery for WooCommerce: Add WordPress library videos to product pages wit
 
 Introducing the Video Gallery for WooCommerce plugin - the perfect solution for businesses looking to enhance their product pages with visually engaging content. With this powerful plugin, adding video files from the WP library is a breeze, and they will be beautifully showcased on the product page. The plugin comes packed with a variety of additional options to help customize the display of videos on your site, including the ability to move videos around on the page to your desired position. You can also change the video file icon and color to match your brand's aesthetic. Video clip settings are fully customizable, giving you control over autoplay, sound, and loop options, as well as the ability to show or hide video control options. Please note that in order to use this plugin, the Woocommerce plugin must be activated. Upgrade your product pages today with Video Gallery for WooCommerce!
 
-**🚀 Looking for more features?** Check out our PRO version with YouTube integration, unlimited videos, custom SVG icons, SEO optimization, and priority support!
+**🚀 Looking for more features?** Check out our PRO version with YouTube integration, unlimited videos, custom SVG icons, SEO optimization, video analytics, and priority support!
 
 The options for this plugin include:
 
@@ -37,9 +37,10 @@ The options for this plugin include:
 *   Basic video icons only
 *   Basic thumbnail generation
 *   Basic SEO video
+*   No analytics
 
 **🚀 Upgrade to PRO Version:**
-Get access to advanced features including up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and premium support!
+Get access to advanced features including up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, video analytics, and premium support!
 
 **PRO Version Features:**
 *   **Unlimited products with video**
@@ -48,6 +49,8 @@ Get access to advanced features including up to 6 videos per product, YouTube in
 *   **Custom SVG icons** - Use your own brand icons
 *   **Optimized thumbnails** - Automatic thumbnail generation
 *   **SEO settings** - Custom titles and descriptions per video
+*   **Video Analytics (Basic)** - Track video views and watch time per product *(Single Site plan)*
+*   **Video Analytics (Advanced)** - Device charts, engagement metrics, location analytics, browser/OS tracking, heatmap visualization, and CSV export *(Multiple & Unlimited plans, or Advanced Analytics Add-on)*
 *   **Premium support** - Priority email support
 
 **[Purchase PRO Version](https://nitramix.com/projects/video-gallery-for-woocommerce/)**
@@ -96,9 +99,13 @@ Yes, you can choose from a range of video clip settings, such as autoplay, sound
 = Is Video Gallery for WooCommerce compatible with other WordPress themes and plugins? =
 Video Gallery for WooCommerce is compatible with most WordPress themes and plugins, although some may require additional customization. It is designed to seamlessly integrate with Woocommerce, ensuring a smooth user experience.
 = Is there a PRO version with more features? =
-Yes! The PRO version unlocks advanced features including Unlimited products with video, up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and priority support. Visit [Video Gallery for WooCommerce PRO](https://nitramix.com/projects/video-gallery-for-woocommerce/) to learn more and purchase.
+Yes! The PRO version unlocks advanced features including unlimited products with video, up to 6 videos per product, YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, video analytics, and priority support. Visit [Video Gallery for WooCommerce PRO](https://nitramix.com/projects/video-gallery-for-woocommerce/) to learn more and purchase.
 = What's the difference between FREE and PRO versions? =
-The FREE version supports basic video functionality with limit 20 products with vide and up to 2 videos per product. The PRO version includes unlimited videos, YouTube support, custom icons, advanced SEO, and premium support.
+The FREE version supports basic video functionality limited to 20 products with video and up to 2 videos per product. The PRO version includes unlimited videos, YouTube support, custom icons, advanced SEO, video analytics, and premium support.
+= What is Video Analytics and how does it work? =
+The PRO version includes a Video Analytics dashboard that tracks how visitors interact with your product videos. Enable it from Video Gallery > Settings. All PRO plans include basic analytics (views, watch time). Advanced analytics features (device charts, engagement metrics, location data, heatmap visualization, CSV export) are included in Multiple Sites and Unlimited Sites plans, or available as a one-time Advanced Analytics Add-on for Single Site license holders.
+= Can I get advanced analytics on a Single Site license? =
+Yes! Single Site license holders can purchase the Advanced Analytics Add-on as a one-time payment from the Video Analytics dashboard. This unlocks all advanced features (device charts, engagement metrics, location analytics, heatmaps, and CSV export) without needing to upgrade your full license.
 
 == Screenshots ==
 
@@ -107,11 +114,21 @@ The FREE version supports basic video functionality with limit 20 products with 
 3. All Products
 4. Product pages
 5. PRO - Embed videos directly from YouTube
-6. PRO - Video SEO settings
-7. PRO - Thumbnails optimization settings
-8. PRO - Custom SVG icon
+6. PRO - Video Analytics dashboard 1
+7. PRO - Video Analytics dashboard 2
+8. PRO - Video Analytics dashboard 3
+9. PRO - Video Analytics dashboard 4
+10. PRO - Video SEO settings
+11. PRO - Thumbnails optimization settings
+12. PRO - Custom SVG icon
 
 == Changelog ==
+
+= 2.5 =
+* **Added:** Product Gallery Block Support
+* **Improvement:** By visualization and code
+* Tested with WordPress 6.9.1
+**Release date: February 27, 2026**
 
 = 2.4 =
 * **Improvement:** By visualization and code

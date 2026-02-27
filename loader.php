@@ -2,7 +2,7 @@
 /**
  * Loads the plugin files
  *
- * @since 1.18
+ * @since 2.5
  */
 
 // Exit if accessed directly
@@ -19,6 +19,9 @@ require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/theme-supports.php' );
 
 // Do plugin operations
 require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/do.php' );
+
+// Product Gallery Block support
+require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/product-gallery-block.php' );
 
 // Version updater
 require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'update.php' );

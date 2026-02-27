@@ -192,22 +192,22 @@
 }
 
 /* Premium Features Tooltip */
-.vwg-pricing-container .pricing-features li.premium-features {
+.vwg-pricing-container .pricing-features li.premium-features, .vwg-pricing-container .pricing-features li.premium-features-analytics {
     cursor: pointer;
     border-bottom: 1px dashed rgba(126, 63, 236, 0.4);
     padding-bottom: 10px;
     transition: background-color 0.2s ease;
 }
 
-.vwg-pricing-container .recommended .pricing-features li.premium-features {
+.vwg-pricing-container .recommended .pricing-features li.premium-features, .vwg-pricing-container .recommended .pricing-features li.premium-features-analytics {
     border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
 }
 
-.vwg-pricing-container .pricing-features li.premium-features:hover {
+.vwg-pricing-container .pricing-features li.premium-features:hover, .vwg-pricing-container .pricing-features li.premium-features-analytics:hover {
     background-color: rgba(126, 63, 236, 0.05);
 }
 
-.vwg-pricing-container .recommended .pricing-features li.premium-features:hover {
+.vwg-pricing-container .recommended .pricing-features li.premium-features:hover, .vwg-pricing-container .recommended .pricing-features li.premium-features-analytics:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -228,7 +228,24 @@
     min-width: 200px;
 }
 
-.vwg-pricing-container .recommended .pricing-features li.premium-features:hover::after {
+.vwg-pricing-container .pricing-features li.premium-features-analytics:hover::after {
+    content: "• All from Basic\A • Device charts\A • Engagement metrics\A • Location analytics (countries & cities)\A • Browser/OS tracking\A • Heatmap visualization\A • CSV export\A • Extended filters";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: #7e3fec;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+}
+
+.vwg-pricing-container .recommended .pricing-features li.premium-features:hover::after, .vwg-pricing-container .recommended .pricing-features li.premium-features-analytics:hover::after {
     background-color: white;
     color: #7e3fec;
 }

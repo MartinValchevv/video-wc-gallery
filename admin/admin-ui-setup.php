@@ -303,7 +303,7 @@ function vwg_render_general_uninstall_settings() {
 
 /**
  * Render metabox Get the PRO version
- * @since 2.1
+ * @since 2.5
  */
 function vwg_render_get_pro_version() {
     $get_pro_info  = '';
@@ -311,6 +311,7 @@ function vwg_render_get_pro_version() {
     $get_pro_info .= __( '<p>Unlock all features with the Pro version:</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Unlimited products with videos</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Up to 6 videos per product</p>', 'video-wc-gallery' );
+    $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Analytics tracking</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Add YouTube videos</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use custom SVG icon</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use optimized thumbnails</p>', 'video-wc-gallery' );
@@ -381,7 +382,7 @@ function vwg_added_admin_scripts() {
 
 /**
  * Register Settings
- * @since 2.1
+ * @since 2.5
  */
 function vwg_register_settings() {
     add_settings_section(
@@ -428,6 +429,14 @@ function vwg_register_settings() {
         'vwg_settings_icon_color',
         __( 'Choose icon color', 'video-wc-gallery' ),
         'vwg_settings_icon_color_callback',
+        'vwg_settings_group',
+        'vwg_settings_section'
+    );
+
+    add_settings_field(
+        'vwg_settings_enable_analytics',
+        __( 'Enable Video Analytics', 'video-wc-gallery' ) . apply_filters("vwg_modify_pro_strings", "<sup> PRO</sup>"),
+        'vwg_settings_enable_analytics_callback',
         'vwg_settings_group',
         'vwg_settings_section'
     );
@@ -754,6 +763,27 @@ function vwg_settings_icon_color_callback() {
     $option = get_option('vwg_settings_group');
     ?>
     <input type="text" id="vwg_settings_icon_color" name="vwg_settings_icon_color" class="vwg_settings_icon_color" value="<?php echo esc_attr($option['vwg_settings_icon_color']) ?>">
+    <?php
+}
+
+/**
+ * Enable analytics callback
+ */
+function vwg_settings_enable_analytics_callback() {
+    $option_pro = get_option('vwg_pro_settings');
+    $analytics_enabled = isset($option_pro['vwg_settings_enable_analytics']) && $option_pro['vwg_settings_enable_analytics'] === '1';
+    ?>
+    <label class="vwg-toggle">
+        <input type="checkbox" class="vwg-toggle-checkbox" name="vwg_settings_enable_analytics" id="vwg_settings_enable_analytics" value="1" <?php checked($analytics_enabled, true); ?>>
+        <div class="vwg-toggle-switch"></div>
+        <span class="vwg-toggle-label"><?php echo esc_html__('Track video views, watch time, engagement and other metrics.' , 'video-wc-gallery') ?>
+            <?php
+            $vwg_pro_feature_link = '<a class="open-vwg-modal-pro-info" href="#">' . esc_html__('PRO feature' , 'video-wc-gallery') . '</a>';
+            $vwg_pro_feature_link = wp_kses_post($vwg_pro_feature_link);
+            echo apply_filters('vwg_pro_feature_link', $vwg_pro_feature_link);
+            ?>
+        </span>
+    </label>
     <?php
 }
 

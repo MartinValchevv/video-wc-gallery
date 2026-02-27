@@ -1,0 +1,209 @@
+/**
+ * Video Gallery for WooCommerce - Product Gallery Block Styles
+ *
+ * Styles for video integration in the WooCommerce Product Gallery Block.
+ *
+ * @since 2.5
+ */
+
+/* ==========================================================================
+   Video Container Overlay (Large Image Area)
+   ========================================================================== */
+
+.vwg-block-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: #000;
+}
+
+.vwg-block-video-container .video-js {
+    width: 100%;
+    height: 100%;
+}
+
+.vwg-block-video-container .video-js video {
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   Video Slide (Large Image Area)
+   ========================================================================== */
+
+.vwg-block-video-slide {
+    position: relative;
+}
+
+/* Poster image styling — show play button cursor. */
+.vwg-block-video-slide .vwg-block-poster-image {
+    cursor: pointer !important;
+}
+
+/* Prevent zoom transform on video poster images. */
+.vwg-block-video-slide .vwg-block-poster-image:hover {
+    transform: none !important;
+    transform-origin: initial !important;
+}
+
+/* Product image wrapper needs relative positioning for video overlay. */
+.vwg-block-video-slide .wc-block-components-product-image {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Poster image — fill the container. */
+.vwg-block-video-slide .vwg-block-poster-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   Play Icon on Poster Image (Large Image)
+   ========================================================================== */
+
+/* Play icon overlay on the poster image in the large viewer. */
+.vwg-block-video-slide .wc-block-components-product-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.05);
+    transition: background 0.2s ease;
+}
+
+/* Hide the overlay when video is playing. */
+.vwg-block-video-slide .wc-block-components-product-image:has(.vwg-block-video-container)::after {
+    display: none;
+}
+
+/* ==========================================================================
+   Thumbnail Play Icon
+   ========================================================================== */
+
+.vwg-block-thumbnail-video {
+    position: relative;
+}
+
+.vwg-block-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'FontAwesome';
+    font-size: 18px;
+    color: var(--vwg-icon-color, #ffffff);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    line-height: 1;
+}
+
+/* The ::before content and font-weight are set dynamically via wp_add_inline_style. */
+
+/* ==========================================================================
+   Video.js Play Button Customization
+   ========================================================================== */
+
+.vwg-block-video-container .vjs-big-play-button {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* The vjs-icon-placeholder icon is set dynamically via wp_add_inline_style. */
+
+/* ==========================================================================
+   Adapt Sizes (object-fit: cover when enabled)
+   ========================================================================== */
+
+.vwg-block-video-container.vwg-adapt-sizes .video-js video {
+    object-fit: cover;
+}
+
+.vwg-block-video-container .video-js.vjs-fullscreen video {
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   YouTube Container
+   ========================================================================== */
+
+.vwg-block-youtube-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vwg-block-youtube-container iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ==========================================================================
+   Dialog (Fullscreen) Video Styling
+   ========================================================================== */
+
+.vwg-block-dialog-video {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+}
+
+.vwg-block-dialog-video .video-js {
+    width: 100%;
+    height: 100%;
+}
+
+/* Hide the poster image when dialog video player is active. */
+.vwg-block-dialog-video-poster[style*="display: none"] + .vwg-block-dialog-video {
+    display: block;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media only screen and (max-width: 768px) {
+    .vwg-block-play-icon {
+        font-size: 14px;
+    }
+
+    .vwg-block-dialog-video {
+        max-width: 100%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .vwg-block-play-icon {
+        font-size: 12px;
+    }
+}
+
+/* ==========================================================================
+   Animation for video container appearance
+   ========================================================================== */
+
+.vwg-block-video-container {
+    animation: vwgFadeIn 0.3s ease;
+}
+
+@keyframes vwgFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
