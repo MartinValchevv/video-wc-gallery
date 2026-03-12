@@ -107,6 +107,10 @@ The PRO version includes a Video Analytics dashboard that tracks how visitors in
 = Can I get advanced analytics on a Single Site license? =
 Yes! Single Site license holders can purchase the Advanced Analytics Add-on as a one-time payment from the Video Analytics dashboard. This unlocks all advanced features (device charts, engagement metrics, location analytics, heatmaps, and CSV export) without needing to upgrade your full license.
 
+== Videos ==
+
+[youtube https://youtu.be/9PNbRUShcRs]
+
 == Screenshots ==
 
 1. Settings
