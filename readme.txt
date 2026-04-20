@@ -3,9 +3,9 @@ Contributors: nitramix, martinvalchev
 Donate link: https://nitramix.com/donate/
 Tags: video gallery, video player, product video, for woocommerce, product page
 Requires at least: 5.3
-Tested up to: 6.9.1
+Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 2.5
+Stable tag: 2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,6 +127,11 @@ Yes! Single Site license holders can purchase the Advanced Analytics Add-on as a
 12. PRO - Custom SVG icon
 
 == Changelog ==
+
+= 1.6 =
+* **Fix:** Video playback stopping on desktop when mouse is idle or hovering over the video in Flatsome theme
+* Tested with WordPress 6.9.4
+**Release date: April 20, 2026**
 
 = 2.5 =
 * **Added:** Product Gallery Block Support

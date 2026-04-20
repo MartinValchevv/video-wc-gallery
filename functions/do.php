@@ -1165,111 +1165,106 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 position: unset !important;
                 margin-top: 1.5em !important;
             }
+            /* Disable easyZoom and hover effects on video slides */
+            .woocommerce-product-gallery__image[data-vwg-video] .easyzoom-flyout,
+            .woocommerce-product-gallery__image[data-vwg-video] .easyzoom-notice {
+                display: none !important;
+            }
+            .woocommerce-product-gallery__image[data-vwg-video] .zoomImg {
+                display: none !important;
+            }
+            /* Ensure video player receives all pointer events */
+            .woocommerce-product-gallery__image[data-vwg-video] .video-js {
+                pointer-events: auto !important;
+                position: relative;
+                z-index: 2;
+            }
+            /* Prevent Flatsome's show-on-hover overlays from blocking video */
+            .woocommerce-product-gallery__image[data-vwg-video] ~ .image-tools,
+            .has-hover:hover .image-tools {
+                pointer-events: none;
+            }
         </style>
         <!-- fix for stacket option -->
 
         <script>
             jQuery( document ).ready(function($) {
+
+                // Disable Flatsome easyZoom and lightbox on video slides
+                jQuery('.woocommerce-product-gallery__image[data-vwg-video]').each(function() {
+                    var $videoSlide = jQuery(this);
+
+                    // Destroy easyZoom if attached
+                    var easyZoomData = $videoSlide.data('easyZoom');
+                    if (easyZoomData) {
+                        easyZoomData.teardown();
+                    }
+
+                    // Block easyZoom and zoom events on video slides
+                    $videoSlide.on('mouseenter.easyzoom mousemove.easyzoom touchstart.easyzoom', function(e) {
+                        e.stopImmediatePropagation();
+                    });
+
+                    // Prevent the <a> wrapper from triggering lightbox or navigation
+                    $videoSlide.find('a.woocommerce-product-gallery__vwg_video').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                    });
+                });
+
                 setInterval(function () {
-                    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                     var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.is-selected .woocommerce-product-gallery__vwg_video')
-                    
-                        // Pause all inactive videos
-                        jQuery('.woocommerce-product-gallery__image').each(function() {
+
+                        // Manage video playback per slide
+                        jQuery('.woocommerce-product-gallery__image[data-vwg-video]').each(function() {
                             var $slide = jQuery(this);
-                            var isActive = $slide.hasClass('flex-active-slide');
-                            var $video = $slide.find('.woocommerce-product-gallery__vwg_video video');
-                            
-                            if ($video.length > 0) {
-                                var videoId = $video.attr('id');
-                                var hasAutoplay = $video.attr('autoplay') !== undefined;
-                                var hasControls = $video.hasClass('.vjs-controls-enabled');
+                            var isActive = $slide.hasClass('is-selected');
+                            var vwgVideoNum = $slide.attr('data-vwg-video');
+                            var videoId = 'vwg_video_js_' + vwgVideoNum;
 
-                                // When video player is initialized
-                                if (typeof videojs !== 'undefined' && videoId) {
-                                    var player = videojs(videoId);
+                            if (typeof videojs !== 'undefined') {
+                                var player;
+                                try {
+                                    player = videojs.getPlayer(videoId) || videojs(videoId);
+                                } catch(e) {
+                                    return; // Player not yet initialized
+                                }
 
-                                    // Set user active/inactive state based on slide
-                                    if (isActive) {
-                                        player.options_.inactivityTimeout = 10000; // 10 seconds
-                                        player.userActive(true);
-                                    } else {
-                                        player.userActive(false);
+                                if (!player || !player.el_) return;
+
+                                var hasAutoplay = player.autoplay() || player.options_.autoplay ||
+                                    jQuery('#' + videoId).attr('autoplay') !== undefined;
+
+                                // One-time setup per player
+                                if (!player._vwgEventsRegistered) {
+                                    player._vwgEventsRegistered = true;
+                                    player._vwgWasActive = isActive;
+                                    player.options_.inactivityTimeout = 0;
+
+                                    // Destroy easyZoom if attached after initial cleanup
+                                    var ezData = $slide.data('easyZoom');
+                                    if (ezData) {
+                                        ezData.teardown();
                                     }
+                                }
 
-                                    if (!hasControls) {
-                                        jQuery($slide).on('click', function() {
-                                            if (player.paused()) {  
-                                                player.play();
-                                            } else {
-                                                player.pause();
-                                            }
-                                        });
-                                    } 
-    
-                                    if (hasAutoplay) {
-                                        // User became inactive (vjs-user-inactive class added)
-                                        player.on('userinactive', function() {
-                                            player.pause();
-                                        });
-    
-                                        // User became active (vjs-user-inactive class removed)
-                                        player.on('useractive', function() {
-                                            player.play();
-                                        });
-
-                                        // Video was paused
-                                        // player.on('pause', function() {
-                                        //     console.log('Video paused');
-                                        // });
-
-                                        // Video started playing
-                                        // player.on('play', function() {
-                                        //     console.log('Video playing');
-                                        // });
+                                if (isActive) {
+                                    // Auto-play only on transition: slide was inactive, now active
+                                    if (!player._vwgWasActive && hasAutoplay) {
+                                        player.play();
                                     }
+                                    player._vwgWasActive = true;
+                                } else {
+                                    // Pause videos on inactive slides
+                                    if (player._vwgWasActive && !player.paused()) {
+                                        player.pause();
+                                    }
+                                    player._vwgWasActive = false;
                                 }
                             }
                         });
-                    
+
                     if ($activeVideoSlide.length > 0 ) {
-                        var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.is-selected').attr('data-vwg-video')
-                        var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')
-                        var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
-                        var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
-                        var vwg_user_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause')
-                        var vwg_controls_enabled = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).hasClass('.vjs-controls-enabled')
-                        if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
-                            var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
-                            if (vwg_video_loop) {
-                                if(vwg_controls_enabled) {
-                                    vwgPlayer.play();
-                                } else {
-                                    if (!vwg_user_pause) {
-                                        vwgPlayer.play();
-                                        // Listen for the 'pause' event to detect when the video is paused
-                                        vwgPlayer.on('pause', function () {
-                                            vwgPlayer.pause();
-                                            var posterUrl = vwgPlayer.poster();
-                                            if (posterUrl) {
-                                                var posterStyle = 'url("' + posterUrl + '")';
-                                                vwgPlayer.el().style.display = 'block';
-                                                vwgPlayer.el().style.backgroundImage = posterStyle;
-                                                vwgPlayer.el().style.backgroundSize = 'cover';
-                                                vwgPlayer.el().style.backgroundPosition = 'center';
-                                            }
-                                            $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
-                                        });
-                                    }
-                                }
-                            } else {
-                                vwgPlayer.play();
-                                vwgPlayer.on('ended', function () {
-                                    vwgPlayer.currentTime(0);
-                                    $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause', 'true');
-                                });
-                            }
-                        }
                         jQuery('a[href="#product-zoom"]').hide()
                     } else {
                         jQuery('a[href="#product-zoom"]').show()
@@ -1444,105 +1439,49 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     // {{ ! }}
 
                     setInterval(function () {
-                        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /apple/i.test(navigator.vendor);
                         var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.flex-active-slide .woocommerce-product-gallery__vwg_video')
-                        
-                        // Pause all inactive videos
-                        jQuery('.woocommerce-product-gallery__image').each(function() {
+
+                        // Manage video playback per slide
+                        jQuery('.woocommerce-product-gallery__image[data-vwg-video]').each(function() {
                             var $slide = jQuery(this);
                             var isActive = $slide.hasClass('flex-active-slide');
-                            var $video = $slide.find('.woocommerce-product-gallery__vwg_video video');
-                            
-                            if ($video.length > 0) {
-                                var videoId = $video.attr('id');
-                                var hasAutoplay = $video.attr('autoplay') !== undefined;
-                                var hasControls = $video.hasClass('.vjs-controls-enabled');
+                            var vwgVideoNum = $slide.attr('data-vwg-video');
+                            var videoId = 'vwg_video_js_' + vwgVideoNum;
 
-                                // When video player is initialized
-                                if (typeof videojs !== 'undefined' && videoId) {
-                                    var player = videojs(videoId);
+                            if (typeof videojs !== 'undefined') {
+                                var player;
+                                try {
+                                    player = videojs.getPlayer(videoId) || videojs(videoId);
+                                } catch(e) {
+                                    return;
+                                }
 
-                                    // Set user active/inactive state based on slide
-                                    if (isActive) {
-                                        player.options_.inactivityTimeout = 10000; // 10 seconds
-                                        player.userActive(true);
-                                    } else {
-                                        player.userActive(false);
+                                if (!player || !player.el_) return;
+
+                                var hasAutoplay = player.autoplay() || player.options_.autoplay ||
+                                    jQuery('#' + videoId).attr('autoplay') !== undefined;
+
+                                if (!player._vwgEventsRegistered) {
+                                    player._vwgEventsRegistered = true;
+                                    player._vwgWasActive = isActive;
+                                    player.options_.inactivityTimeout = 0;
+                                }
+
+                                if (isActive) {
+                                    if (!player._vwgWasActive && hasAutoplay) {
+                                        player.play();
                                     }
-
-                                    if (!hasControls) {
-                                        jQuery($slide).on('click', function() {
-                                            if (player.paused()) {  
-                                                player.play();
-                                            } else {
-                                                player.pause();
-                                            }
-                                        });
-                                    } 
-    
-                                    if (hasAutoplay) {
-                                        // User became inactive (vjs-user-inactive class added)
-                                        player.on('userinactive', function() {
-                                            player.pause();
-                                        });
-    
-                                        // User became active (vjs-user-inactive class removed)
-                                        player.on('useractive', function() {
-                                            player.play();
-                                        });
-
-                                        // Video was paused
-                                        // player.on('pause', function() {
-                                        //     console.log('Video paused');
-                                        // });
-
-                                        // Video started playing
-                                        // player.on('play', function() {
-                                        //     console.log('Video playing');
-                                        // });
+                                    player._vwgWasActive = true;
+                                } else {
+                                    if (player._vwgWasActive && !player.paused()) {
+                                        player.pause();
                                     }
+                                    player._vwgWasActive = false;
                                 }
                             }
                         });
-                        
+
                         if ($activeVideoSlide.length > 0 ) {
-                            var vwg_video_ID = jQuery('.woocommerce-product-gallery__image.flex-active-slide').attr('data-vwg-video')
-                            var vwg_video_isAutoPlay = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('autoplay')
-                            var vwg_video_loop = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('loop')
-                            var vwg_video_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause')
-                            var vwg_user_pause = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause')
-                            var vwg_controls_enabled = $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).hasClass('.vjs-controls-enabled')
-                            if (isSafari && vwg_video_isAutoPlay && !vwg_video_pause ) {
-                                var vwgPlayer = videojs(`vwg_video_js_${vwg_video_ID}`);
-                                if (vwg_video_loop) {
-                                    if(vwg_controls_enabled) {
-                                        vwgPlayer.play();
-                                    } else {
-                                        if (!vwg_user_pause) {
-                                            vwgPlayer.play();
-                                            // Listen for the 'pause' event to detect when the video is paused
-                                            vwgPlayer.on('pause', function () {
-                                                vwgPlayer.pause();
-                                                var posterUrl = vwgPlayer.poster();
-                                                if (posterUrl) {
-                                                    var posterStyle = 'url("' + posterUrl + '")';
-                                                    vwgPlayer.el().style.display = 'block';
-                                                    vwgPlayer.el().style.backgroundImage = posterStyle;
-                                                    vwgPlayer.el().style.backgroundSize = 'cover';
-                                                    vwgPlayer.el().style.backgroundPosition = 'center';
-                                                }
-                                                $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('user_pause', 'true');
-                                            });
-                                        }
-                                    }
-                                } else {
-                                    vwgPlayer.play();
-                                    vwgPlayer.on('ended', function () {
-                                        vwgPlayer.currentTime(0);
-                                        $activeVideoSlide.find(`#vwg_video_js_${vwg_video_ID}`).attr('pause', 'true');
-                                    });
-                                }
-                            }
                             jQuery('.woocommerce-product-gallery__trigger').hide()
                         } else {
                             jQuery('.woocommerce-product-gallery__trigger').show()
