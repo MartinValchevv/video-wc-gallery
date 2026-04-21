@@ -12,7 +12,7 @@ $option = get_option('vwg_settings_group');
 /**
  * Active theme checker for different logic
  *
- * @since 2.2
+ * @since 2.6
  */
 function vwg_active_theme_checker()
 {
@@ -21,6 +21,8 @@ function vwg_active_theme_checker()
         $use_different_logic = 'Flatsome';
     } elseif (function_exists('blocksy') || defined('BLOCKSY_VERSION') || class_exists('Blocksy_Manager')) {
         $use_different_logic = 'Blocksy';
+    } elseif (defined('ASTRA_THEME_VERSION') || function_exists('astra_get_option') || stripos(wp_get_theme()->get('Name'), 'Astra') !== false || stripos((string) wp_get_theme()->get('Template'), 'astra') !== false) {
+        $use_different_logic = 'Astra';
     } else {
         $use_different_logic = 'default';
     }
@@ -32,14 +34,14 @@ function vwg_active_theme_checker()
 /**
  * Overwrite woocommerce templates for different themes
  *
- * @since 2.2
+ * @since 2.6
  */
 function vwg_custom_wc_template_overwrite_for_themes($located, $template_name, $args, $template_path, $default_path)
 {
     global $option;
 
     if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_first'] == 1) {
-        if (vwg_active_theme_checker() === 'default') {
+        if (vwg_active_theme_checker() === 'default' || vwg_active_theme_checker() === 'Astra') {
             if ($template_name === 'single-product/product-image.php') {
                 $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/product-image.php';
             }
@@ -155,4 +157,53 @@ function vwg_blocksy_gallery_override_content( $content, $product, $gallery_imag
     return ob_get_clean();
 }
 add_filter( 'blocksy:woocommerce:product-view:content', 'vwg_blocksy_gallery_override_content', 5, 4 );
+
+/**
+ * Astra / Astra Pro compatibility.
+ *
+ * Astra Pro overrides the Woo single-product gallery when its layout option
+ * is "vertical-slider" or "horizontal-slider". It does so via
+ * `include_once` on its own template, which bypasses `wc_get_template` and
+ * therefore bypasses our template filter — so videos never get rendered.
+ *
+ * Astra Pro exposes `astra_addon_override_single_product_layout`; returning
+ * false short-circuits the override so the standard Woo flow runs and our
+ * VWG template / hooks take over. We only neutralize the override when the
+ * product actually has videos (or show-first is enabled), so products
+ * without videos keep Astra Pro's custom gallery layout untouched.
+ *
+ * @since 2.6
+ */
+function vwg_astra_force_default_gallery( $enabled ) {
+    if ( vwg_active_theme_checker() !== 'Astra' ) {
+        return $enabled;
+    }
+
+    if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+        return $enabled;
+    }
+
+    $opt = get_option( 'vwg_settings_group' );
+    if ( isset( $opt['vwg_settings_show_first'] ) && $opt['vwg_settings_show_first'] == 1 ) {
+        return false;
+    }
+
+    global $product;
+    if ( ! is_object( $product ) ) {
+        $product = wc_get_product( get_the_ID() );
+    }
+
+    if ( ! is_object( $product ) || ! method_exists( $product, 'get_id' ) ) {
+        return $enabled;
+    }
+
+    $videos = get_post_meta( $product->get_id(), 'vwg_video_url', true );
+    if ( ! empty( $videos ) ) {
+        return false;
+    }
+
+    return $enabled;
+}
+add_filter( 'astra_addon_override_single_product_layout', 'vwg_astra_force_default_gallery', 5, 1 );
+
 

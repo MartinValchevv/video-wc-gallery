@@ -130,6 +130,7 @@ Yes! Single Site license holders can purchase the Advanced Analytics Add-on as a
 
 = 1.6 =
 * **Fix:** Video playback stopping on desktop when mouse is idle or hovering over the video in Flatsome theme
+* **Added:** Added basic support for Astra theme
 * Tested with WordPress 6.9.4
 **Release date: April 20, 2026**
 

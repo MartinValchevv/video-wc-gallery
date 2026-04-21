@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Define constants
  *
- * @since 2.5
+ * @since 2.6
  */
 if ( ! defined( 'VWG_VERSION_NUM' ) ) 		    define( 'VWG_VERSION_NUM'		    , '2.6' ); // Plugin version constant
 if ( ! defined( 'VWG_VIDEO_WOO_GALLERY' ) )		define( 'VWG_VIDEO_WOO_GALLERY'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'video-wc-gallery'
