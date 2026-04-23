@@ -163,7 +163,7 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 
 == Changelog ==
 
-= 1.6 =
+= 2.6 =
 * **Fix:** Video playback stopping on desktop when mouse is idle or hovering over the video in Flatsome theme
 * **Added:** Added basic support for Astra theme
 * Tested with WordPress 6.9.4
