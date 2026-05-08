@@ -5,7 +5,7 @@ Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
 Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 2.6
+Stable tag: 2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,7 @@ Pick any clip from the WordPress media library. The video shows up right next to
 
 Upgrade your product pages today with Video Gallery for WooCommerce!
 
-**🚀 Looking for more features?** Check out our PRO version with YouTube integration, unlimited videos, custom SVG icons, SEO optimization, video analytics, and priority support!
+**🚀 Looking for more features?** Check out our PRO version with YouTube integration, unlimited videos, custom SVG icons, SEO optimization, video analytics, sticky video on scroll, and priority support!
 
 = Product Video Gallery Features =
 
@@ -67,6 +67,7 @@ Get access to advanced features including up to 6 videos per product, YouTube in
 *   **SEO settings** - Custom titles and descriptions per video
 *   **Video Analytics (Basic)** - Track video views and watch time per product *(Single Site plan)*
 *   **Video Analytics (Advanced)** - Device charts, engagement metrics, location analytics, browser/OS tracking, heatmap visualization, and CSV export *(Multiple & Unlimited plans, or Advanced Analytics Add-on)*
+*   **Sticky video on scroll** - When the active gallery slide leaves the viewport, the video stays visible in a small floating player anchored to the corner of your choice (top-left, top-right, bottom-left, bottom-right). Adapts to the source video's aspect ratio so the whole frame is always visible.
 *   **Premium support** - Priority email support
 
 **[Purchase PRO Version](https://nitramix.com/projects/video-gallery-for-woocommerce/)**
@@ -140,6 +141,9 @@ The PRO version includes a Video Analytics dashboard. It tracks how visitors int
 = Can I get advanced analytics on a Single Site license? =
 Yes. Buy the Advanced Analytics Add-on as a one-time payment from the Video Analytics dashboard. It unlocks device charts, engagement metrics, location analytics, heatmaps, and CSV export. No need to upgrade your full license.
 
+= What is the Sticky video on scroll feature? =
+Sticky video on scroll is a PRO feature. When a shopper scrolls past the active product video in the gallery, the video stays visible in a small floating player anchored to the corner of the screen you pick - Top left, Top right, Bottom left, or Bottom right. Playback continues exactly where it was: if the video was playing it keeps playing, if paused it stays paused. The floating player adapts to the source video's aspect ratio, so 16:9, 4:3, vertical (9:16), and square clips all show without cropping. A small × button sends the video back to the gallery on demand, and scrolling back up to the gallery returns it automatically. Pick the corner from Video Gallery > Settings.
+
 == Videos ==
 
 Watch Video Gallery for WooCommerce in action and see how to add a product video to your WooCommerce product gallery:
@@ -160,8 +164,15 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 10. PRO - Video SEO settings
 11. PRO - Thumbnails optimization settings
 12. PRO - Custom SVG icon
+13. PRO - Sticky video on scroll
 
 == Changelog ==
+
+= 2.7 =
+* **Added:** New "Sticky video on scroll" PRO upsell setting on the Video Gallery settings page, with a visual position picker (preview cards for Top left, Top right, Bottom left, Bottom right). The actual sticky behaviour ships with the PRO version - on the product page, when the active gallery slide leaves the viewport, the first/active video flies into the chosen corner with a smooth animation.
+* **Updated:** Pricing modal now shows "1 year of updates" (instead of "Free updates") with a hover tooltip that explains how updates work - free updates for 1 year from purchase, the plugin keeps working forever after expiry, optional renewal to unlock new versions.
+* Tested with WordPress 6.9.4
+**Release date: May 8, 2026**
 
 = 2.6 =
 * **Fix:** Video playback stopping on desktop when mouse is idle or hovering over the video in Flatsome theme

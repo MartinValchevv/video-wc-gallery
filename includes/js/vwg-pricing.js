@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 2.5 Function show modal pricing info
+     * @since 2.7 Function show modal pricing info
      */
     const selectorTrigger = [
         '.open-vwg-modal-pro-info',                               // URL info PRO feature
@@ -71,7 +71,7 @@ jQuery(document).ready(function($) {
                                     <li><i class="fas fa-check"></i>1 WordPress site</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Analytics Basic</li>
-                                    <li><i class="fas fa-check"></i>Free updates</li>
+                                    <li class="updates-info"><i class="fas fa-check"></i>1 year of updates <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">
@@ -92,7 +92,7 @@ jQuery(document).ready(function($) {
                                     <li><i class="fas fa-check"></i>Up to 3 WordPress sites</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li class="premium-features-analytics"><i class="fas fa-check"></i>Analytics Advanced <i class="fas fa-info-circle tooltip-icon"></i></li>
-                                    <li><i class="fas fa-check"></i>Free updates</li>
+                                    <li class="updates-info"><i class="fas fa-check"></i>1 year of updates <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">
@@ -112,7 +112,7 @@ jQuery(document).ready(function($) {
                                     <li><i class="fas fa-check"></i>Unlimited WordPress sites</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li class="premium-features-analytics"><i class="fas fa-check"></i>Analytics Advanced <i class="fas fa-info-circle tooltip-icon"></i></li>
-                                    <li><i class="fas fa-check"></i>Free updates</li>
+                                    <li class="updates-info"><i class="fas fa-check"></i>1 year of updates <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
                                 </ul>
                                 <div class="pricing-footer">

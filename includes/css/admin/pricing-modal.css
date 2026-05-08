@@ -212,7 +212,7 @@
 }
 
 .vwg-pricing-container .pricing-features li.premium-features:hover::after {
-    content: "• Unlimited products with videos\A • Up to 6 videos per product\A • Add YouTube videos\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Premium Support";
+    content: "• Unlimited products with videos\A • Up to 6 videos per product\A • Add YouTube videos\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Sticky video on scroll\A • Premium Support";
     position: absolute;
     left: 0;
     top: 100%;
@@ -243,6 +243,48 @@
     z-index: 100;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     min-width: 200px;
+}
+
+/* "1 year of updates" hint */
+.vwg-pricing-container .pricing-features li.updates-info {
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(126, 63, 236, 0.4);
+    padding-bottom: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.vwg-pricing-container .recommended .pricing-features li.updates-info {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+}
+
+.vwg-pricing-container .pricing-features li.updates-info:hover {
+    background-color: rgba(126, 63, 236, 0.05);
+}
+
+.vwg-pricing-container .recommended .pricing-features li.updates-info:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.vwg-pricing-container .pricing-features li.updates-info:hover::after {
+    content: "How updates work:\A • Free updates for 1 year from purchase\A • Plugin keeps working forever after expiry\A • Optional renewal to unlock new versions";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: #7e3fec;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    min-width: 220px;
+}
+
+.vwg-pricing-container .recommended .pricing-features li.updates-info:hover::after {
+    background-color: white;
+    color: #7e3fec;
 }
 
 .vwg-pricing-container .recommended .pricing-features li.premium-features:hover::after, .vwg-pricing-container .recommended .pricing-features li.premium-features-analytics:hover::after {

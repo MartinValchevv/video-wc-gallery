@@ -303,7 +303,7 @@ function vwg_render_general_uninstall_settings() {
 
 /**
  * Render metabox Get the PRO version
- * @since 2.5
+ * @since 2.7
  */
 function vwg_render_get_pro_version() {
     $get_pro_info  = '';
@@ -317,6 +317,7 @@ function vwg_render_get_pro_version() {
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Use optimized thumbnails</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Auto convert to optimized thumbnail on upload</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> SEO settings for each video</p>', 'video-wc-gallery' );
+    $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Sticky video on scroll</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="feature"><span class="dashicons dashicons-yes"></span> Premium Support</p>', 'video-wc-gallery' );
     $get_pro_info .= __( '<p class="btn-wrap"><a href="javascript:;" class="get-vwg-pro-version-info-btn button button-primary">Get PRO</a> &nbsp;&nbsp;</p>', 'video-wc-gallery' );
     $get_pro_info .= '</div>';
@@ -382,7 +383,7 @@ function vwg_added_admin_scripts() {
 
 /**
  * Register Settings
- * @since 2.5
+ * @since 2.7
  */
 function vwg_register_settings() {
     add_settings_section(
@@ -429,6 +430,14 @@ function vwg_register_settings() {
         'vwg_settings_icon_color',
         __( 'Choose icon color', 'video-wc-gallery' ),
         'vwg_settings_icon_color_callback',
+        'vwg_settings_group',
+        'vwg_settings_section'
+    );
+
+    add_settings_field(
+        'vwg_settings_sticky_video_position',
+        __( 'Sticky video on scroll', 'video-wc-gallery' ) . apply_filters("vwg_modify_pro_strings", "<sup> PRO</sup>"),
+        'vwg_settings_sticky_video_position_callback',
         'vwg_settings_group',
         'vwg_settings_section'
     );
@@ -601,6 +610,12 @@ function vwg_register_settings() {
         'default' => false
     ) );
 
+    register_setting( 'vwg_settings_group', 'vwg_settings_sticky_video_position', array(
+        'type' => 'string',
+        'sanitize_callback' => 'sanitize_text_field',
+        'default' => ''
+    ) );
+
     /**
      * Thumbnails optimization - register
      */
@@ -763,6 +778,55 @@ function vwg_settings_icon_color_callback() {
     $option = get_option('vwg_settings_group');
     ?>
     <input type="text" id="vwg_settings_icon_color" name="vwg_settings_icon_color" class="vwg_settings_icon_color" value="<?php echo esc_attr($option['vwg_settings_icon_color']) ?>">
+    <?php
+}
+
+/**
+ * Sticky video on scroll callback (PRO feature)
+ *
+ * Renders a visual position picker. The radio inputs are disabled in the free
+ * plugin; the PRO plugin unlocks them via vwg-pro-admin.js and persists the
+ * chosen position in `vwg_pro_settings` through vwg_pro_save_settings().
+ */
+function vwg_settings_sticky_video_position_callback() {
+    $option_pro = get_option('vwg_pro_settings');
+    $current = isset($option_pro['vwg_settings_sticky_video_position']) ? $option_pro['vwg_settings_sticky_video_position'] : '';
+    $positions = array(
+        ''             => __('Disabled', 'video-wc-gallery'),
+        'top-left'     => __('Top left', 'video-wc-gallery'),
+        'top-right'    => __('Top right', 'video-wc-gallery'),
+        'bottom-left'  => __('Bottom left', 'video-wc-gallery'),
+        'bottom-right' => __('Bottom right', 'video-wc-gallery'),
+    );
+    ?>
+    <div class="vwg-sticky-position-picker" role="radiogroup" aria-label="<?php echo esc_attr__('Sticky video position', 'video-wc-gallery'); ?>">
+        <?php foreach ($positions as $value => $label) :
+            $input_id = 'vwg_settings_sticky_video_position_' . ($value === '' ? 'off' : str_replace('-', '_', $value));
+            $preview_class = $value === '' ? 'is-off' : 'has-marker is-' . $value;
+        ?>
+            <label class="vwg-sticky-pos-option" for="<?php echo esc_attr($input_id); ?>">
+                <input type="radio" id="<?php echo esc_attr($input_id); ?>" name="vwg_settings_sticky_video_position" value="<?php echo esc_attr($value); ?>" <?php checked($current, $value); ?> disabled>
+                <span class="vwg-sticky-pos-card">
+                    <span class="vwg-sticky-pos-screen <?php echo esc_attr($preview_class); ?>" aria-hidden="true">
+                        <?php if ($value !== '') : ?>
+                            <span class="vwg-sticky-pos-marker"></span>
+                        <?php else : ?>
+                            <span class="vwg-sticky-pos-off">&times;</span>
+                        <?php endif; ?>
+                    </span>
+                    <span class="vwg-sticky-pos-label"><?php echo esc_html($label); ?></span>
+                </span>
+            </label>
+        <?php endforeach; ?>
+    </div>
+    <p class="vwg-sticky-pos-help">
+        <?php echo esc_html__('When the product gallery scrolls out of view, the first product video stays pinned in the chosen corner of the screen.', 'video-wc-gallery'); ?>
+        <?php
+        $vwg_pro_feature_link = '<a class="open-vwg-modal-pro-info" href="#">' . esc_html__('PRO feature', 'video-wc-gallery') . '</a>';
+        $vwg_pro_feature_link = wp_kses_post($vwg_pro_feature_link);
+        echo apply_filters('vwg_pro_feature_link', $vwg_pro_feature_link);
+        ?>
+    </p>
     <?php
 }
 
