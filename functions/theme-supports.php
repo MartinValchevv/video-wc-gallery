@@ -12,7 +12,7 @@ $option = get_option('vwg_settings_group');
 /**
  * Active theme checker for different logic
  *
- * @since 2.6
+ * @since 2.8
  */
 function vwg_active_theme_checker()
 {
@@ -23,6 +23,8 @@ function vwg_active_theme_checker()
         $use_different_logic = 'Blocksy';
     } elseif (defined('ASTRA_THEME_VERSION') || function_exists('astra_get_option') || stripos(wp_get_theme()->get('Name'), 'Astra') !== false || stripos((string) wp_get_theme()->get('Template'), 'astra') !== false) {
         $use_different_logic = 'Astra';
+    } elseif (defined('PORTO_VERSION') || function_exists('porto_setup') || stripos(wp_get_theme()->get('Name'), 'Porto') !== false || stripos((string) wp_get_theme()->get('Template'), 'porto') !== false) {
+        $use_different_logic = 'Porto';
     } else {
         $use_different_logic = 'default';
     }
@@ -34,7 +36,7 @@ function vwg_active_theme_checker()
 /**
  * Overwrite woocommerce templates for different themes
  *
- * @since 2.6
+ * @since 2.8
  */
 function vwg_custom_wc_template_overwrite_for_themes($located, $template_name, $args, $template_path, $default_path)
 {
@@ -56,11 +58,27 @@ function vwg_custom_wc_template_overwrite_for_themes($located, $template_name, $
                 // Use our default Woo template (contains the video-first hook)
                 $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/product-image.php';
             }
+        } elseif (vwg_active_theme_checker() === 'Porto') {
+            if ($template_name === 'single-product/product-image.php') {
+                $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/porto/product-image-porto-theme.php';
+            } elseif ($template_name === 'single-product/product-thumbnails.php') {
+                $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/porto/product-thumbnails-porto-theme.php';
+            }
         }
     } else {
         if (vwg_active_theme_checker() === 'Flatsome') {
             if ($template_name === 'woocommerce/single-product/product-gallery-thumbnails.php') {
                 $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/flatsome/product-gallery-thumbnails-flatsome-theme.php';
+            }
+        } elseif (vwg_active_theme_checker() === 'Porto') {
+            // Porto's woocommerce_product_thumbnails action fires outside the Owl Carousel,
+            // so the default hook placement dumps videos at the bottom of the gallery.
+            // Always use our overridden templates which inject the hook inside the carousel
+            // and the thumbs slider, regardless of the "show first" setting.
+            if ($template_name === 'single-product/product-image.php') {
+                $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/porto/product-image-porto-theme.php';
+            } elseif ($template_name === 'single-product/product-thumbnails.php') {
+                $located = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/porto/product-thumbnails-porto-theme.php';
             }
         }
     }
@@ -70,17 +88,32 @@ function vwg_custom_wc_template_overwrite_for_themes($located, $template_name, $
 add_filter('wc_get_template', 'vwg_custom_wc_template_overwrite_for_themes', 10, 5);
 
 /**
- * Flatsome Modify part template for theme
+ * Flatsome and Porto Modify part template for theme
  *
- * @since 1.18
+ * @since 2.8
  */
 function vwg_wc_template_part_modify($template, $slug, $name) {
-    // Check if it's the template part you want to modify
-    if ($slug === 'single-product/product-image' && $name === 'vertical' && vwg_active_theme_checker() === 'Flatsome') {
-        // Modify the template path here
-        $modify_template_path = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/flatsome/product-image-vertical-flatsome-theme.php';
+    $theme = function_exists('vwg_active_theme_checker') ? vwg_active_theme_checker() : 'default';
 
-        // Check if the custom template file exists
+    // Flatsome vertical layout
+    if ($slug === 'single-product/product-image' && $name === 'vertical' && $theme === 'Flatsome') {
+        $modify_template_path = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/flatsome/product-image-vertical-flatsome-theme.php';
+        if (file_exists($modify_template_path)) {
+            return $modify_template_path;
+        }
+    }
+
+    // Porto: builder/extended layouts load product-image.php via wc_get_template_part
+    // (not wc_get_template), so we have to override here too. Same template,
+    // independent of the $name suffix.
+    if ($slug === 'single-product/product-image' && $theme === 'Porto') {
+        $modify_template_path = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/porto/product-image-porto-theme.php';
+        if (file_exists($modify_template_path)) {
+            return $modify_template_path;
+        }
+    }
+    if ($slug === 'single-product/product-thumbnails' && $theme === 'Porto') {
+        $modify_template_path = VWG_VIDEO_WOO_GALLERY_DIR . 'woocommerce-overwrite/templates/single-product/porto/product-thumbnails-porto-theme.php';
         if (file_exists($modify_template_path)) {
             return $modify_template_path;
         }

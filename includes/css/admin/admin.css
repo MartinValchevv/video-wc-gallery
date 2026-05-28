@@ -566,77 +566,6 @@ label sup {
     box-shadow: 0 0 0 2px #7e3fec;
 }
 
-/*Responsive*/
-@media only screen and (max-width: 768px) {
-    div.radio-with-Icon {
-        padding-top: 10px;
-    }
-
-    .vwg-swal-popup-pro-info {
-        width: 90% !important;
-    }
-
-}
-
-@media only screen and (max-width: 480px) {
-    div.radio-with-Icon p.radioOption label {
-        padding: 4px 8px 4px 8px;
-        font-size: 14px;
-    }
-    div.radio-with-Icon p.radioOption {
-        width: 20px;
-        height: 20px;
-        margin: 0px 10px;
-    }
-
-    .vwg-logo-wrapper {
-        justify-content: center;
-    }
-
-    .vwg-logo-wrapper .logo-text {
-        font-size: 16px;
-        font-weight: 600;
-        color: #7e3fec;
-        margin-left: 3px;
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    #vwg-options #poststuff .metabox-holder .postbox-container.column-1 {
-        float: left;
-        width: 100%;
-    }
-
-    #vwg-options #poststuff .metabox-holder .postbox-container.column-2 {
-        float: left;
-        width: 100%;
-    }
-}
-
-@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-    #vwg-options #poststuff .metabox-holder .postbox-container.column-1 {
-        float: left;
-        width: 100%;
-    }
-
-    #vwg-options #poststuff .metabox-holder .postbox-container.column-2 {
-        float: left;
-        width: 100%;
-    }
-}
-
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-    #vwg-options #poststuff .metabox-holder .postbox-container.column-1 {
-        float: left;
-        width: 100%;
-    }
-
-    #vwg-options #poststuff .metabox-holder .postbox-container.column-2 {
-        float: left;
-        width: 100%;
-    }
-}
-
 /* Sticky video position picker */
 .vwg-sticky-position-picker {
     display: flex;
@@ -730,4 +659,80 @@ label sup {
     margin: 4px 0 0;
     color: #50575e;
     font-size: 13px;
+}
+/* END Sticky video position picker */
+
+#side-sortables #vwg_metabox_get_pro_version .button, #side-sortables #vwg_metabox_review .button, #side-sortables #vwg_metabox_support .button, #side-sortables #vwg_metabox_donate .button {
+    min-height: unset;
+}
+
+/*Responsive*/
+@media only screen and (max-width: 768px) {
+    div.radio-with-Icon {
+        padding-top: 10px;
+    }
+
+    .vwg-swal-popup-pro-info {
+        width: 90% !important;
+    }
+
+}
+
+@media only screen and (max-width: 480px) {
+    div.radio-with-Icon p.radioOption label {
+        padding: 4px 8px 4px 8px;
+        font-size: 14px;
+    }
+    div.radio-with-Icon p.radioOption {
+        width: 20px;
+        height: 20px;
+        margin: 0px 10px;
+    }
+
+    .vwg-logo-wrapper {
+        justify-content: center;
+    }
+
+    .vwg-logo-wrapper .logo-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: #7e3fec;
+        margin-left: 3px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    #vwg-options #poststuff .metabox-holder .postbox-container.column-1 {
+        float: left;
+        width: 100%;
+    }
+
+    #vwg-options #poststuff .metabox-holder .postbox-container.column-2 {
+        float: left;
+        width: 100%;
+    }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+    #vwg-options #poststuff .metabox-holder .postbox-container.column-1 {
+        float: left;
+        width: 100%;
+    }
+
+    #vwg-options #poststuff .metabox-holder .postbox-container.column-2 {
+        float: left;
+        width: 100%;
+    }
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    #vwg-options #poststuff .metabox-holder .postbox-container.column-1 {
+        float: left;
+        width: 100%;
+    }
+
+    #vwg-options #poststuff .metabox-holder .postbox-container.column-2 {
+        float: left;
+        width: 100%;
+    }
 }

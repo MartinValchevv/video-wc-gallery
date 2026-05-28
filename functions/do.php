@@ -1050,7 +1050,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page (IMPORTANT)
  *
- * @since 2.6
+ * @since 2.8
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -1133,6 +1133,13 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 font-weight: <?=esc_attr($iconWeight)?>;
                 font-size: 30px;
                 color: <?=esc_attr($iconColor)?>;
+            }
+
+            /* Fix: Allow gallery swipe on touch devices over YouTube iframe */
+            @media (pointer: coarse) {
+                .woocommerce-product-gallery__image .vwg_video_js .vjs-tech {
+                    pointer-events: none;
+                }
             }
 
             <?php if (isset($adaptSettings) && $adaptSettings == 1) : ?>
@@ -1646,7 +1653,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 2.6
+ * @since 2.8
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -1719,7 +1726,13 @@ if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_firs
         add_action( 'vwg_woocommerce_product_thumbnails_first_show', 'vwg_add_video_to_product_gallery', 1 );
     } elseif (vwg_active_theme_checker() === 'Flatsome') {
         add_action( 'vwg_woocommerce_product_thumbnails_first_show_flatsome_theme', 'vwg_add_video_to_product_gallery', 1 );
+    } elseif (vwg_active_theme_checker() === 'Porto') {
+        add_action( 'vwg_woocommerce_product_thumbnails_first_show_porto_theme', 'vwg_add_video_to_product_gallery', 1 );
     }
+} elseif (vwg_active_theme_checker() === 'Porto') {
+    // For Porto we always fire through our overridden template's action so videos
+    // land inside the Owl Carousel rather than at the bottom of the gallery.
+    add_action( 'vwg_woocommerce_product_thumbnails_first_show_porto_theme', 'vwg_add_video_to_product_gallery', 1 );
 } else {
     add_action( 'woocommerce_product_thumbnails', 'vwg_add_video_to_product_gallery', 99 );
 }

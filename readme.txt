@@ -3,9 +3,9 @@ Contributors: nitramix, martinvalchev
 Donate link: https://nitramix.com/donate/
 Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
-Tested up to: 6.9.4
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.7
+Stable tag: 2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,13 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 13. PRO - Sticky video on scroll
 
 == Changelog ==
+
+= 2.8 =
+* **Fix:** Allow gallery swipe on touch devices over YouTube iframe
+* **Fix:** Design issues
+* **Added:** Added basic support for Porto theme
+* Tested with WordPress 7.0
+**Release date: May 28, 2026**
 
 = 2.7 =
 * **Added:** New "Sticky video on scroll" PRO upsell setting on the Video Gallery settings page, with a visual position picker (preview cards for Top left, Top right, Bottom left, Bottom right). The actual sticky behaviour ships with the PRO version - on the product page, when the active gallery slide leaves the viewport, the first/active video flies into the chosen corner with a smooth animation.
