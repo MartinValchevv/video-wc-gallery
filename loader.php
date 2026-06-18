@@ -2,7 +2,7 @@
 /**
  * Loads the plugin files
  *
- * @since 2.8
+ * @since 2.9
  */
 
 // Exit if accessed directly
@@ -19,6 +19,9 @@ require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/theme-supports.php' );
 
 // Do plugin operations
 require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/do.php' );
+
+// Thumbnail editor modal (markup + assets), used inside the product video tab.
+require_once( VWG_VIDEO_WOO_GALLERY_DIR . 'functions/thumbnail-editor.php' );
 
 // Porto theme integration. Lives next to its template overrides for tidiness.
 // Loaded after do.php so the renderer function vwg_add_video_to_product_gallery

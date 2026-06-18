@@ -5,7 +5,7 @@ Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.8
+Stable tag: 2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,7 @@ Video Gallery for WooCommerce plugs into the native WooCommerce product gallery.
 = Key Features =
 
 *   Add video files from the WP library to your product pages
+*   Pick the video thumbnail by choosing any frame, or upload your own image
 *   Move videos around on the product page to your desired position
 *   Customize the video file icon and color
 *   Choose autoplay, sound, and loop options for video clips
@@ -167,6 +168,11 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 13. PRO - Sticky video on scroll
 
 == Changelog ==
+
+= 2.9 =
+* **Added:** Thumbnail editor for product videos. Each video in the Video Gallery tab now has an "Edit thumbnail" button that opens a popup where you can pick any frame of the video as the thumbnail by dragging a slider (no need to settle for the first frame, which is often black), upload your own image, or reset back to the first frame. Useful when the auto-generated thumbnail starts on a dark frame.
+* **Improvement:** Code cleanup - moved the thumbnail editor into its own file for better maintainability
+**Release date: June 18, 2026**
 
 = 2.8 =
 * **Fix:** Allow gallery swipe on touch devices over YouTube iframe
@@ -401,6 +407,9 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 2.9 =
+* Adds a thumbnail editor so you can pick any video frame as the thumbnail, upload your own image, or reset to the first frame.
 
 = 2.0 =
 * Added an admin menu with a full redesign, fixed Safari playback issues when repeat is enabled and controls are disabled, resolved crossorigin errors, improved the Video Gallery tab design, cleaned up the code, and confirmed compatibility with WordPress 6.9.

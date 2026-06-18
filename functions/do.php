@@ -54,7 +54,7 @@ add_filter( 'woocommerce_product_data_tabs', 'vwg_add_custom_product_tab', 10, 1
 /**
  * Add the tab content
  *
- * @since 2.0
+ * @since 2.9
  */
 function vwg_add_custom_product_tab_content() {
     global $post;
@@ -101,6 +101,10 @@ function vwg_add_custom_product_tab_content() {
                 if ($position_counter > $break_rule) {
                     break;
                 }
+                // YouTube videos use their own thumbnail (from YouTube), so the
+                // custom thumbnail editor does not apply to them.
+                $is_youtube = ( isset($video['video_type']) && $video['video_type'] === 'youtube' )
+                    || ( ! empty($video['video_url']) && preg_match('#(youtube\.com|youtu\.be)#i', $video['video_url']) );
                 ?>
                 <li class="ui-state video_id_<?php echo esc_attr($key) ?>" data-position="<?php echo esc_attr($position_counter) ?>" >
                     <div class="video-player" style="background-image: url('<?php echo esc_url($video['video_thumb_url']); ?>');">
@@ -109,6 +113,11 @@ function vwg_add_custom_product_tab_content() {
                         </video>
                     </div>
                     <div class="video-actions">
+                        <?php if (!$is_youtube): ?>
+                        <div class="action-btn change-thumb-btn" data-video-id="<?php echo esc_attr($key) ?>" title="<?php echo esc_attr__('Edit thumbnail', 'video-wc-gallery'); ?>">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <?php endif; ?>
                         <div class="action-btn seo-btn" data-video-id="<?php echo esc_attr($key) ?>" title="<?php echo esc_attr__('SEO settings', 'video-wc-gallery'); ?>">
                             <i class="fas fa-cog"></i>
                             <?php if (!vwg_is_pro_addon()): ?>
@@ -161,7 +170,9 @@ function vwg_add_custom_product_tab_content() {
                 <?php endif; ?>
             </div>
         </div>
-        
+
+        <?php vwg_render_thumbnail_editor_modal(); ?>
+
     </div>
     <?php
     // Allows the PRO version to add its SEO modal or other content after the gallery
@@ -173,13 +184,21 @@ add_action( 'woocommerce_product_data_panels', 'vwg_add_custom_product_tab_conte
 /**
  * Save the tab content data
  *
- * @since 2.0
+ * @since 2.9
  */
 function vwg_save_custom_product_tab_content( $post_id ) {
-    if ( isset( $_POST['video_url'] ) )  {
+    // Defence in depth: WooCommerce already verifies its meta nonce before firing
+    // this hook, but make sure the current user may actually edit this product.
+    if ( ! current_user_can( 'edit_product', $post_id ) ) {
+        return;
+    }
+
+    if ( isset( $_POST['video_url'] ) && is_array( $_POST['video_url'] ) )  {
+        // Unslash the posted data before sanitising, per WordPress standards.
+        $posted_videos  = wp_unslash( $_POST['video_url'] );
         $sanitized_urls = array();
-        
-        foreach ( $_POST['video_url'] as $key => $attachment ) {
+
+        foreach ( $posted_videos as $key => $attachment ) {
 
             $unique_id = uniqid(); // Generate a unique identifier
 
@@ -197,7 +216,15 @@ function vwg_save_custom_product_tab_content( $post_id ) {
                     $base64_image = $attachment['video_thumb_url'];
                     // Remove the data URI scheme and get the base64-encoded image data
                     $base64_data = str_replace( 'data:image/png;base64,', '', $base64_image );
-                    $decoded_image = base64_decode( $base64_data );
+                    $decoded_image = base64_decode( $base64_data, true );
+
+                    // Only write the payload if it is a genuine image. This guards
+                    // against a tampered request smuggling arbitrary bytes onto disk.
+                    if ( false === $decoded_image || false === @getimagesizefromstring( $decoded_image ) ) {
+                        $sanitized_attachment['video_thumb_url'] = '';
+                        $sanitized_urls[ $key ] = $sanitized_attachment;
+                        continue;
+                    }
 
                     // Create a directory (if not exists) to store the uploaded images
                     $upload_dir = wp_upload_dir();
@@ -252,7 +279,7 @@ add_action( 'woocommerce_process_product_meta', 'vwg_save_custom_product_tab_con
 /**
  * Add the media upload script
  *
- * @since 2.1
+ * @since 2.9
  */
 function vwg_add_video_upload_script() {
     ?>
@@ -577,6 +604,9 @@ function vwg_add_video_upload_script() {
                                     </video>
                                 </div>
                                 <div class="video-actions">
+                                    <div class="action-btn change-thumb-btn" data-video-id="${attachment.id}" title="<?php echo esc_js(__('Edit thumbnail', 'video-wc-gallery')); ?>">
+                                        <i class="fas fa-image"></i>
+                                    </div>
                                     <div class="action-btn seo-btn" data-video-id="${attachment.id}" title="${'SEO settings'}">
                                         <i class="fas fa-cog"></i>
                                         ${$('#vwg_video_tab_content').attr('is-pro') === '0' ? '<span class="pro-badge">PRO</span>' : ''}
