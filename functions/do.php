@@ -54,7 +54,7 @@ add_filter( 'woocommerce_product_data_tabs', 'vwg_add_custom_product_tab', 10, 1
 /**
  * Add the tab content
  *
- * @since 2.9
+ * @since 2.10
  */
 function vwg_add_custom_product_tab_content() {
     global $post;
@@ -65,16 +65,29 @@ function vwg_add_custom_product_tab_content() {
         ?>
         <p class="form-field vwg-add-video-button-container">
             <label for="add_video_button"><?php echo esc_html__('Add video from' , 'video-wc-gallery') ?></label>
-            <button id="add_video_button" type="button" class="button">
-                <i class="fas fa-plus-circle"></i> <?php echo esc_html__('WP Media' , 'video-wc-gallery') ?>
-            </button>
-            <span class="vwg-button-separator"><?php echo esc_html__('- or -' , 'video-wc-gallery') ?></span>
-            <button id="add_youtube_button" type="button" class="button vwg-youtube-btn">
-                <i class="fab fa-youtube"></i> <?php echo esc_html__('YouTube Video' , 'video-wc-gallery') ?>
-                <?php if (!vwg_is_pro_addon()): ?>
-                    <span class="pro-badge">PRO</span>
-                <?php endif; ?>
-            </button>
+            <span class="vwg-source-buttons">
+                <button id="add_video_button" type="button" class="button vwg-source-btn">
+                    <i class="fas fa-plus-circle"></i> <?php echo esc_html__('WP Media' , 'video-wc-gallery') ?>
+                </button>
+                <button id="add_youtube_button" type="button" class="button vwg-source-btn vwg-youtube-btn">
+                    <i class="fab fa-youtube"></i> <?php echo esc_html__('YouTube' , 'video-wc-gallery') ?>
+                    <?php if (!vwg_is_pro_addon()): ?>
+                        <span class="pro-badge">PRO</span>
+                    <?php endif; ?>
+                </button>
+                <button id="add_vimeo_button" type="button" class="button vwg-source-btn vwg-vimeo-btn">
+                    <i class="fab fa-vimeo-v"></i> <?php echo esc_html__('Vimeo' , 'video-wc-gallery') ?>
+                    <?php if (!vwg_is_pro_addon()): ?>
+                        <span class="pro-badge">PRO</span>
+                    <?php endif; ?>
+                </button>
+                <button id="add_external_url_button" type="button" class="button vwg-source-btn vwg-external-btn" title="<?php echo esc_attr__('Requires the Multiple Sites plan or higher' , 'video-wc-gallery') ?>">
+                    <i class="fas fa-link"></i> <?php echo esc_html__('External URL' , 'video-wc-gallery') ?>
+                    <?php if (!vwg_can_external_url()): ?>
+                        <span class="pro-badge plan-badge">MULTIPLE PLAN</span>
+                    <?php endif; ?>
+                </button>
+            </span>
         </p>
 
         <!-- YouTube URL input field (shown only in PRO version) -->
@@ -85,6 +98,32 @@ function vwg_add_custom_product_tab_content() {
                 <?php echo esc_html__('Add Video' , 'video-wc-gallery') ?>
             </button>
             <button id="cancel_youtube_button" type="button" class="button button-secondary">
+                <?php echo esc_html__('Cancel' , 'video-wc-gallery') ?>
+            </button>
+        </div>
+        <?php endif; ?>
+
+        <!-- Vimeo URL input field (shown only in PRO version) -->
+        <?php if (vwg_is_pro_addon()): ?>
+        <div id="vimeo_url_container" class="vwg-youtube-input-container" style="display: none;">
+            <input type="url" id="vimeo_url_input" placeholder="<?php echo esc_attr__('Enter Vimeo URL...' , 'video-wc-gallery') ?>" class="vwg-youtube-input" />
+            <button id="confirm_vimeo_button" type="button" class="button button-primary">
+                <?php echo esc_html__('Add Video' , 'video-wc-gallery') ?>
+            </button>
+            <button id="cancel_vimeo_button" type="button" class="button button-secondary">
+                <?php echo esc_html__('Cancel' , 'video-wc-gallery') ?>
+            </button>
+        </div>
+        <?php endif; ?>
+
+        <!-- External video URL input field (Multiple-sites tier and above) -->
+        <?php if (vwg_can_external_url()): ?>
+        <div id="external_url_container" class="vwg-youtube-input-container" style="display: none;">
+            <input type="url" id="external_url_input" placeholder="<?php echo esc_attr__('Enter direct video file URL (.mp4, .webm, .mov)...' , 'video-wc-gallery') ?>" class="vwg-youtube-input" />
+            <button id="confirm_external_button" type="button" class="button button-primary">
+                <?php echo esc_html__('Add Video' , 'video-wc-gallery') ?>
+            </button>
+            <button id="cancel_external_button" type="button" class="button button-secondary">
                 <?php echo esc_html__('Cancel' , 'video-wc-gallery') ?>
             </button>
         </div>
@@ -101,10 +140,10 @@ function vwg_add_custom_product_tab_content() {
                 if ($position_counter > $break_rule) {
                     break;
                 }
-                // YouTube videos use their own thumbnail (from YouTube), so the
-                // custom thumbnail editor does not apply to them.
-                $is_youtube = ( isset($video['video_type']) && $video['video_type'] === 'youtube' )
-                    || ( ! empty($video['video_url']) && preg_match('#(youtube\.com|youtu\.be)#i', $video['video_url']) );
+                // Embedded videos (YouTube, Vimeo) use their own remote thumbnail,
+                // so the custom thumbnail editor does not apply to them.
+                $is_embedded = ( isset($video['video_type']) && in_array($video['video_type'], array('youtube', 'vimeo'), true) )
+                    || ( ! empty($video['video_url']) && preg_match('#(youtube\.com|youtu\.be|vimeo\.com)#i', $video['video_url']) );
                 ?>
                 <li class="ui-state video_id_<?php echo esc_attr($key) ?>" data-position="<?php echo esc_attr($position_counter) ?>" >
                     <div class="video-player" style="background-image: url('<?php echo esc_url($video['video_thumb_url']); ?>');">
@@ -113,7 +152,7 @@ function vwg_add_custom_product_tab_content() {
                         </video>
                     </div>
                     <div class="video-actions">
-                        <?php if (!$is_youtube): ?>
+                        <?php if (!$is_embedded): ?>
                         <div class="action-btn change-thumb-btn" data-video-id="<?php echo esc_attr($key) ?>" title="<?php echo esc_attr__('Edit thumbnail', 'video-wc-gallery'); ?>">
                             <i class="fas fa-image"></i>
                         </div>
@@ -279,7 +318,7 @@ add_action( 'woocommerce_process_product_meta', 'vwg_save_custom_product_tab_con
 /**
  * Add the media upload script
  *
- * @since 2.9
+ * @since 2.10
  */
 function vwg_add_video_upload_script() {
     ?>
@@ -288,6 +327,7 @@ function vwg_add_video_upload_script() {
 
             $('#vwg_video_tab_content').attr('v-limit', <?php echo vwg_get_video_limit(); ?>)
             $('#vwg_video_tab_content').attr('is-pro', <?php echo vwg_is_pro_addon() ? 1 : 0; ?>)
+            $('#vwg_video_tab_content').attr('can-external', <?php echo vwg_can_external_url() ? 1 : 0; ?>)
             
             var pvc = <?php echo intval(vwg_pvc()); ?>;
             var pml = <?php echo intval(vwg_pml()); ?>;
@@ -299,15 +339,35 @@ function vwg_add_video_upload_script() {
             var videoLimit = parseInt($('#vwg_video_tab_content').attr('v-limit'));
             var isPro = parseInt($('#vwg_video_tab_content').attr('is-pro'));
 
-            // YouTube button click handler
-            $('#add_youtube_button').on('click', function(e) {
-                e.preventDefault();
-
-                // Create a hidden element and trigger a click on it to open the pricing popup
+            function vwgOpenProModal(hideSingle) {
                 var proInfoLink = $('<a href="#" class="open-vwg-modal-pro-info" style="display:none;">Pro Info</a>');
                 $('body').append(proInfoLink);
                 proInfoLink.trigger('click');
                 proInfoLink.remove();
+
+                if (hideSingle) {
+                    setTimeout(function() {
+                        $('.vwg-pricing-container .pricing-list > li').first().remove();
+                    }, 60);
+                }
+            }
+
+            // YouTube button click handler
+            $('#add_youtube_button').on('click', function(e) {
+                e.preventDefault();
+                vwgOpenProModal();
+            });
+
+            // Vimeo button click handler
+            $('#add_vimeo_button').on('click', function(e) {
+                e.preventDefault();
+                vwgOpenProModal();
+            });
+
+            // External URL button click handler
+            $('#add_external_url_button').on('click', function(e) {
+                e.preventDefault();
+                vwgOpenProModal(true);
             });
 
             // Simple sortable initialization
@@ -764,6 +824,31 @@ function vwg_add_video_upload_script() {
             text-transform: uppercase;
         }
 
+        /* Source-button row layout */
+        #vwg_video_tab_content .vwg-add-video-button-container {
+            overflow: visible;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 6px 12px;
+        }
+        #vwg_video_tab_content .vwg-add-video-button-container > label {
+            margin: 6px 0 0 0;
+            font-weight: 600;
+        }
+        #vwg_video_tab_content .vwg-source-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            padding-top: 6px;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        #vwg_video_tab_content .vwg-source-btn i {
+            font-size: 14px;
+        }
+
         /* YouTube button styles */
         #vwg_video_tab_content #add_youtube_button {
             background: #ff0000;
@@ -780,6 +865,49 @@ function vwg_add_video_upload_script() {
         #vwg_video_tab_content #add_youtube_button .pro-badge {
             top: -8px;
             right: -8px;
+        }
+
+        /* Vimeo button styles */
+        #vwg_video_tab_content #add_vimeo_button {
+            background: #1ab7ea;
+            color: white;
+            border-color: #1ab7ea;
+            position: relative;
+        }
+        #vwg_video_tab_content #add_vimeo_button:hover {
+            background: #1295c0;
+            border-color: #1295c0;
+        }
+        #vwg_video_tab_content #add_vimeo_button .pro-badge {
+            top: -8px;
+            right: -8px;
+        }
+
+        /* External URL button styles */
+        #vwg_video_tab_content #add_external_url_button {
+            background: #2d3436;
+            color: white;
+            border-color: #2d3436;
+            position: relative;
+        }
+        #vwg_video_tab_content #add_external_url_button:hover {
+            background: #1e2224;
+            border-color: #1e2224;
+        }
+        #vwg_video_tab_content #add_external_url_button .pro-badge {
+            top: -8px;
+            right: -8px;
+        }
+
+        #vwg_video_tab_content .vwg-external-btn .pro-badge.plan-badge {
+            background-color: #6c5ce7;
+            top: -8px;
+            right: 0;
+            left: auto;
+            transform: none;
+            white-space: nowrap;
+            letter-spacing: .2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.2);
         }
         #vwg_video_tab_content .action-btn.delete-btn {
             color: #ff5252;
@@ -863,30 +991,35 @@ function vwg_add_video_upload_script() {
         }
 
         /* Responsive styles for mobile */
-        @media (max-width: 768px) {
-            .vwg-add-video-button-container {
+        @media (max-width: 782px) {
+            #vwg_video_tab_content .vwg-add-video-button-container {
                 flex-direction: column;
-                align-items: center;
-                gap: 15px;
+                align-items: stretch;
+                gap: 10px;
             }
-
-            #vwg_video_tab_content #add_video_button,
-            #vwg_video_tab_content #add_youtube_button {
+            #vwg_video_tab_content .vwg-add-video-button-container > label {
+                margin: 0 0 4px 0;
+            }
+            #vwg_video_tab_content .vwg-source-buttons {
                 width: 100%;
-                min-width: auto;
-                font-size: 14px;
-                padding: 10px 16px;
-                justify-content: center;
+                gap: 10px;
+                padding-top: 2px;
             }
-
-            .vwg-button-separator {
-                font-size: 13px;
+            #vwg_video_tab_content .vwg-source-btn {
+                flex: 1 1 100%;
+                width: 100%;
+                min-width: 0;
+                font-size: 14px;
+                padding: 11px 16px;
+            }
+            #vwg_video_tab_content .vwg-external-btn .pro-badge.plan-badge {
+                right: 8px;
             }
         }
         
-        /* Button styles */
-        #vwg_video_tab_content #add_video_button,
-        #vwg_video_tab_content #add_youtube_button {
+        /* Shared appearance for every video-source button (WP Media, YouTube,
+           Vimeo, External) so the newer buttons match the originals. */
+        #vwg_video_tab_content .vwg-source-btn {
             padding: 8px 16px;
             height: auto;
             border-radius: 6px;
@@ -894,11 +1027,14 @@ function vwg_add_video_upload_script() {
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             font-size: 13px;
+            line-height: 1.2;
             margin: 0;
             min-width: 140px;
-            justify-content: center;
+            position: relative;
+            box-sizing: border-box;
         }
 
         #vwg_video_tab_content #add_video_button {
@@ -1851,6 +1987,16 @@ add_action('wp_enqueue_scripts', 'vwg_enqueue_overwrite_scripts', 20);
  */
 function vwg_is_pro_addon() {
     return apply_filters('vwg_is_pro_addon', false);
+}
+
+/**
+ * Whether the "External video URL"
+ *
+ * @since 2.10
+ * @return bool
+ */
+function vwg_can_external_url() {
+    return apply_filters('vwg_can_external_url', false);
 }
 
 /**

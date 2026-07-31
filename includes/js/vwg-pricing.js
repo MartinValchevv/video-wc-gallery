@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     /**
-     * @since 2.7 Function show modal pricing info
+     * @since 2.10 Function show modal pricing info
      */
     const selectorTrigger = [
         '.open-vwg-modal-pro-info',                               // URL info PRO feature
@@ -64,12 +64,13 @@ jQuery(document).ready(function($) {
                                 <h2>Single Site</h2>
                                 <div class="price">
                                     <span class="currency">$</span>
-                                    <span class="value">69</span>
+                                    <span class="value">89</span>
                                     <span class="duration">one-time</span>
                                 </div>
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>1 WordPress site</li>
                                     <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li><i class="fas fa-check"></i>YouTube &amp; Vimeo videos</li>
                                     <li><i class="fas fa-check"></i>Analytics Basic</li>
                                     <li class="updates-info"><i class="fas fa-check"></i>1 year of updates <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
@@ -90,7 +91,9 @@ jQuery(document).ready(function($) {
                                 </div>
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>Up to 3 WordPress sites</li>
-                                    <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li class="premium-features has-external"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li><i class="fas fa-check"></i>YouTube &amp; Vimeo videos</li>
+                                    <li><i class="fas fa-check"></i>External video URLs</li>
                                     <li class="premium-features-analytics"><i class="fas fa-check"></i>Analytics Advanced <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li class="updates-info"><i class="fas fa-check"></i>1 year of updates <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>
@@ -110,7 +113,9 @@ jQuery(document).ready(function($) {
                                 </div>
                                 <ul class="pricing-features">
                                     <li><i class="fas fa-check"></i>Unlimited WordPress sites</li>
-                                    <li class="premium-features"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li class="premium-features has-external"><i class="fas fa-check"></i>All premium features <i class="fas fa-info-circle tooltip-icon"></i></li>
+                                    <li><i class="fas fa-check"></i>YouTube &amp; Vimeo videos</li>
+                                    <li><i class="fas fa-check"></i>External video URLs</li>
                                     <li class="premium-features-analytics"><i class="fas fa-check"></i>Analytics Advanced <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li class="updates-info"><i class="fas fa-check"></i>1 year of updates <i class="fas fa-info-circle tooltip-icon"></i></li>
                                     <li><i class="fas fa-check"></i>Premium Support</li>

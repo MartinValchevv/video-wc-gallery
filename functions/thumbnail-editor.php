@@ -33,7 +33,7 @@ function vwg_render_thumbnail_editor_modal() {
             </div>
             <div class="vwg-modal-body vwg-thumb-body">
                 <div class="vwg-thumb-stage">
-                    <video class="vwg-thumb-video" muted playsinline preload="auto" crossorigin="anonymous"></video>
+                    <video class="vwg-thumb-video" muted playsinline preload="auto"></video>
                 </div>
                 <div class="vwg-thumb-controls">
                     <button type="button" class="vwg-thumb-playpause" title="<?php echo esc_attr__('Play / pause', 'video-wc-gallery'); ?>"><i class="fas fa-play"></i></button>
@@ -61,7 +61,7 @@ function vwg_render_thumbnail_editor_modal() {
 /**
  * Print the thumbnail editor styles + behaviour in the product edit footer.
  *
- * @since 2.9
+ * @since 2.10
  */
 function vwg_thumbnail_editor_assets() {
     ?>
@@ -307,8 +307,24 @@ function vwg_thumbnail_editor_assets() {
                 $thumbModal.find('.vwg-thumb-time').text('0:00 / 0:00');
                 $thumbModal.find('.vwg-thumb-playpause i').attr('class', 'fas fa-play');
 
+                // A cross-origin external video won't load with crossorigin set, and
+                // its frames can't be read onto a canvas. When the PRO same-origin
+                // proxy is available, route the clip through it so it loads, seeks
+                // (Range) and the frame can be captured cleanly.
+                var playSrc = videoSrc;
+                var isCrossOrigin = false;
+                try { isCrossOrigin = (new URL(videoSrc, window.location.href)).host !== window.location.host; } catch (e) {}
+
+                if (isCrossOrigin && typeof window.vwgBuildExtProxyUrl === 'function') {
+                    playSrc = window.vwgBuildExtProxyUrl(videoSrc);
+                }
+                // Same-origin (local upload or proxied) → clean canvas, no crossorigin
+                // attribute needed. Raw cross-origin (no proxy) → also drop it so the
+                // clip at least loads (capture will fall back to "upload an image").
+                thumbModalVideo.removeAttribute('crossorigin');
+
                 thumbModalVideo.pause();
-                thumbModalVideo.src = videoSrc;
+                thumbModalVideo.src = playSrc;
                 thumbModalVideo.load();
 
                 $thumbModal.css('display', 'flex');

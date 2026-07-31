@@ -3,9 +3,9 @@ Contributors: nitramix, martinvalchev
 Donate link: https://nitramix.com/donate/
 Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
-Tested up to: 7.0
+Tested up to: 7.0.2
 Requires PHP: 7.4
-Stable tag: 2.9
+Stable tag: 2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,7 @@ Pick any clip from the WordPress media library. The video shows up right next to
 
 Upgrade your product pages today with Video Gallery for WooCommerce!
 
-**🚀 Looking for more features?** Check out our PRO version with YouTube integration, unlimited videos, custom SVG icons, SEO optimization, video analytics, sticky video on scroll, and priority support!
+**🚀 Looking for more features?** Check out our PRO version with YouTube & Vimeo integration, external video URLs, unlimited videos, custom SVG icons, SEO optimization, video analytics, sticky video on scroll, and priority support!
 
 = Product Video Gallery Features =
 
@@ -50,7 +50,7 @@ Video Gallery for WooCommerce plugs into the native WooCommerce product gallery.
 **FREE Version Limitations:**
 *   Limited to 20 products with video
 *   Limited to 2 videos per product
-*   WordPress Media Library videos only (no YouTube support)
+*   WordPress Media Library videos only (no YouTube, Vimeo or external video URL support)
 *   Basic video icons only
 *   Basic thumbnail generation
 *   Basic SEO video
@@ -63,6 +63,8 @@ Get access to advanced features including up to 6 videos per product, YouTube in
 *   **Unlimited products with video**
 *   **Up to 6 videos per product** - Showcase products from multiple angles
 *   **YouTube video integration** - Embed videos directly from YouTube
+*   **Vimeo video integration** - Add Vimeo videos by URL (all plans)
+*   **External video URLs** - Add direct video-file links, .mp4/.webm/.mov (Multiple Sites plan and above)
 *   **Custom SVG icons** - Use your own brand icons
 *   **Optimized thumbnails** - Automatic thumbnail generation
 *   **SEO settings** - Custom titles and descriptions per video
@@ -116,7 +118,10 @@ Open the product in WooCommerce. Go to the "Video Gallery for WooCommerce" tab i
 Yes. Video Gallery for WooCommerce works with the default WooCommerce product gallery. It also supports the new WooCommerce Product Gallery Block. Your product video sits next to your product images, without breaking your theme's layout.
 
 = What types of video files can I use with Video Gallery for WooCommerce? =
-You can use any video format supported by WordPress. The most common ones are MP4 and MOV.
+You can use any video format supported by WordPress. The most common ones are MP4 and MOV. The PRO version also lets you add YouTube and Vimeo videos, and direct external video URLs (.mp4, .webm, .mov).
+
+= Can I add YouTube or Vimeo videos, or a video from an external URL? =
+These are PRO features. The PRO version adds a YouTube button and a Vimeo button (available on every PRO plan), plus an "External URL" button for direct video-file links such as a CDN .mp4 (available on the Multiple Sites plan and above). External videos even get an automatic thumbnail, and behave just like an uploaded video (controls, autoplay, sticky, SEO, thumbnail editor). In the free version these buttons are visible but locked.
 
 = Can I customize the display of my video files? =
 Yes. You can change the video icon and color. You can also move each video to any position on the product page.
@@ -131,10 +136,10 @@ Yes. Video Gallery for WooCommerce works with most WordPress themes and plugins.
 Yes. Any uploaded clip can be used as a featured video for a WooCommerce product. The featured video loads inside the product gallery. It plays through the built-in VideoJS player, with full control over autoplay, mute, and loop.
 
 = Is there a PRO version with more features? =
-Yes. The PRO version unlocks unlimited products with video and up to 6 videos per product. It also adds YouTube integration, custom SVG icons, optimized thumbnails, SEO settings, and video analytics. PRO users get priority support. Visit [Video Gallery for WooCommerce PRO](https://nitramix.com/projects/video-gallery-for-woocommerce/) to learn more.
+Yes. The PRO version unlocks unlimited products with video and up to 6 videos per product. It also adds YouTube and Vimeo integration, external video URLs, custom SVG icons, optimized thumbnails, SEO settings, and video analytics. PRO users get priority support. Visit [Video Gallery for WooCommerce PRO](https://nitramix.com/projects/video-gallery-for-woocommerce/) to learn more.
 
 = What's the difference between FREE and PRO versions? =
-The FREE version is limited to 20 products with video and 2 videos per product. The PRO version is unlimited. PRO also adds YouTube support, custom icons, advanced SEO, video analytics, and premium support.
+The FREE version is limited to 20 products with video and 2 videos per product. The PRO version is unlimited. PRO also adds YouTube and Vimeo support, external video URLs, custom icons, advanced SEO, video analytics, and premium support.
 
 = What is Video Analytics and how does it work? =
 The PRO version includes a Video Analytics dashboard. It tracks how visitors interact with your product videos. Enable it from Video Gallery > Settings. All PRO plans include basic analytics (views and watch time). Advanced analytics (device charts, engagement, location data, heatmaps, CSV export) are part of the Multiple Sites and Unlimited Sites plans. Single Site holders can unlock them with the one-time Advanced Analytics Add-on.
@@ -168,6 +173,13 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 13. PRO - Sticky video on scroll
 
 == Changelog ==
+
+= 2.10 =
+* **Improvement:** Redesigned the "Add video from" button row — consistent rounded source buttons, a tidier layout and better behaviour on small screens.
+* **Improvement:** The thumbnail editor now works with external-URL videos too (loads the clip, scrub to any frame and capture it).
+* **Improvement:** Optimization code
+* Tested with WordPress 7.0.2
+**Release date: July 31, 2026**
 
 = 2.9 =
 * **Added:** Thumbnail editor for product videos. Each video in the Video Gallery tab now has an "Edit thumbnail" button that opens a popup where you can pick any frame of the video as the thumbnail by dragging a slider (no need to settle for the first frame, which is often black), upload your own image, or reset back to the first frame. Useful when the auto-generated thumbnail starts on a dark frame.

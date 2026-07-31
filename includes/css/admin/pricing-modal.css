@@ -212,7 +212,7 @@
 }
 
 .vwg-pricing-container .pricing-features li.premium-features:hover::after {
-    content: "• Unlimited products with videos\A • Up to 6 videos per product\A • Add YouTube videos\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Sticky video on scroll\A • Premium Support";
+    content: "• Unlimited products with videos\A • Up to 6 videos per product\A • YouTube & Vimeo videos\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Sticky video on scroll\A • Premium Support";
     position: absolute;
     left: 0;
     top: 100%;
@@ -226,6 +226,10 @@
     z-index: 100;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     min-width: 200px;
+}
+
+.vwg-pricing-container .pricing-features li.premium-features.has-external:hover::after {
+    content: "• Unlimited products with videos\A • Up to 6 videos per product\A • YouTube & Vimeo videos\A • Add external video URLs\A • Use custom SVG icon\A • Use optimized thumbnails\A • Auto convert to optimized thumbnail\A • SEO settings for each video\A • Sticky video on scroll\A • Premium Support";
 }
 
 .vwg-pricing-container .pricing-features li.premium-features-analytics:hover::after {
