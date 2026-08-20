@@ -3,7 +3,7 @@ Contributors: nitramix, martinvalchev
 Donate link: https://nitramix.com/donate/
 Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
-Tested up to: 7.0.2
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 2.10
 License: GPLv2 or later
