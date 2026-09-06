@@ -1,0 +1,89 @@
+/* Blocksy: gallery navigation arrows for the forced-default Woo gallery.
+ *
+ * Blocksy empties `woocommerce_enqueue_styles`, so WooCommerce's FlexSlider CSS
+ * never loads and the direction nav we switch on would render as bare,
+ * unpositioned links. These rules mirror the theme's own `[class*=flexy-arrow]`
+ * styling, reusing its CSS variables so the Customizer colours still apply.
+ *
+ * Loaded only on product pages where a video pushed the gallery off Blocksy's
+ * flexy view -- see vwg_blocksy_flexslider_arrows_styles().
+ */
+
+.woocommerce-product-gallery:has(.flex-direction-nav) {
+    display: grid;
+    grid-template-columns: 100%;
+}
+.woocommerce-product-gallery > .flex-viewport,
+.woocommerce-product-gallery > .flex-direction-nav {
+    grid-area: 1 / 1;
+}
+.woocommerce-product-gallery > .flex-control-thumbs {
+    grid-area: 2 / 1;
+}
+.woocommerce-product-gallery > .flex-direction-nav {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+}
+.woocommerce-product-gallery .flex-direction-nav li {
+    margin: 0;
+    padding: 0;
+}
+.woocommerce-product-gallery .flex-direction-nav a {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 100%;
+    text-indent: 0;
+    text-decoration: none;
+    color: var(--flexy-nav-arrow-color, var(--theme-text-color));
+    box-shadow: 0 25px 40px rgba(0, 0, 0, .03);
+    background: var(--flexy-nav-background-color, #fff);
+    transform: translate(var(--translate-x, 0), -50%);
+    transition: opacity .12s cubic-bezier(.455, .03, .515, .955),
+                transform .12s cubic-bezier(.455, .03, .515, .955),
+                color .12s cubic-bezier(.455, .03, .515, .955),
+                background .12s cubic-bezier(.455, .03, .515, .955);
+}
+.woocommerce-product-gallery .flex-direction-nav a svg {
+    pointer-events: none;
+}
+.woocommerce-product-gallery .flex-direction-nav .flex-prev {
+    inset-inline-start: 20px;
+}
+.woocommerce-product-gallery .flex-direction-nav .flex-next {
+    inset-inline-end: 20px;
+}
+/* FlexSlider disables one arrow on the first/last slide. Blocksy's own arrows
+   never change appearance, so keep ours looking identical. */
+.woocommerce-product-gallery .flex-direction-nav a.flex-disabled {
+    cursor: default;
+}
+@media (any-hover: hover) {
+    .woocommerce-product-gallery .flex-direction-nav a {
+        opacity: 0;
+    }
+    .woocommerce-product-gallery .flex-direction-nav .flex-prev {
+        --translate-x: -10px;
+    }
+    .woocommerce-product-gallery .flex-direction-nav .flex-next {
+        --translate-x: 10px;
+    }
+    .woocommerce-product-gallery:hover .flex-direction-nav a {
+        opacity: 1;
+        --translate-x: 0;
+    }
+    .woocommerce-product-gallery .flex-direction-nav a:hover {
+        color: var(--flexy-nav-arrow-hover-color, #fff);
+        background: var(--flexy-nav-background-hover-color, var(--theme-palette-color-1));
+    }
+}

@@ -5,7 +5,7 @@ Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.10
+Stable tag: 2.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,12 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 13. PRO - Sticky video on scroll
 
 == Changelog ==
+
+= 2.11 =
+* **Fix:** Blocksy theme - the gallery's left/right navigation arrows disappeared as soon as a product had a video. They are back, using the theme's own arrow icons and hover behaviour, so a product with video now looks and works exactly like one without.
+* **Fix:** Blocksy theme - clicking a gallery image on a product with video opened the raw image file in the browser. Clicks are inert now, matching what the theme does when its lightbox is switched off. With the lightbox on, nothing changes - it keeps opening as before.
+* **Improvement:** Code cleanup - the Blocksy integration decides in one place whether the default WooCommerce gallery is in use, and its styles moved into their own stylesheet.
+**Release date: September 6, 2026**
 
 = 2.10 =
 * **Improvement:** Redesigned the "Add video from" button row — consistent rounded source buttons, a tidier layout and better behaviour on small screens.
