@@ -1216,7 +1216,7 @@ add_action( 'admin_footer-post-new.php', 'vwg_add_video_upload_script' );
 /**
  * Add custom style and scripts in product page (IMPORTANT)
  *
- * @since 2.8
+ * @since 2.12
  */
 function vwg_add_custom_style_and_scripts_product_page() {
     if ( is_product() ) {
@@ -1374,7 +1374,8 @@ function vwg_add_custom_style_and_scripts_product_page() {
                     }
 
                     // Block easyZoom and zoom events on video slides
-                    $videoSlide.on('mouseenter.easyzoom mousemove.easyzoom touchstart.easyzoom', function(e) {
+                    // (touchstart is left alone: Flickity needs it to start a swipe on the video slide)
+                    $videoSlide.on('mouseenter.easyzoom mousemove.easyzoom', function(e) {
                         e.stopImmediatePropagation();
                     });
 
@@ -1386,6 +1387,30 @@ function vwg_add_custom_style_and_scripts_product_page() {
                 });
 
                 setInterval(function () {
+                    // When the gallery is printed more than once on the page, Flickity's
+                    // "asNavFor" selector binds every thumbnail slider to the first gallery.
+                    // Link each thumbnail slider to the gallery next to it instead.
+                    jQuery('.product-thumbnails').each(function() {
+                        var $thumbs = jQuery(this);
+                        var thumbsFlickity = $thumbs.data('flickity');
+                        if (!thumbsFlickity || typeof thumbsFlickity.setNavCompanion !== 'function') return;
+
+                        var $gallery = jQuery();
+                        $thumbs.parents().each(function() {
+                            $gallery = jQuery(this).find('.product-gallery-slider').first();
+                            return $gallery.length === 0;
+                        });
+
+                        var galleryFlickity = $gallery.data('flickity');
+                        if (!galleryFlickity || thumbsFlickity.navCompanion === galleryFlickity) return;
+
+                        if (thumbsFlickity.navCompanion) {
+                            thumbsFlickity.deactivateAsNavFor();
+                            thumbsFlickity.destroyAsNavFor();
+                        }
+                        thumbsFlickity.setNavCompanion($gallery[0]);
+                    });
+
                     var $activeVideoSlide = jQuery('.woocommerce-product-gallery__image.is-selected .woocommerce-product-gallery__vwg_video')
 
                         // Manage video playback per slide
@@ -1819,7 +1844,7 @@ add_action( 'wp_footer', 'vwg_add_custom_style_and_scripts_product_page' );
 /**
  * Add video in product page
  *
- * @since 2.8
+ * @since 2.12
  */
 function vwg_add_video_to_product_gallery() {
     global $product;
@@ -1858,6 +1883,13 @@ function vwg_add_video_to_product_gallery() {
         $adaptClass = 'vjs-fluid';
     }
 
+    // The gallery can be printed more than once on a page (e.g. separate desktop
+    // and mobile galleries in a page builder layout). Every extra copy gets a suffix
+    // so the player ids stay unique: vwg_video_js_1, vwg_video_js_1_2, ...
+    static $gallery_instance = 0;
+    $gallery_instance++;
+    $id_suffix = ($gallery_instance > 1) ? '_' . $gallery_instance : '';
+
     if ( $video_url ) {
         $countVideo = 0;
         $break_rule = vwg_get_video_limit();
@@ -1873,10 +1905,10 @@ function vwg_add_video_to_product_gallery() {
                  data-woocommerce_gallery_thumbnail_url="<?=esc_url((isset($video['woocommerce_gallery_thumbnail_url']))?$video['woocommerce_gallery_thumbnail_url']:'') ?>"
                  data-woocommerce_thumbnail_url="<?=esc_url((isset($video['woocommerce_thumbnail_url']))?$video['woocommerce_thumbnail_url']:'') ?>"
                  data-thumb-alt=""
-                 data-vwg-video="<?=esc_attr($countVideo) ?>"
+                 data-vwg-video="<?=esc_attr($countVideo . $id_suffix) ?>"
                  class="woocommerce-product-gallery__image <?php echo (isset($showFirstClassSettings) && $showFirstClassSettings == 1)?'vwg_show_first':''; ?>">
                 <a href="<?=esc_url($video['video_url']) ?>" class="woocommerce-product-gallery__vwg_video">
-                    <video id="vwg_video_js_<?=esc_attr($countVideo) ?>" class="video-js <?=esc_attr($adaptClass) ?> vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>" crossorigin="anonymous">
+                    <video id="vwg_video_js_<?=esc_attr($countVideo . $id_suffix) ?>" class="video-js <?=esc_attr($adaptClass) ?> vwg_video_js" width="<?=esc_attr($width) ?>" height="<?=esc_attr($height) ?>" preload="auto" <?=esc_attr($controls) ?> <?=esc_attr($autoplay) ?> <?=esc_attr($loop) ?> <?=esc_attr($muted) ?> playsinline data-setup="{}" poster="<?=esc_url($video['video_thumb_url']) ?>" crossorigin="anonymous">
                         <source src="<?=esc_url($video['video_url']) ?>" type="video/mp4" />
                     </video>
                 </a>

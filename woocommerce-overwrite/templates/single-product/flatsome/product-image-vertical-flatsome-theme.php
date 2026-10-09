@@ -113,16 +113,6 @@ if(get_theme_mod('product_zoom', 0)){
     // Add videos to thumb count
     $thumb_count += $video_count;
 
-    // Disable thumbnails if there is only one extra image.
-    if ( $post_thumbnail && $thumb_count == 1 && !$has_videos ) {
-        return;
-    }
-
-    // Also show gallery if we have videos, even if no attachment_ids
-    if (!$attachment_ids && !$has_videos) {
-        return;
-    }
-
     $rtl = 'false';
     $thumb_cell_align = 'left';
 
