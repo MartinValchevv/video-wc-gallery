@@ -1939,7 +1939,7 @@ if (isset($option['vwg_settings_show_first']) && $option['vwg_settings_show_firs
 /**
  * Enqueue JS - if theme not support wc-product-gallery-zoom
  *
- * @since 1.39
+ * @since 2.13
  */
 function vwg_enqueue_overwrite_scripts() {
     // Check if we are on the product page
@@ -1969,8 +1969,9 @@ function vwg_enqueue_overwrite_scripts() {
         wp_enqueue_script('vwg-flexslider', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/flexslider/jquery.flexslider.js',  array('jquery'), VWG_VERSION_NUM, true);
 
         if (!current_theme_supports('wc-product-gallery-zoom')) {
-            wp_dequeue_script('wc-single-product');
-            wp_enqueue_script('vwg-single-product', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/frontend/single-product.js',  array('jquery'), VWG_VERSION_NUM, true);
+            wp_deregister_script('wc-single-product');
+            wp_register_script('wc-single-product', VWG_VIDEO_WOO_GALLERY_URL . 'woocommerce-overwrite/assets/js/frontend/single-product.js',  array('jquery'), VWG_VERSION_NUM, true);
+            wp_enqueue_script('wc-single-product');
 
             $params = array(
                 'i18n_required_rating_text' => esc_attr__( 'Please select a rating', 'woocommerce' ),

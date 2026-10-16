@@ -5,7 +5,7 @@ Tags: video gallery, featured video, product video, woocommerce, product gallery
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.12
+Stable tag: 2.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,10 @@ Watch Video Gallery for WooCommerce in action and see how to add a product video
 13. PRO - Sticky video on scroll
 
 == Changelog ==
+
+= 2.13 =
+* **Fix:** On products with a video, the image lightbox could not be closed by clicking outside the image when another plugin (e.g. YITH Questions and Answers) also loaded WooCommerce's gallery script.
+**Release date: October 16, 2026**
 
 = 2.12 =
 * **Fix:** Product gallery printed more than once on the same page (for example separate desktop and mobile galleries in a Flatsome UX Builder product layout) - every copy now gets its own video player IDs. Before, both copies shared the same ID, so a player could end up in the hidden copy and the visible gallery collapsed when the video thumbnail was selected.
